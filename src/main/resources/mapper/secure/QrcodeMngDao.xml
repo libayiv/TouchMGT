@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.security.modules.hyb.dao.QrcodeMngDao">
+
+	<resultMap type="QrcodeMng" id="QrcodeMngMap">
+		<result column="PID" property="pId" />
+		<result column="TITLE" property="title" />
+		<result column="SORT_NUM" property="sortNum" />
+		<result column="CREATE_ID" property="createId" />
+		<result column="QRCODE_IMG" property="qrcodeImg" />
+		<result column="PLATFORM" property="platform" />
+		<result column="QRCODE_DESC" property="qrcodeDesc" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="STATUS" property="status" />
+		<result column="OPERATION_ID" property="operationId" />
+		<result column="OPERATION_TIME" property="operationTime" />
+	</resultMap>
+
+	<insert id="save" parameterType="QrcodeMng">
+		INSERT INTO
+		<include refid="tableName" />
+		(
+		<include refid="base" />
+	)
+	VALUES(
+	#{pId},
+	#{sortNum, jdbcType=VARCHAR},
+	#{createId, jdbcType=VARCHAR},
+	#{title, jdbcType=VARCHAR},
+	#{qrcodeImg,jdbcType=VARCHAR},
+	#{qrcodeDesc, jdbcType=VARCHAR},
+	#{createTime, jdbcType=VARCHAR},
+	#{status,jdbcType=VARCHAR},
+	#{operationId, jdbcType=VARCHAR},
+	#{platform,jdbcType=VARCHAR},
+	#{operationTime, jdbcType=VARCHAR}
+
+	)
+	</insert>
+
+	<delete id="delete" parameterType="java.lang.Long">
+		DELETE FROM
+		<include refid="tableName" />
+		WHERE
+		PID = #{pId}
+	</delete>
+	
+	<delete id="deleteBatch" parameterType="java.lang.Long">
+		DELETE FROM
+		<include refid="tableName" />
+		WHERE
+		PID IN 
+		<foreach item="pId" collection="array" open="(" separator="," close=")">
+			#{pId}
+		</foreach>
+	</delete>
+	
+	<update id="deleteByStatus" parameterType="java.lang.Long">
+		UPDATE
+		<include refid="tableName" />
+		SET STATUS =0
+		WHERE
+		PID IN 
+		<foreach item="pId" collection="array" open="(" separator="," close=")">
+			#{pId}
+		</foreach>
+	</update>
+	
+	<update id="update" parameterType="QrcodeMng">
+		UPDATE
+		<include refid="tableName" />
+		<include refid="set" />
+		WHERE
+		PID = #{pId}
+	</update>
+	
+	<select id="queryObject" parameterType="string"
+		resultMap="QrcodeMngMap">
+		SELECT
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		WHERE
+		PID = #{pId}
+	</select>
+	
+	<select id="queryVisibleList" parameterType="QrcodeMng" resultMap="QrcodeMngMap">
+		SELECT 
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		<include refid="where" />
+		<include refid="orderBy" />
+	</select>
+	
+	<select id="queryList" parameterType="java.util.Map" resultMap="QrcodeMngMap">
+		SELECT 
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		<include refid="where" />
+		<include refid="orderBy" />
+	</select>
+	
+	
+	<select id="queryTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT 
+		COUNT(1)
+		FROM
+		<include refid="tableName" />
+		<include refid="where" />
+	</select>
+	
+	<sql id="tableName">
+		QRCODE_INFO
+	</sql>
+	<sql id="base">
+		PID,SORT_NUM,CREATE_ID,TITLE,QRCODE_IMG,QRCODE_DESC,CREATE_TIME,STATUS,OPERATION_ID,PLATFORM,OPERATION_TIME
+	</sql>
+	
+	<sql id="set">
+		<set>
+			<if test="sortNum != null and sortNum != ''">
+				SORT_NUM = #{sortNum},
+			</if>
+			<if test="createId != null and createId != ''">
+				CREATE_ID = #{createId},
+			</if>
+			<if test="title != null and title != ''">
+				TITLE = #{title},
+			</if>
+			<if test="qrcodeImg != null and qrcodeImg != ''">
+				QRCODE_IMG = #{qrcodeImg},
+			</if>
+			<if test="qrcodeDesc != null and qrcodeDesc != ''">
+				QRCODE_DESC = #{qrcodeDesc},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				CREATE_TIME = #{createTime}, 
+			</if>
+			<if test="status != null and status != ''">
+				STATUS = #{status}, 
+			</if>
+			<if test="operationId != null and operationId != ''">
+				OPERATION_ID = #{operationId}, 
+			</if>
+			<if test="platform != null and platform != ''">
+				PLATFORM = #{platform}, 
+			</if>
+			<if test="operationTime != null and operationTime != ''">
+				OPERATION_TIME = #{operationTime}, 
+			</if>
+		</set>
+	</sql>
+	<sql id="where">
+		<where>
+			<if test="pId != null and pId != ''">
+				PID = #{pId}
+			</if>
+			<if test="sortNum != null and sortNum != ''">
+				AND SORT_NUM = #{sortNum}
+			</if>
+			<if test="createId != null and createId != ''">
+				AND CREATE_ID = #{createId}
+			</if>
+			<if test="title != null and title != ''">
+				AND TITLE = #{title}
+			</if>
+			<if test="qrcodeImg != null and qrcodeImg != ''">
+				AND QRCODE_IMG = #{qrcodeImg}
+			</if>
+			<if test="qrcodeDesc != null and qrcodeDesc != ''">
+				AND QRCODE_DESC = #{qrcodeDesc}
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND CREATE_TIME = #{createTime} 
+			</if>
+			<if test="status != null and status != ''">
+				AND STATUS = #{status} 
+			</if>
+			<if test="status == null or status == ''">
+				AND STATUS != 0 
+			</if>
+			<if test="operationId != null and operationId != ''">
+				AND OPERATION_ID = #{operationId} 
+			</if>
+			<if test="platform != null and platform != ''">
+				AND PLATFORM IN (#{platform},3)
+			</if>
+			<if test="operationTime != null and operationTime != ''">
+				AND OPERATION_TIME = #{operationTime} 
+			</if>
+		</where>
+	</sql>
+	<sql id="orderBy">
+		ORDER BY SORT_NUM
+	</sql>
+</mapper>

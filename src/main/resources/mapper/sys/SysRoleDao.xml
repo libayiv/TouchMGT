@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.security.modules.sys.dao.SysRoleDao">
+
+	<select id="queryObject" resultType="com.security.modules.sys.entity.SysRoleEntity">
+		select * from sys_role where role_id = #{value}
+	</select>
+	
+	<select id="queryList" resultType="com.security.modules.sys.entity.SysRoleEntity">
+		select r.* from sys_role r
+		<where>
+			<if test="roleName != null and roleName.trim() != ''">
+				and r.role_name like concat('%',#{roleName},'%')
+			</if>
+
+			<!--  数据过滤  -->
+			${filterSql}
+			
+			<if test="offset != null and limit != null">
+				and ROWNUM > #{offset} AND ROWNUM <![CDATA[ <= ]]> (#{limit}+#{offset})
+			</if>
+		</where>
+		<choose>
+			<when test="sidx != null and sidx.trim() != ''">
+				order by r.${sidx} ${order}
+			</when>
+			<otherwise>
+				order by r.role_id asc
+			</otherwise>
+		</choose>
+		
+	</select>
+	
+	<select id="queryTotal" resultType="int">
+		select count(*) from sys_role r
+		<where>
+			<if test="roleName != null and roleName.trim() != ''">
+				and r.role_name like concat('%',#{roleName},'%')
+			</if>
+
+			<!--  数据过滤  -->
+			${filterSql}
+		</where>
+	</select>
+	
+	<insert id="save" parameterType="com.security.modules.sys.entity.SysRoleEntity">
+		<selectKey resultType="java.lang.Long" order="BEFORE" keyProperty="roleId">  
+       	SELECT SYS_ROLE_SEQ.Nextval as roleId from DUAL  
+   		</selectKey> 
+		insert into sys_role
+		(
+			role_id, 
+			role_name, 
+			remark,
+			create_time
+		)
+		values
+		(
+			#{roleId}, 
+			#{roleName}, 
+			#{remark},
+			#{createTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.security.modules.sys.entity.SysRoleEntity">
+		update sys_role 
+		<set> 
+			<if test="roleName != null">role_name = #{roleName}, </if>
+			<if test="remark != null">remark = #{remark},</if>
+			<if test="deptId != null">dept_id = #{deptId}, </if>
+		</set>
+		where role_id = #{roleId}
+	</update>
+	
+	<delete id="deleteBatch">
+		delete from sys_role where role_id in 
+		<foreach item="roleId" collection="array" open="(" separator="," close=")">
+			#{roleId}
+		</foreach>
+		;
+		delete from sys_role_menu where role_id in 
+		<foreach item="roleId" collection="array" open="(" separator="," close=")">
+			#{roleId}
+		</foreach>
+		;
+		delete from sys_role_dept where role_id in
+		<foreach item="roleId" collection="array" open="(" separator="," close=")">
+			#{roleId}
+		</foreach>
+		;
+		delete from sys_user_role where role_id in 
+		<foreach item="roleId" collection="array" open="(" separator="," close=")">
+			#{roleId}
+		</foreach>
+	</delete>
+
+</mapper>

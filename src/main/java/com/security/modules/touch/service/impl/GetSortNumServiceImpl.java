@@ -31,7 +31,7 @@ public class GetSortNumServiceImpl implements GetSortNumService{
 	public Map<String, Object> repeat(Map<String, Object> map) {		
 		Map<String, Object> repeatMap = new HashMap<String, Object>();	
 		try {
-			ParamValidate.doing(map, "sortNum","tableName");
+			ParamValidate.doing(map, "rank","tableName");
 			int count = getSortNumDao.queryTotal(map);
 			if(count > 0){
 				repeatMap.put("code", 500);

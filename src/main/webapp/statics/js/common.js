@@ -85,7 +85,7 @@ function getDictList(dictCode){
 	var dictList;
 	$.ajax({
         type: "GET",
-        url: baseURL + "hyb/dict/getDict?dictCode="+dictCode,
+        url: baseURL + "touch/dict/getDict?dictCode="+dictCode,
         contentType: "application/json",
         async:false,
         success: function(r){

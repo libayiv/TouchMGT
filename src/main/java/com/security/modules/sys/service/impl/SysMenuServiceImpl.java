@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.security.common.utils.Constant;
 import com.security.modules.sys.dao.SysMenuDao;
+import com.security.modules.sys.dao.SysRoleMenuDao;
 import com.security.modules.sys.entity.SysMenuEntity;
 import com.security.modules.sys.service.SysMenuService;
 import com.security.modules.sys.service.SysUserService;
@@ -22,7 +23,8 @@ public class SysMenuServiceImpl implements SysMenuService {
 	private SysMenuDao sysMenuDao;
 	@Autowired
 	private SysUserService sysUserService;
-	
+	@Autowired
+	private SysRoleMenuDao sysRoleMenuDao;
 	@Override
 	public List<SysMenuEntity> queryListParentId(Long parentId, List<Long> menuIdList) {
 		List<SysMenuEntity> menuList = queryListParentId(parentId);
@@ -90,6 +92,7 @@ public class SysMenuServiceImpl implements SysMenuService {
 	@Transactional
 	public void deleteBatch(Long[] menuIds) {
 		sysMenuDao.deleteBatch(menuIds);
+		sysRoleMenuDao.deleteBatch(menuIds);
 	}
 	
 	@Override

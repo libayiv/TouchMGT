@@ -1,30 +1,27 @@
 {
 	"PLATFORM": [
 		{
-			"KEY": "3",
+			"KEY": "2",
 			"VALUE": "全部"
 		},
 		{
-			"KEY": "1",
+			"KEY": "0",
 			"VALUE": "PC网页"
 		},
 		{
-			"KEY": "2",
+			"KEY": "1",
 			"VALUE": "APP网页"
 		}
 	],
 	"STATUS": [
 		{
 			"KEY": "0",
-			"VALUE": "删除"
+			"VALUE": "无效"
 		},
 		{
 			"KEY": "1",
 			"VALUE": "有效"
-		},
-		{
-			"KEY": "2",
-			"VALUE": "无效"
 		}
+		
 	]
 }

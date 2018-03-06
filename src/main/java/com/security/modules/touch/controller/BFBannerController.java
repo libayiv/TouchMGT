@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mchange.v1.util.MapUtils;
 import com.security.common.annotation.SysLog;
 import com.security.common.exception.TouchException;
 import com.security.common.utils.PageUtils;
@@ -24,6 +25,7 @@ import com.security.common.validator.ValidatorUtils;
 import com.security.common.validator.group.AddGroup;
 import com.security.common.validator.group.UpdateGroup;
 import com.security.modules.sys.controller.AbstractController;
+import com.security.modules.touch.entity.BFBannerConfig;
 import com.security.modules.touch.entity.BFBannerInf;
 import com.security.modules.touch.service.BFBannerService;
 import com.security.modules.touch.service.GetSortNumService;
@@ -57,16 +59,20 @@ public class BFBannerController extends AbstractController {
 		//查询列表数据
 		Query query = new Query(params);
 		List<BFBannerInf> bannerList = null;
+		Map<String,String> parmas=new HashMap<String,String>();
+		List<BFBannerConfig> config = null;
 		int total = 0;
 		try {
 			bannerList = bfBannerService.queryPageList(query, new RowBounds(query.getOffset(), query.getLimit()));
+			parmas.put("type", "app");
+			config=bfBannerService.queryConfig(parmas);
 			total = bfBannerService.count(query);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return R.error("获取首页Banner列表失败");
 		}
 		PageUtils pageUtil = new PageUtils(bannerList, total, query.getLimit(), query.getPage());
-		return R.ok().put("page", pageUtil);
+		return R.ok().put("page", pageUtil).put("config", config);
 	}
 	
 	/**

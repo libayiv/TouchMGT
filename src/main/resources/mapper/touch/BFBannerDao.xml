@@ -57,7 +57,7 @@
 		<include refid="tableName" />
 		<include refid="set" />
 		WHERE
-		ID = #{pid}
+		ID = #{id}
 	</update>
 	
 	<update id="updateStatus" parameterType="java.util.Map">
@@ -89,6 +89,14 @@
 		ORDER BY RANK
 	</select>
 	
+	<select id="queryConfig" parameterType="java.util.Map" resultType="BFBannerConfig">
+		SELECT 
+		<include refid="configBase" />
+		FROM
+		<include refid="tableConfig" />
+		<include refid="configWhere" />
+	</select>
+	
 	<select id="queryTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
 		SELECT 
 		COUNT(1)
@@ -101,8 +109,14 @@
 	<sql id="tableName">
 		BFCMS_BANNER_SETTING
 	</sql>
+	<sql id="tableConfig">
+		BFCMS_BANNER_CONFIG
+	</sql>
 	<sql id="base">
 		ID,TYPE,VALUE,TITLE,COVERSRC,RANK,STATUS,IS_SINGLE,PC_VALID
+	</sql>
+	<sql id="configBase">
+		ID,TYPE,NAME,INTRO,STATUS
 	</sql>
 	<sql id="set">
 		<set>
@@ -160,11 +174,18 @@
 			</if>
 		</where>
 	</sql>
-	
+	<sql id="configWhere">
+		<where>	
+			<if test="type != null and type != ''">
+				 TYPE = #{type}
+			</if>
+		</where>
+	</sql>
 	<sql id="mapWhere">
 		<where>
+				AND IS_SINGLE = 0
 			<if test="id != null and id != ''">
-				ID = #{id}
+				AND ID = #{id}
 			</if>
 			<if test="title != null and title != ''">
 				AND TITLE = #{title}
@@ -179,11 +200,10 @@
 				AND RANK = #{rank}
 			</if>
 			<if test="status != null and status != ''">
-				AND STATUS != 0
+				AND STATUS = #{status}
 			</if>
-			<if test="is_single != null and is_single != ''">
-				AND IS_SINGLE = #{is_single}
-			</if>
+				
+			
 			<if test="pcValidList != null">
 				AND PC_VALID IN
 				<foreach collection="pcValidList" index="index" item="item" open="(" separator="," close=")">

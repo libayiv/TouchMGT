@@ -12,6 +12,6 @@ public class CommonUtils{
 	 */
 	public static String getRandomId(){
 		UUID uuid = UUID.randomUUID();
-		return uuid.toString().replace("-", "");
+		return uuid.toString().replaceAll("-", "").toUpperCase();
 	}
 }

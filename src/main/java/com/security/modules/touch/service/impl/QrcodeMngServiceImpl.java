@@ -1,4 +1,4 @@
-package com.security.modules.secure.service.impl;
+package com.security.modules.touch.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.security.common.utils.CommonUtils;
-import com.security.modules.secure.dao.QrcodeMngDao;
-import com.security.modules.secure.entity.QrcodeMng;
-import com.security.modules.secure.service.QrcodeMngService;
-import com.security.modules.secure.service.exception.ArgumentNullException;
 import com.security.modules.sys.entity.SysUserEntity;
+import com.security.modules.touch.dao.QrcodeMngDao;
+import com.security.modules.touch.entity.QrcodeMng;
+import com.security.modules.touch.service.QrcodeMngService;
+import com.security.modules.touch.service.exception.ArgumentNullException;
 
 @Service
 public class QrcodeMngServiceImpl implements QrcodeMngService {

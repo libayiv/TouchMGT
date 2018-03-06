@@ -1,8 +1,8 @@
-package com.security.modules.secure.entity;
+package com.security.modules.touch.entity;
 
 import java.io.Serializable;
 
-import com.security.modules.secure.utils.JsonConfigUtils;
+import com.security.modules.touch.utils.JsonConfigUtils;
 
 /**
  * 好医保二维码实体类

@@ -1,11 +1,11 @@
-package com.security.modules.secure.service;
+package com.security.modules.touch.service;
 
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 
-import com.security.modules.secure.entity.QrcodeMng;
+import com.security.modules.touch.entity.QrcodeMng;
 
 /**
  * 好医保友情链接service

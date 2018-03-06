@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="io.renren.modules.hyb.dao.GetSortNumDao">
+		
+	<select id="queryTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT 
+		COUNT(1)
+		FROM
+		${tableName}
+		<include refid="where" />
+	</select>
+	
+	<sql id="where">
+		<where>
+			<if test="rank != null and rank != ''">
+				AND RANK = ${rank}
+			</if>			
+			<if test="status == null or status == ''">
+				AND STATUS = 1
+			</if>
+			<if test="pc_valid == 0 or pc_valid == 1">
+				AND PC_VALID IN (${pc_valid})
+			</if>			
+			<if test="pc_valid == 2">
+				AND PC_VALID IN (2)
+			</if>
+			<if test="id != null and id != ''">
+				AND ID &lt;&gt; #{id}
+			</if>			
+		</where>
+	</sql>	
+</mapper>

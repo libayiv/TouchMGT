@@ -1,4 +1,4 @@
-package com.security.modules.secure.controller;
+package com.security.modules.touch.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +22,8 @@ import com.security.common.utils.R;
 import com.security.common.validator.ValidatorUtils;
 import com.security.common.validator.group.AddGroup;
 import com.security.common.validator.group.UpdateGroup;
-import com.security.modules.secure.entity.QrcodeMng;
-import com.security.modules.secure.service.QrcodeMngService;
+import com.security.modules.touch.entity.QrcodeMng;
+import com.security.modules.touch.service.QrcodeMngService;
 
 
 /**

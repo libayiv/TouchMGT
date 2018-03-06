@@ -1,4 +1,4 @@
-package com.security.modules.secure.service.exception;
+package com.security.modules.touch.service.exception;
 
 /**
  * 值不能为空异常信息处理类

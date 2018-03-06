@@ -7,7 +7,7 @@
     </settings>
     
     <typeAliases>
-     	<typeAlias type="com.security.modules.secure.entity.QrcodeMng" alias="QrcodeMng"/> 
+     	<typeAlias type="com.security.modules.touch.entity.BFBannerInf" alias="QrcodeMng"/> 
      </typeAliases>
     
     <!-- 分页插件 -->

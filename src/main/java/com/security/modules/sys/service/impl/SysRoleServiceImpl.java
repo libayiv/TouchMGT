@@ -6,10 +6,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.security.common.annotation.DataFilter;
 import com.security.modules.sys.dao.SysRoleDao;
+import com.security.modules.sys.dao.SysRoleDeptDao;
+import com.security.modules.sys.dao.SysRoleMenuDao;
+import com.security.modules.sys.dao.SysUserRoleDao;
 import com.security.modules.sys.entity.SysRoleEntity;
 import com.security.modules.sys.service.SysRoleDeptService;
 import com.security.modules.sys.service.SysRoleMenuService;
 import com.security.modules.sys.service.SysRoleService;
+import com.security.modules.sys.service.SysUserRoleService;
 
 import java.util.Date;
 import java.util.List;
@@ -30,7 +34,12 @@ public class SysRoleServiceImpl implements SysRoleService {
 	@Autowired
 	private SysRoleMenuService sysRoleMenuService;
 	@Autowired
-	private SysRoleDeptService sysRoleDeptService;
+	private SysRoleDeptDao sysRoleDeptDao;
+	@Autowired
+	private SysUserRoleDao sysUserRoleDao;
+	
+	@Autowired
+	private SysRoleMenuDao sysRoleMenuDao;
 
 	@Override
 	public SysRoleEntity queryObject(Long roleId) {
@@ -78,6 +87,9 @@ public class SysRoleServiceImpl implements SysRoleService {
 	@Transactional
 	public void deleteBatch(Long[] roleIds) {
 		sysRoleDao.deleteBatch(roleIds);
+		sysRoleDeptDao.deleteBatch(roleIds);
+		sysUserRoleDao.deleteBatch(roleIds);
+		sysRoleMenuDao.deleteBatch(roleIds);
 	}
 
 }

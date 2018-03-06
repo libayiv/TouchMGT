@@ -1,4 +1,4 @@
-package com.security.modules.secure.entity;
+package com.security.modules.touch.entity;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

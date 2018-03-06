@@ -30,4 +30,10 @@
 		select menu_id from sys_role_menu where role_id = #{value}
 	</select>
 
+	<delete id="deleteBatch">
+		delete from sys_role_menu where role_id in 
+		<foreach item="roleId" collection="array" open="(" separator="," close=")">
+			#{roleId}
+		</foreach>
+	</delete>
 </mapper>

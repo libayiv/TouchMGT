@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="com.security.modules.touch.dao.BFBannerDao">
+	
+
+	<resultMap type="BFBannerInf" id="BFBannerInfMap">
+		<result column="ID" property="id"/>
+		<result column="TYPE" property="type"/>
+		<result column="VALUE" property="value"/>
+		<result column="TITLE" property="title"/>
+		<result column="COVERSRC" property="coversrc"/>
+		<result column="RANK" property="rank"/>
+		<result column="STATUS" property="status"/>
+		<result column="IS_SINGLE" property="is_single"/>
+		<result column="PC_VALID" property="pc_valid"/>
+	</resultMap>
+	
+	<insert id="save" parameterType="BFBannerInf">
+		INSERT INTO
+		<include refid="tableName" />
+		(
+			<include refid="base" />
+		)
+		VALUES(
+			#{id},
+			#{type, jdbcType=VARCHAR},
+			#{value, jdbcType=VARCHAR},
+			#{title, jdbcType=VARCHAR},
+			#{coversrc, jdbcType=VARCHAR},
+			#{rank, jdbcType=VARCHAR},
+			#{status, jdbcType=VARCHAR},
+			#{is_single, jdbcType=VARCHAR},
+			#{pc_valid, jdbcType=VARCHAR}
+			
+		)
+	</insert>
+	
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM 
+		<include refid="tableName" />
+		WHERE
+		ID = #{pid}
+	</delete>
+	
+	<delete id="deleteBatch" parameterType="java.util.List">
+		DELETE FROM 
+		<include refid="tableName" />
+		WHERE
+		ID IN
+		<foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<update id="update" parameterType="BFBannerInf" >
+		UPDATE
+		<include refid="tableName" />
+		<include refid="set" />
+		WHERE
+		ID = #{pid}
+	</update>
+	
+	<update id="updateStatus" parameterType="java.util.Map">
+		UPDATE
+		<include refid="tableName" />
+		SET STATUS = #{status}
+		WHERE
+		ID IN
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<select id="queryObject" parameterType="java.lang.String" resultMap="BFBannerInfMap">
+		SELECT 
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		WHERE
+		ID = #{id}
+	</select>
+	
+	<select id="queryList" parameterType="java.util.Map" resultMap="BFBannerInfMap">
+		SELECT 
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		<include refid="mapWhere" />
+		ORDER BY RANK
+	</select>
+	
+	<select id="queryTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT 
+		COUNT(1)
+		FROM
+		<include refid="tableName" />
+		<include refid="mapWhere" />
+	</select>
+	
+	
+	<sql id="tableName">
+		BFCMS_BANNER_SETTING
+	</sql>
+	<sql id="base">
+		ID,TYPE,VALUE,TITLE,COVERSRC,RANK,STATUS,IS_SINGLE,PC_VALID
+	</sql>
+	<sql id="set">
+		<set>
+			<if test="type != null and type != ''">
+				TYPE = #{type},
+			</if>
+			<if test="title != null and title != ''">
+				TITLE = #{title},
+			</if>
+			<if test="value != null and value != ''">
+				VALUE = #{value},
+			</if>
+			<if test="coversrc != null and coversrc != ''">
+				COVERSRC = #{coversrc},
+			</if>
+			<if test="rank != null and rank != ''">
+				RANK = #{rank},
+			</if>
+			<if test="status != null and status != ''">
+				STATUS = #{status}, 
+			</if>
+			<if test="is_single != null and is_single != ''">
+				IS_SINGLE = #{is_single}, 
+			</if>
+			<if test="pc_valid != null and pc_valid != ''">
+				PC_VALID = #{pc_valid}, 
+			</if>
+		</set>
+	</sql>
+	<sql id="where">
+		<where>
+			<if test="id != null and id != ''">
+				ID = #{id}
+			</if>
+			<if test="title != null and title != ''">
+				AND TITLE = #{title}
+			</if>
+			<if test="value != null and value != ''">
+				AND VALUE = #{value}
+			</if>
+			<if test="coversrc != null and coversrc != ''">
+				AND COVERSRC = #{coversrc}
+			</if>
+			<if test="rank != null and rank != ''">
+				AND RANK = #{rank}
+			</if>
+			<if test="status != null and status != ''">
+				AND STATUS = #{status}
+			</if>
+			<if test="is_single != null and is_single != ''">
+				AND IS_SINGLE = #{is_single}
+			</if>
+			<if test="pc_valid != null and pc_valid != ''">
+				AND PC_VALID = #{pc_valid}
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="mapWhere">
+		<where>
+			<if test="id != null and id != ''">
+				ID = #{id}
+			</if>
+			<if test="title != null and title != ''">
+				AND TITLE = #{title}
+			</if>
+			<if test="value != null and value != ''">
+				AND VALUE = #{value}
+			</if>
+			<if test="coversrc != null and coversrc != ''">
+				AND COVERSRC = #{coversrc}
+			</if>
+			<if test="rank != null and rank != ''">
+				AND RANK = #{rank}
+			</if>
+			<if test="status != null and status != ''">
+				AND STATUS != 0
+			</if>
+			<if test="is_single != null and is_single != ''">
+				AND IS_SINGLE = #{is_single}
+			</if>
+			<if test="pcValidList != null">
+				AND PC_VALID IN
+				<foreach collection="pcValidList" index="index" item="item" open="(" separator="," close=")">
+					#{item}				
+				</foreach>
+			</if>
+		</where>
+	</sql>
+	
+	
+</mapper>

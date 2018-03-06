@@ -1,9 +1,9 @@
-package com.security.modules.secure.dao;
+package com.security.modules.touch.dao;
 
 import java.util.List;
 
-import com.security.modules.secure.entity.QrcodeMng;
 import com.security.modules.sys.dao.BaseDao;
+import com.security.modules.touch.entity.QrcodeMng;
 
 /**
  * 好医保二维码Dao

@@ -1,4 +1,4 @@
-package com.security.modules.secure.utils;
+package com.security.modules.touch.utils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.security.modules.secure.service.exception.ArgumentNullException;
+import com.security.modules.touch.service.exception.ArgumentNullException;
 
 /**
  * Map中的必需字段效验

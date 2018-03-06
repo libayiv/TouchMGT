@@ -7,13 +7,15 @@
     </settings>
     
     <typeAliases>
-     	<typeAlias type="com.security.modules.touch.entity.BFBannerInf" alias="QrcodeMng"/> 
+     	<typeAlias type="com.security.modules.touch.entity.QrcodeMng" alias="QrcodeMng"/> 
+     	     	<typeAlias type="com.security.modules.touch.entity.BFBannerInf" alias="BFBannerInf"/> 
+     	
      </typeAliases>
     
     <!-- 分页插件 -->
-		<!-- <plugins>
+		 <plugins>
         <plugin interceptor="com.github.pagehelper.PageInterceptor" ></plugin>
-    </plugins> -->
+    </plugins> 
     
 </configuration>
 

@@ -10,6 +10,7 @@
      	<typeAlias type="com.security.modules.touch.entity.QrcodeMng" alias="QrcodeMng"/> 
      	<typeAlias type="com.security.modules.touch.entity.BFBannerInf" alias="BFBannerInf"/>   
      	<typeAlias type="com.security.modules.touch.entity.BFBannerConfig" alias="BFBannerConfig"/>
+     	<typeAlias type="com.security.modules.touch.entity.FileListEntity" alias="FileListEntity"/> 	
     </typeAliases>
     
     <!-- 分页插件 -->

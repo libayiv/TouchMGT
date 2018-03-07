@@ -105,6 +105,13 @@
 		<include refid="mapWhere" />
 	</select>
 	
+	<select id="querySingle" resultMap="BFBannerInfMap">
+		SELECT 
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		WHERE IS_SINGLE=1
+	</select>
 	
 	<sql id="tableName">
 		BFCMS_BANNER_SETTING

@@ -61,5 +61,6 @@ public interface BFBannerService {
 	
 	List<BFBannerConfig> queryConfig(Map<String,String> parmas) throws Exception;
 
-	
+	BFBannerInf querySingle() throws Exception;
+
 }

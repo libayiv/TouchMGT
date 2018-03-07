@@ -49,14 +49,11 @@ public class FileUploaderUtils {
     			file.mkdirs();
     		}
             String fileSuffix= getSuffixByFilename(multipartFile.getOriginalFilename()).toUpperCase();
-            if(!fileSuffix.equals(".JPG")&&!fileSuffix.equals(".GIF")&&!fileSuffix.equals(".JPEG")&&!fileSuffix.equals(".PNG")&&!fileSuffix.equals(".SWF")){
-            	 return fileName;
-            } else {
-            	fileName = UUID.randomUUID().toString().replaceAll("-", "") + fileSuffix;
-            	// 转存文件  
-            	multipartFile.transferTo(new File(filePath + fileName));
-            	fileName = dirname + "/" + fileName ;
-            }
+            fileName = UUID.randomUUID().toString().replaceAll("-", "") + fileSuffix;
+            // 转存文件  
+            multipartFile.transferTo(new File(filePath + fileName));
+            fileName = dirname + "/" + fileName ;
+
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}

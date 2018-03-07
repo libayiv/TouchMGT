@@ -87,7 +87,7 @@ $(function () {
     });
     
     new AjaxUpload('#banner_upload', {
-        action: baseURL + "touch/fileupload/uploadimg?modularName=banner",
+        action: baseURL + "touch/fileupload/upload?modularName=banner",
         name: 'file',
         autoSubmit:true,
         responseType:"json",
@@ -138,7 +138,7 @@ var vm = new Vue({
         	$("#banner_img").removeAttr("src");
             vm.showList = false;
             vm.title = "新增";
-           // $("#selectType").find("option:selected").removeAttr("selected");
+        	$("#url").hide();
             vm.banner = {status:1,is_single:0, pc_valid:1, fileName:'', oriFileName:'', rank:0, playbackLength:10};
 
         },
@@ -177,9 +177,17 @@ var vm = new Vue({
         		alert("请上传图片！");
         		return;
         	}
-        	if(vm.banner.value == "jumpUrl" || vm.banner.value=='' || vm.banner.value==null){
-        		alert("请填写链接地址！");
+        	if(vm.banner.value=='' || vm.banner.value==null){
+        		alert("请选择跳转位置！");
         		return;
+        	}
+        	if(vm.banner.value == "jumpUrl" ){
+	        	if(vm.banner.url=='' || vm.banner.url==null){
+	        		alert("请填写链接地址！");
+	        		return;
+	        	}else{
+	        		vm.banner.value=vm.banner.url;
+	        	}
         	}
             var url = vm.banner.id == null ? "touch/banner/save" : "touch/banner/update";
             $.ajax({
@@ -202,19 +210,19 @@ var vm = new Vue({
         	$("#banner_img").removeAttr("src");
             $.get(baseURL + "touch/banner/info/"+pid, function(r){
                 vm.banner = r.banner;
-                debugger;
                 if(r.banner.coversrc != null && r.banner.coversrc != ''){
                 	$("#banner_img").removeAttr("width");
                 	$("#banner_img").removeAttr("height");
-                	$("#banner_img").attr("src", localStorage.fileUrlPath + r.banner.fileName);
+                	$("#banner_img").attr("src", localStorage.fileUrlPath + r.banner.coversrc);
                 } else {
                 	/*$("#banner_img").attr("width", "100px");
                 	$("#banner_img").attr("height", "100px");*/
                 }
                 if(vm.banner.type=='web'){
+                	vm.banner.url=vm.banner.value;
+                	vm.banner.value='jumpUrl';
                	 	$("#url").show();
                }else{
-            	    $("#selectType").find("option[value='"+vm.banner.value+"']").attr("selected",true);
                		$("#url").hide();
                }
             });
@@ -249,13 +257,15 @@ var vm = new Vue({
         	vm.updateStatus(pid, "1");
         },
         disable: function(pid){
-        	vm.updateStatus(pid, "2");
+        	vm.updateStatus(pid, "0");
         },
         changeType: function (ele) {  
             var optionTxt = $(ele.target).find("option:selected").text();  
-            var optionVal = ele.target.value;  
+            var optionVal = ele.target.value; 
+            if(optionVal==''){
+            	return false;
+            }
             if(optionVal=='jumpUrl'){
-            	vm.banner.value='';
             	vm.banner.type='web';
             	 $("#url").show();
             }else{

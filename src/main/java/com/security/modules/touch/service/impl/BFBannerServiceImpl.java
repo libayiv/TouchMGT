@@ -84,4 +84,9 @@ public class BFBannerServiceImpl implements BFBannerService {
 		return BFBannerDao.queryConfig(parmas);
 	}
 
+	@Override
+	public BFBannerInf querySingle() throws Exception {
+		return BFBannerDao.querySingle();
+	}
+
 }

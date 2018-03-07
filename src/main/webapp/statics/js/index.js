@@ -140,3 +140,14 @@ function routerList(router, menuList){
 		}
 	}
 }
+
+//文件访问路径前缀
+$(document).ready(function(){
+	$.getJSON("touch/dict/getFlieUrlPath?_"+$.now(), function(r){
+        if(r.code == 0){
+        	localStorage.fileUrlPath = r.fileUrlPath;
+        }else{
+        	alert("服务器异常");
+        }
+	});
+});

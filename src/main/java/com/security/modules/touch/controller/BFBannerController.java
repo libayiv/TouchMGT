@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mchange.v1.util.MapUtils;
 import com.security.common.annotation.SysLog;
 import com.security.common.exception.TouchException;
 import com.security.common.utils.PageUtils;
@@ -73,6 +72,28 @@ public class BFBannerController extends AbstractController {
 		}
 		PageUtils pageUtil = new PageUtils(bannerList, total, query.getLimit(), query.getPage());
 		return R.ok().put("page", pageUtil).put("config", config);
+	}
+	/**
+	 * single Banner列表
+	 */
+	@RequestMapping("/single")
+	@RequiresPermissions("touch:single:info")
+	public R single(){
+		//查询列表数据
+		BFBannerInf banner = null;
+		List<BFBannerConfig> config = null;
+		Map<String,String> parmas=new HashMap<String,String>();
+
+		try {
+			parmas.put("type", "app");
+			banner = bfBannerService.querySingle();	
+			config=bfBannerService.queryConfig(parmas);
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return R.error("获取首页Banner列表失败");
+		}
+		return R.ok().put("single", banner).put("config", config);
 	}
 	
 	/**

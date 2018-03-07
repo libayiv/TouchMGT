@@ -23,4 +23,6 @@ public interface BFBannerDao extends BaseDao<BFBannerInf> {
 	int updateStatus(Map<String, Object> params) throws Exception;
 	
 	List<BFBannerConfig> queryConfig(Map<String, String> params) throws Exception;
+	
+	BFBannerInf querySingle() throws Exception;
 }

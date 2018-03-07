@@ -7,36 +7,13 @@
 </head>
 <body>
 <div id="rrapp" v-cloak>
-	<div v-show="showList">
-		<div class="grid-btn">
-			<div class="form-group col-sm-2">
-				<input type="text" class="form-control" v-model="q.title" @keyup.enter="query" placeholder="标题">
-			</div>
-			<a class="btn btn-default" @click="query">查询</a>
-			<#if shiro.hasPermission("touch:banner:save")>
-			<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-			</#if>
-		<!-- 	<#if shiro.hasPermission("touch:banner:updateStatus")>
-			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-			</#if> -->
-		</div>
-	    <table id="jqGrid"></table>
-	    <div id="jqGridPager"></div>
-    </div>
 
-	<div v-show="!showList" class="panel panel-default">
+	<div  class="panel panel-default">
 		<div class="panel-heading">{{title}}</div>
 		<form class="form-horizontal">
 			<input type="hidden" id="banner_fileName" class="form-control" v-model="banner.fileName" />
 			<input type="hidden" id="banner_oriFileName" class="form-control" v-model="banner.oriFileName" />
-			<div class="form-group">
-				<div class="col-sm-2 control-label">显示到</div>
-				<template v-for="platform in platformList">
-					<label class="radio-inline">
-						<input type="radio" name="platform" v-bind:value="platform.KEY" v-model="banner.pc_valid"/> {{ platform.VALUE }}
-					</label>
-				</template>
-			</div>
+		
 			<div class="form-group">
 				<div class="col-sm-2 control-label">序号</div>
 				<div class="col-sm-10">
@@ -61,21 +38,14 @@
 				<div class="col-sm-2 control-label">banner跳转位置</div>
 				
 				<div class="col-sm-10">
-						<select class="form-control" @change='changeType' id="selectType" v-model="banner.value">
+						<select class="form-control"  id="selectType" v-model="banner.value">
 							<template v-for="config in configList">
-							<option v-bind:value="config.name">APP {{config.intro}}</option>
+							<option v-bind:value="config.name">{{config.intro}}</option>
 								</template>
-							<option value="jumpUrl">跳转到外部链接</option>
 
 						</select>
 				</div>
 			</div>
-			<div class="form-group" style="display:none" id="url">
-				<div class="col-sm-2 control-label">链接地址</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="banner.url"/>
-				</div>
-			</div> 
 			
 			<div class="form-group">
 				<div class="col-sm-2 control-label">是否显示</div>
@@ -94,7 +64,6 @@
 			<div class="form-group">
 				<div class="col-sm-2 control-label"></div>
 				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
-				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
 			</div>
 		</form>
 	</div>
@@ -102,7 +71,7 @@
 
 
 <script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
-<script src="${request.contextPath}/statics/js/modules/touch/banner.js?_${.now?long}"></script>
+<script src="${request.contextPath}/statics/js/modules/touch/single.js?_${.now?long}"></script>
 
 </body>
 </html>

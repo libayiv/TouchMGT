@@ -1,34 +1,26 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'hyb/carousel/list',
+        url: baseURL + 'touch/banner/list',
         datatype: "json",
         colModel: [			
-			{ label: '编号', name: 'pid', index: "pid", width: 45, key: true, hidden: true},
-			{ label: '序号', name: 'sortNum', width: 45, editable:true },
-			{ label: '图片', name: 'fileName', formatter: function(value, options, row){
+			{ label: '编号', name: 'id', index: "pid", width: 45, key: true, hidden: true},
+			{ label: '序号', name: 'rank', width: 45, editable:true },
+			{ label: '封面', name: 'coversrc', formatter: function(value, options, row){
 				return '<img src="'+ localStorage.fileUrlPath + value +'" width="100px;" height="100px;" />';
 			} },
 			{ label: '标题', name: 'title' },
-            /*{ label: '开始时间', name: 'startTime', width: 75 },
-			{ label: '截止时间', name: 'endTime', width: 75 },*/
-			{ label: '链接类型', name: 'linkType', formatter:function(value, options, row){
-				return value == 1 ? '内部链接' : '外部链接';
-			} },
-			{ label: '链接地址', name: 'linkUrl' },
 			{ label: '是否显示', name: 'status', width: 60, formatter: function(value, options, row){
-				var id='checked_' + row.pid;
+				var id='checked_' + row.id;
 				return value == 1 ? 
-						'<input id="' + id + '" type="checkbox" class="switch" onclick="vm.disable(\'' + row.pid + '\')" checked/><label for="'+id+'" class="newlabel"></label>' : 
-						'<input id="' + id + '" type="checkbox" class="switch" onclick="vm.enable(\'' + row.pid + '\')"/><label for="'+id+'" class="newlabel"></label>';
+						'<input id="' + id + '" type="checkbox" class="switch" onclick="vm.disable(\'' + row.id + '\')" checked/><label for="'+id+'" class="newlabel"></label>' : 
+						'<input id="' + id + '" type="checkbox" class="switch" onclick="vm.enable(\'' + row.id + '\')"/><label for="'+id+'" class="newlabel"></label>';
 			} },
-			{ label: '所属平台', name: 'platform', hidden: true },
-			{ label: '所属平台', name: 'platformStr', width: 60, },
-			{ label: '描述信息', name: 'carouselDesc'},
+			{ label: '跳转地址', name: 'value', width: 60 },
 			{ label: '操作', name: 'operation', width: 80, formatter: function(value, options, row){
 				if(hasPermission == null){
 					$.ajax({
 		                type: "GET",
-		                url: baseURL + "sys/permitted/hasPermission?permission=hyb:carousel:save",
+		                url: baseURL + "sys/permitted/hasPermission?permission=touch:banner:save",
 		                contentType: "application/json",
 		                async:false,
 		                success: function(r){
@@ -41,7 +33,7 @@ $(function () {
 		            });
 				}
 				if(hasPermission){
-					return '<a class="btn btn-primary" onclick="vm.update(\'' + row.pid + '\')"><i class="fa fa-pencil-square-o"></i>&nbsp;编辑</a>';
+					return '<a class="btn btn-primary" onclick="vm.update(\'' + row.id + '\')"><i class="fa fa-pencil-square-o"></i>&nbsp;编辑</a>';
 				}
 				return '';
 			} },
@@ -55,7 +47,7 @@ $(function () {
         autowidth:true,
         multiselect: true,
         cellEdit:true,
-        cellurl: baseURL +"hyb/carousel/updateSortNum",
+        cellurl: baseURL +"touch/banner/updateSortNum",
         pager: "#jqGridPager",
         jsonReader : {
             root: "page.list",
@@ -71,6 +63,10 @@ $(function () {
         gridComplete:function(){
         	//隐藏grid底部滚动条
         	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
+        },
+        loadComplete: function (res) {
+            // res是服务器返回的数据
+        	vm.configList = res.config;
         },
         beforeSubmitCell :function(rowid, cellname, value, iRow, iCol){  
             // 传递参数  
@@ -90,8 +86,8 @@ $(function () {
          }
     });
     
-    new AjaxUpload('#carousel_upload', {
-        action: baseURL + "hyb/fileupload/uploadimg?modularName=carousel",
+    new AjaxUpload('#banner_upload', {
+        action: baseURL + "touch/fileupload/uploadimg?modularName=banner",
         name: 'file',
         autoSubmit:true,
         responseType:"json",
@@ -103,11 +99,11 @@ $(function () {
         },
         onComplete : function(file, r){
             if(r.code == 0){
-            	vm.carousel.fileName = r.fileName;
-            	vm.carousel.oriFileName = r.oriFileName;
-/*            	$("#carousel_img").removeAttr("width");
-            	$("#carousel_img").removeAttr("height");
-*/            	$("#carousel_img").attr("src", r.url);
+            	vm.banner.coversrc = r.fileName;
+            	vm.banner.oriFileName = r.oriFileName;
+/*            	$("#banner_img").removeAttr("width");
+            	$("#banner_img").removeAttr("height");
+*/            	$("#banner_img").attr("src", r.url);
                 alert("图片上传成功");
             }else{
                 alert(r.msg);
@@ -128,11 +124,10 @@ var vm = new Vue({
         showList: true,
         title:null,
         platformList:platformList,
-        carousel:{
+        configList:{},
+        banner:{
             status:1,
-            deptId:null,
-            deptName:null,
-            roleIdList:[]
+            is_single:0
         }
     },
     methods: {
@@ -140,16 +135,17 @@ var vm = new Vue({
             vm.reload();
         },
         add: function(){
-        	$("#carousel_img").removeAttr("src");
+        	$("#banner_img").removeAttr("src");
             vm.showList = false;
             vm.title = "新增";
-            vm.carousel = {status:1, linkType:1, platform:1, fileName:'', oriFileName:'', sortNum:0, playbackLength:10};
+           // $("#selectType").find("option:selected").removeAttr("selected");
+            vm.banner = {status:1,is_single:0, pc_valid:1, fileName:'', oriFileName:'', rank:0, playbackLength:10};
 
         },
         update: function (pid) {
             vm.showList = false;
             vm.title = "编辑";
-            vm.getCarousel(pid);
+            vm.getbanner(pid);
         },
         del: function () {
             var pids = getSelectedRows();
@@ -162,31 +158,35 @@ var vm = new Vue({
         },
         saveOrUpdate: function () {
         	var re = /^[0-9]+$/ ;
-        	if(vm.carousel.sortNum==null || vm.carousel.sortNum==''){    
+        	if(vm.banner.rank==null || vm.banner.rank==''){    
         		alert("请填写序号!");
        		 	return;
         	} 
-        	if(!re.test(vm.carousel.sortNum)){    
+        	if(!re.test(vm.banner.rank)){    
         		alert("序号请填写正整数!");
        		 	return;
         	}         	
-        	if(vm.carousel.title==null || vm.carousel.title==''){
+        	if(vm.banner.title==null || vm.banner.title==''){
         		alert("请填写标题！");
         		return;
-        	}else if(vm.carousel.title.length > 50){
+        	}else if(vm.banner.title.length > 50){
         		alert("标题不能大于50字！");
         		return;
         	}
-        	if(vm.carousel.fileName == null || vm.carousel.fileName==''){
+        	if(vm.banner.coversrc == null || vm.banner.coversrc==''){
         		alert("请上传图片！");
         		return;
         	}
-            var url = vm.carousel.pid == null ? "hyb/carousel/save" : "hyb/carousel/update";
+        	if(vm.banner.value == "jumpUrl" || vm.banner.value=='' || vm.banner.value==null){
+        		alert("请填写链接地址！");
+        		return;
+        	}
+            var url = vm.banner.id == null ? "touch/banner/save" : "touch/banner/update";
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
                 contentType: "application/json",
-                data: JSON.stringify(vm.carousel),
+                data: JSON.stringify(vm.banner),
                 success: function(r){
                     if(r.code === 0){
                         alert('操作成功', function(){
@@ -198,18 +198,25 @@ var vm = new Vue({
                 }
             });
         },
-        getCarousel: function(pid){
-        	$("#carousel_img").removeAttr("src");
-            $.get(baseURL + "hyb/carousel/info/"+pid, function(r){
-                vm.carousel = r.carousel;
-                if(r.carousel.fileName != null && r.carousel.fileName != ''){
-                	$("#carousel_img").removeAttr("width");
-                	$("#carousel_img").removeAttr("height");
-                	$("#carousel_img").attr("src", localStorage.fileUrlPath + r.carousel.fileName);
+        getbanner: function(pid){
+        	$("#banner_img").removeAttr("src");
+            $.get(baseURL + "touch/banner/info/"+pid, function(r){
+                vm.banner = r.banner;
+                debugger;
+                if(r.banner.coversrc != null && r.banner.coversrc != ''){
+                	$("#banner_img").removeAttr("width");
+                	$("#banner_img").removeAttr("height");
+                	$("#banner_img").attr("src", localStorage.fileUrlPath + r.banner.fileName);
                 } else {
-                	/*$("#carousel_img").attr("width", "100px");
-                	$("#carousel_img").attr("height", "100px");*/
+                	/*$("#banner_img").attr("width", "100px");
+                	$("#banner_img").attr("height", "100px");*/
                 }
+                if(vm.banner.type=='web'){
+               	 	$("#url").show();
+               }else{
+            	    $("#selectType").find("option[value='"+vm.banner.value+"']").attr("selected",true);
+               		$("#url").hide();
+               }
             });
         },
         reload: function () {
@@ -224,7 +231,7 @@ var vm = new Vue({
         	var data = {'pids':pids, 'status': status};
             $.ajax({
                 type: "POST",
-                url: baseURL + "hyb/carousel/updateStatus",
+                url: baseURL + "touch/banner/updateStatus",
                 contentType: "application/json",
                 data: JSON.stringify(data),
                 success: function(r){
@@ -244,6 +251,20 @@ var vm = new Vue({
         disable: function(pid){
         	vm.updateStatus(pid, "2");
         },
+        changeType: function (ele) {  
+            var optionTxt = $(ele.target).find("option:selected").text();  
+            var optionVal = ele.target.value;  
+            if(optionVal=='jumpUrl'){
+            	vm.banner.value='';
+            	vm.banner.type='web';
+            	 $("#url").show();
+            }else{
+            	vm.banner.type='app';
+            	vm.banner.value=optionVal;
+            	$("#url").hide();
+            }
+           
+        }  
     }
 });
 

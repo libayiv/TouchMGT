@@ -8,6 +8,9 @@
 	</select>
 	
 	<insert id="save" parameterType="com.security.modules.sys.entity.SysMenuEntity">
+		<selectKey resultType="java.lang.Long" order="BEFORE" keyProperty="menuId">  
+       		SELECT SYS_MENU_SEQ.Nextval as menuId from DUAL  
+   		</selectKey> 
 		insert into sys_menu
 		(
 			menu_id, 
@@ -23,11 +26,11 @@
 		(
 			#{menuId}, 
 			#{parentId}, 
-			#{name}, 
-			#{url}, 
-			#{perms}, 
+			#{name,jdbcType=VARCHAR}, 
+			#{url,jdbcType=VARCHAR}, 
+			#{perms,jdbcType=VARCHAR}, 
 			#{type}, 
-			#{icon}, 
+			#{icon,jdbcType=VARCHAR}, 
 			#{orderNum}
 		)
 	</insert>
@@ -88,11 +91,6 @@
 	
 	<delete id="deleteBatch">
 		delete from sys_menu where menu_id in 
-		<foreach item="menuId" collection="array" open="(" separator="," close=")">
-			#{menuId}
-		</foreach>
-		;
-		delete from sys_role_menu where menu_id in 
 		<foreach item="menuId" collection="array" open="(" separator="," close=")">
 			#{menuId}
 		</foreach>

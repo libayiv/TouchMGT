@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.security.common.utils.CommonUtils;
 import com.security.modules.touch.dao.BFBannerDao;
+import com.security.modules.touch.entity.BFBannerConfig;
 import com.security.modules.touch.entity.BFBannerInf;
 import com.security.modules.touch.service.BFBannerService;
 
@@ -75,6 +76,12 @@ public class BFBannerServiceImpl implements BFBannerService {
 			params.put("list", list);
 			BFBannerDao.updateStatus(params);
 		}
+	}
+
+	@Override
+	public List<BFBannerConfig> queryConfig(Map<String, String> parmas) throws Exception {
+		
+		return BFBannerDao.queryConfig(parmas);
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 
+import com.security.modules.touch.entity.BFBannerConfig;
 import com.security.modules.touch.entity.BFBannerInf;
 
 
@@ -57,5 +58,8 @@ public interface BFBannerService {
 	 * @param status  状态
 	 */
 	void updateStatus(String pids, String status) throws Exception;
+	
+	List<BFBannerConfig> queryConfig(Map<String,String> parmas) throws Exception;
+
 	
 }

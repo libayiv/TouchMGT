@@ -16,12 +16,9 @@
 			<#if shiro.hasPermission("touch:banner:save")>
 			<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
 			</#if>
-			<!-- <#if shiro.hasPermission("hyb:carousel:update")>
-			<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;编辑</a>
-			</#if> -->
-			<#if shiro.hasPermission("touch:banner:updateStatus")>
+		<!-- 	<#if shiro.hasPermission("touch:banner:updateStatus")>
 			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-			</#if>
+			</#if> -->
 		</div>
 	    <table id="jqGrid"></table>
 	    <div id="jqGridPager"></div>
@@ -30,88 +27,70 @@
 	<div v-show="!showList" class="panel panel-default">
 		<div class="panel-heading">{{title}}</div>
 		<form class="form-horizontal">
-			<input type="hidden" id="carousel_fileName" class="form-control" v-model="carousel.fileName" />
-			<input type="hidden" id="carousel_oriFileName" class="form-control" v-model="carousel.oriFileName" />
+			<input type="hidden" id="banner_fileName" class="form-control" v-model="banner.fileName" />
+			<input type="hidden" id="banner_oriFileName" class="form-control" v-model="banner.oriFileName" />
 			<div class="form-group">
-				<div class="col-sm-2 control-label">所属平台</div>
+				<div class="col-sm-2 control-label">显示到</div>
 				<template v-for="platform in platformList">
 					<label class="radio-inline">
-						<input type="radio" name="platform" v-bind:value="platform.KEY" v-model="carousel.platform"/> {{ platform.VALUE }}
+						<input type="radio" name="platform" v-bind:value="platform.KEY" v-model="banner.pc_valid"/> {{ platform.VALUE }}
 					</label>
 				</template>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-2 control-label">序号</div>
 				<div class="col-sm-10">
-					<input type="number" class="form-control" v-model="carousel.sortNum"/>
+					<input type="number" class="form-control" v-model="banner.rank"/>
 				</div>
 			</div>
 			<div class="form-group">
-				<div class="col-sm-2 control-label">标题</div>
+				<div class="col-sm-2 control-label">banner标题</div>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="carousel.title" placeholder="标题"/>
+					<input type="text" class="form-control" v-model="banner.title" placeholder="标题"/>
 				</div>
 			</div>
 			<div class="form-group">
-				<div class="col-sm-2 control-label">图片</div>
+				<div class="col-sm-2 control-label">banner显示图片</div>
 				<div class="col-sm-10">
-					<img id="carousel_img"/>
-					<a class="btn btn-primary" id="carousel_upload"><i class="fa fa-plus"></i>&nbsp;图片上传</a>
+					<img id="banner_img"/>
+					<a class="btn btn-primary" id="banner_upload"><i class="fa fa-plus"></i>&nbsp;图片上传</a>
 				</div>
 			</div>
-			<!-- <div class="form-group">
-				<div class="col-sm-2 control-label">开始时间</div>
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">banner跳转位置</div>
+				
 				<div class="col-sm-10">
-					<input type="datetime" class="form-control" v-model="carousel.startTime" />
-					<input type="text" class="form-control" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="">
+						<select class="form-control" @change='changeType' id="selectType">
+							<template v-for="config in configList">
+							
+							<option v-bind:value="config.name">APP {{config.intro}}</option>
+								</template>
+							<option value="jumpUrl">跳转到外部链接</option>
+
+						</select>
 				</div>
 			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">截止时间</div>
-				<div class="col-sm-10">
-					<input type="datetime" class="form-control" v-model="carousel.endTime"/>
-				</div>
-			</div> -->
-			<div class="form-group">
-				<div class="col-sm-2 control-label">链接类型</div>
-				<label class="radio-inline">
-					<input type="radio" name="linkType" value="1" v-model="carousel.linkType"/> 内部链接
-				</label>
-				<label class="radio-inline">
-					<input type="radio" name="linkType" value="2" v-model="carousel.linkType"/> 外部链接
-				</label>
-			</div>
-			<div class="form-group">
+			<div class="form-group" style="display:none" id="url">
 				<div class="col-sm-2 control-label">链接地址</div>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="carousel.linkUrl"/>
+					<input type="text" class="form-control" v-model="banner.value"/>
 				</div>
-			</div>
-			<!-- <div class="form-group">
-				<div class="col-sm-2 control-label">播放时长</div>
-				<div class="col-sm-10">
-					<input type="number" class="form-control" v-model="carousel.playbackLength"/>
-				</div>
-			</div> -->
+			</div> 
+			
 			<div class="form-group">
 				<div class="col-sm-2 control-label">是否显示</div>
 				<!-- <label class="radio-inline">
-					<input type="radio" name="status" value="0" v-model="carousel.status"/> 删除
+					<input type="radio" name="status" value="0" v-model="banner.status"/> 删除
 				</label> -->
 				<label class="radio-inline">
-					<input type="radio" name="status" value="1" v-model="carousel.status"/> 是
+					<input type="radio" name="status" value="1" v-model="banner.status"/> 是
 				</label>
 				<label class="radio-inline">
-					<input type="radio" name="status" value="2" v-model="carousel.status"/> 否
+					<input type="radio" name="status" value="0" v-model="banner.status"/> 否
 				</label>
 			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">描述信息</div>
-				<div class="col-sm-10">
-					<!-- <input type="text" class="form-control" v-model="carousel.carouselDesc"/> -->
-					<textarea rows="10" cols="" class="form-control" v-model="carousel.carouselDesc"></textarea>
-				</div>
-			</div>
+			
 			
 			<div class="form-group">
 				<div class="col-sm-2 control-label"></div>
@@ -124,7 +103,7 @@
 
 
 <script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
-<script src="${request.contextPath}/statics/js/modules/hyb/carousel.js?_${.now?long}"></script>
+<script src="${request.contextPath}/statics/js/modules/touch/banner.js?_${.now?long}"></script>
 
 </body>
 </html>

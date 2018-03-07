@@ -2,18 +2,20 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
 "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-	<settings>  
-		<setting name="mapUnderscoreToCamelCase" value="true" />  
-    </settings>
-    
-    <typeAliases>
-     	<typeAlias type="com.security.modules.touch.entity.QrcodeMng" alias="QrcodeMng"/> 
-     	<typeAlias type="com.security.modules.touch.entity.BFBannerInf" alias="BFBannerInf"/>      </typeAliases>
-    
-    <!-- 分页插件 -->
-		 <plugins>
-        <plugin interceptor="com.github.pagehelper.PageInterceptor" ></plugin>
-    </plugins> 
-    
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
+
+	<typeAliases>
+		<typeAlias type="com.security.modules.touch.entity.QrcodeMng" alias="QrcodeMng" />
+		<typeAlias type="com.security.modules.touch.entity.BFBannerInf" alias="BFBannerInf" />
+		<typeAlias type="com.security.modules.sys.entity.MessageInfo" alias="MessageInfo" />
+	</typeAliases>
+
+	<!-- 分页插件 -->
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
+	</plugins>
+
 </configuration>
 

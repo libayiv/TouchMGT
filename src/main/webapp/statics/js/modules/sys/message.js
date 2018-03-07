@@ -125,17 +125,18 @@ var vm = new Vue({
         acceptor:{}
     },
     mounted: function() { 
-    	vm.ue = UE.getEditor('editor',{ 
+    	this.ue = UE.getEditor('editor',{ 
     		BaseUrl: '', 
-    		UEDITOR_HOME_URL: 'static/ueditor/', 
+    		UEDITOR_HOME_URL: '../../statics/ueditor/', 
     	}); 
     },
     methods: {
     	
-    	showDetail:function(){
+    	showDetail:function(pid){
     		vm.showList = false;
             vm.title = "查看";
             vm.getMessage(pid);
+            $('#sure').attr('disabled',true); 
     	},
         query: function () {
             vm.reload();
@@ -146,12 +147,14 @@ var vm = new Vue({
             vm.title = "新增";
             //$("#selectType").find("option:selected").removeAttr("selected");
             vm.message = {status:1,};
+            $('#sure').attr('disabled',false); 
 
         },
         update: function (pid) {
             vm.showList = false;
             vm.title = "编辑";
             vm.getMessage(pid);
+            $('#sure').attr('disabled',false); 
         },
         del: function () {
             var pids = getSelectedRows();
@@ -216,6 +219,7 @@ var vm = new Vue({
             $.get(baseURL + "sys/message/info/"+pid, function(r){
                 vm.message = r.message;
                 debugger;
+                UE.getEditor('editor').setContent(vm.message.content);
                 if(r.message.coversrc != null && r.message.coversrc != ''){
                 	$("#message_img").removeAttr("width");
                 	$("#message_img").removeAttr("height");

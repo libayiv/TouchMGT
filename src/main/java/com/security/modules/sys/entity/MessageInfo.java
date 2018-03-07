@@ -1,11 +1,20 @@
 package com.security.modules.sys.entity;
+
+import java.io.Serializable;
+
 /**
  * 
  * @说明 google 消息推送实体类
  * @author hejun
  * @时间 2018年3月6日 下午3:21:03
  */
-public class MessageInfo {
+public class MessageInfo implements Serializable{
+
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2324808184723038113L;
 	/**
 	 * 
 	 */

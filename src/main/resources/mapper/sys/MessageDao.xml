@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="com.security.modules.sys.dao.MessageDao">
+	<resultMap type="MessageInfo" id="MessageInfoMap">
+		<result column="ID" property="id"/>
+		<result column="TAG" property="tag"/>
+		<result column="TITLE" property="title"/>
+		<result column="COVERSRC" property="coversrc"/>
+		<result column="INTRO" property="intro"/>
+		<result column="CONTENT" property="content"/>
+		<result column="PUBDATE" property="pubdate"/>
+		<result column="STATUS" property="status"/>
+		<result column="ACCEPTOR" property="acceptor"/>
+	</resultMap>
+
+	<sql id="tableName">
+		BFCMS_MESSAGE_INFO
+	</sql>
+	<sql id="queryBase">
+		ID,TAG,TITLE,COVERSRC,INTRO,CONTENT,TO_CHAR(PUBDATE,'YYYY-MM-DD HH24:MI:SS') AS PUBDATE,STATUS,ACCEPTOR
+	</sql>
+	<sql id="saveBase">
+		ID,TAG,TITLE,COVERSRC,INTRO,CONTENT,PUBDATE,STATUS,ACCEPTOR
+	</sql>
+	<sql id="set">
+		<set>
+			<if test="id != null and id != ''">
+				ID = #{id},
+			</if>
+			<if test="tag != null and tag != ''">
+				TAG = #{tag},
+			</if>
+			<if test="title != null and title != ''">
+				TITLE = #{title},
+			</if>
+			<if test="coversrc != null and coversrc != ''">
+				COVERSRC = #{coversrc},
+			</if>
+			<if test="intro != null and intro != ''">
+				INTRO = #{intro},
+			</if>
+			<if test="content != null and content != ''">
+				CONTENT = #{content}, 
+			</if>
+			<if test="pubdate != null and pubdate != ''">
+				PUBDATE = to_date(#{pubdate},'yyyy-mm-dd hh24:mi:ss'), 
+			</if>
+			<if test="status != null and status != ''">
+				STATUS = #{status}, 
+			</if>
+			<if test="acceptor != null and acceptor != ''">
+				ACCEPTOR = #{acceptor}, 
+			</if>
+		</set>
+	</sql>
+	<sql id="where">
+		<where>
+			<if test="id != null and id != ''">
+				ID = #{id}
+			</if>
+			<if test="tag != null and tag != ''">
+				AND TAG = #{tag}
+			</if>
+			<if test="title != null and title != ''">
+				AND TITLE = #{title}
+			</if>
+			<if test="coversrc != null and coversrc != ''">
+				AND COVERSRC = #{coversrc}
+			</if>
+			<if test="intro != null and intro != ''">
+				AND INTRO = #{intro}
+			</if>
+			<if test="content != null and content != ''">
+				AND CONTENT = #{content}
+			</if>
+			<if test="pubdate != null and pubdate != ''">
+				AND PUBDATE = to_date(#{pubdate},'yyyy-mm-dd hh24:mi:ss')
+			</if>
+			<if test="status != null and status != ''">
+				AND STATUS = #{status}
+			</if>
+			<if test="acceptor != null and acceptor != ''">
+				AND ACCEPTOR = #{acceptor}
+			</if>
+		</where>
+	</sql>
+	
+	<select id="queryList" resultMap="MessageInfoMap" parameterType="java.util.Map">
+		SELECT 
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		<include refid="where" />
+		ORDER BY PUBDATE DESC 
+	</select>
+	<select id="queryTotal" resultType="java.lang.Integer" parameterMap="java.util.Map">
+		SELECT 
+		COUNT(1)
+		FROM
+		<include refid="tableName" />
+		<include refid="where" />
+	</select>
+	<select id="queryObject" resultMap="MessageInfoMap" parameterType="java.lang.String">
+		SELECT 
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		WHERE
+		ID = #{id}
+	</select>
+	
+	<update id="update" parameterType="MessageInfo" >
+		UPDATE
+		<include refid="tableName" />
+		<include refid="set" />
+		WHERE
+		ID = #{id}
+	</update>
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM 
+		<include refid="tableName" />
+		WHERE
+		ID = #{id}
+	</delete>
+	<delete id="deleteBatch" parameterType="java.util.List">
+		DELETE FROM 
+		<include refid="tableName" />
+		WHERE
+		ID IN
+		<foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+</mapper>

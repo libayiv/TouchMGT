@@ -5,6 +5,8 @@ package com.security.modules.sys.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
+
 import com.security.modules.sys.entity.SysConfigEntity;
 
 /**
@@ -39,7 +41,7 @@ public interface SysConfigService {
 	/**
 	 * 获取List列表
 	 */
-	public List<SysConfigEntity> queryList(Map<String, Object> map);
+	public List<SysConfigEntity> queryList(Map<String, Object> map, RowBounds rowBounds);
 	/**
 	 * 获取总记录数
 	 */

@@ -7,17 +7,15 @@
 		select * from sys_log where id = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.security.modules.sys.entity.SysLogEntity">
+	<select id="queryList" resultType="com.security.modules.sys.entity.SysLogEntity" parameterType="java.util.Map">
 		select * from sys_log 
 		<where>
 			<if test="key != null and key.trim() != ''">
-				username like concat('%',#{key},'%') or operation like concat('%',#{key},'%')
+				username like  concat(concat('%',#{key}),'%') or operation like concat(concat('%',#{key}),'%')
 			</if>
-			<if test="offset != null and limit != null">
-				and ROWNUM > #{offset} AND ROWNUM <![CDATA[ <= ]]> (#{limit}+#{offset})
-			</if>
+			
 		</where>
-		order by id desc 
+		order by CREATE_DATE desc 
 		
 		
 	</select>
@@ -26,7 +24,7 @@
 		select count(*) from sys_log 
 		<where>
 			<if test="key != null and key.trim() != ''">
-				username like concat('%',#{key},'%') or operation like concat('%',#{key},'%')
+				username like  concat(concat('%',#{key}),'%') or operation like concat(concat('%',#{key}),'%')
 			</if>
 		</where>
 	</select>
@@ -52,7 +50,7 @@
 			#{username},
 			#{operation},
 			#{method},
-			#{params},
+			#{params,jdbcType=VARCHAR},
 			#{time},
 			#{ip},
 			#{createDate}

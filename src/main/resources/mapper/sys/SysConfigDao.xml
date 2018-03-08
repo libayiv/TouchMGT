@@ -8,11 +8,9 @@
 	<select id="queryList" parameterType="map" resultType="com.security.modules.sys.entity.SysConfigEntity">
 		select * from sys_config where status = 1 
 		<if test="key != null and key.trim() != ''">
-			and key like concat('%',#{key},'%') 
+			and key  like  concat(concat('%',#{key}),'%')
 		</if>
-		<if test="offset != null and limit != null">
-				and ROWNUM > #{offset} AND ROWNUM <![CDATA[ <= ]]> (#{limit}+#{offset})
-			</if>
+	
 	</select>
 	
 	<select id="queryTotal" parameterType="map" resultType="int">

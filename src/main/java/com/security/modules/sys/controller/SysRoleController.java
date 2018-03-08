@@ -1,5 +1,6 @@
 package com.security.modules.sys.controller;
 
+import org.apache.ibatis.session.RowBounds;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +50,7 @@ public class SysRoleController extends AbstractController {
 		
 		//查询列表数据
 		Query query = new Query(params);
-		List<SysRoleEntity> list = sysRoleService.queryList(query);
+		List<SysRoleEntity> list = sysRoleService.queryList(query,new RowBounds(query.getOffset(), query.getLimit()));
 		int total = sysRoleService.queryTotal(query);
 		
 		PageUtils pageUtil = new PageUtils(list, total, query.getLimit(), query.getPage());
@@ -69,7 +70,9 @@ public class SysRoleController extends AbstractController {
 		if(getUserId() != Constant.SUPER_ADMIN){
 			map.put("createUserId", getUserId());
 		}
-		List<SysRoleEntity> list = sysRoleService.queryList(map);
+		Query query = new Query(map);
+
+		List<SysRoleEntity> list = sysRoleService.queryList(query,new RowBounds(query.getOffset(), query.getLimit()));
 		
 		return R.ok().put("list", list);
 	}

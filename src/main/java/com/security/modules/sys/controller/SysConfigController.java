@@ -1,6 +1,7 @@
 package com.security.modules.sys.controller;
 
 
+import org.apache.ibatis.session.RowBounds;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class SysConfigController extends AbstractController {
 	public R list(@RequestParam Map<String, Object> params){
 		//查询列表数据
 		Query query = new Query(params);
-		List<SysConfigEntity> configList = sysConfigService.queryList(query);
+		List<SysConfigEntity> configList = sysConfigService.queryList(query,new RowBounds(query.getOffset(), query.getLimit()));
 		int total = sysConfigService.queryTotal(query);
 		
 		PageUtils pageUtil = new PageUtils(configList, total, query.getLimit(), query.getPage());

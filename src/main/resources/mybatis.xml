@@ -7,8 +7,8 @@
 	</settings>
 
 	<typeAliases>
-		<typeAlias type="com.security.modules.touch.entity.QrcodeMng"
-			alias="QrcodeMng" />
+		<typeAlias type="com.security.modules.touch.entity.BFNewsEntity"
+			alias="BFNewsEntity" />
 		<typeAlias type="com.security.modules.touch.entity.BFBannerInf"
 			alias="BFBannerInf" />
 		<typeAlias type="com.security.modules.touch.entity.BFBannerConfig"

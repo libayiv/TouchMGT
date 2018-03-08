@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.security.modules.touch.dao.BFNewsListDao">
+
+	<resultMap type="BFNewsEntity" id="BFNewsEntityMap">
+		<result column="ID" property="id" />
+		<result column="TITLE" property="title" />
+		<result column="COVERSRC" property="coversrc" />
+		<result column="INTRO" property="intro" />
+		<result column="CONTENT" property="content" />
+		<result column="VIEWS" property="views" />
+		<result column="GOOD" property="good" />
+		<result column="STORE" property="store" />
+		<result column="REPLY" property="reply" />
+		<result column="PUBDATE" property="pubdate" />
+		<result column="STATUS" property="status" />
+		<result column="IS_HOT" property="is_hot" />
+		<result column="TAG" property="tag" />
+		<result column="PC_VALID" property="pc_valid" />
+		<result column="IS_ACTIVITY" property="is_activity" />
+
+	</resultMap>
+
+	<insert id="save" parameterType="BFNewsEntity">
+		INSERT INTO
+		<include refid="tableName" />
+		(
+		<include refid="base" />
+		)
+		VALUES(
+		#{id},
+		#{title, jdbcType=VARCHAR},
+		#{coversrc, jdbcType=VARCHAR},
+		#{intro, jdbcType=VARCHAR},
+		#{content, jdbcType=VARCHAR},
+		#{views, jdbcType=VARCHAR},
+		#{good, jdbcType=VARCHAR},
+		#{store, jdbcType=VARCHAR},
+		#{reply, jdbcType=VARCHAR},
+		SYSDATE,
+		#{status, jdbcType=VARCHAR},
+		#{is_hot, jdbcType=VARCHAR},
+		#{tag, jdbcType=VARCHAR},
+		#{pc_valid, jdbcType=VARCHAR},
+		#{is_activity, jdbcType=VARCHAR}
+
+		)
+	</insert>
+
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM
+		<include refid="tableName" />
+		WHERE
+		ID = #{pid}
+	</delete>
+
+	<delete id="deleteBatch" parameterType="java.util.List">
+		DELETE FROM
+		<include refid="tableName" />
+		WHERE
+		ID IN
+		<foreach collection="array" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<update id="update" parameterType="BFNewsEntity">
+		UPDATE
+		<include refid="tableName" />
+		<include refid="set" />
+		WHERE
+		ID = #{id}
+	</update>
+
+	<update id="updateStatus" parameterType="java.util.Map">
+		UPDATE
+		<include refid="tableName" />
+		<set>
+			<if test="status != null and status != ''">
+				STATUS = #{status},
+			</if>
+			<if test="is_hot != null and is_hot != ''">
+				IS_HOT = #{is_hot},
+			</if>
+			<if test="is_activity != null and is_activity != ''">
+				IS_ACTIVITY = #{is_activity}
+			</if>
+		</set>
+		WHERE
+		ID IN
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<select id="queryObject" parameterType="java.lang.String"
+		resultMap="BFNewsEntityMap">
+		SELECT
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		WHERE
+		ID = #{id}
+	</select>
+
+	<select id="queryList" parameterType="java.util.Map" resultMap="BFNewsEntityMap">
+		SELECT
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		<include refid="where" />
+		ORDER BY PUBDATE DESC
+	</select>
+
+
+
+	<select id="queryTotal" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(1)
+		FROM
+		<include refid="tableName" />
+		<include refid="where" />
+	</select>
+
+
+
+	<sql id="tableName">
+		BFCMS_NEWS
+	</sql>
+
+	<sql id="base">
+		ID,TITLE,COVERSRC,INTRO,CONTENT,VIEWS,GOOD,STORE,REPLY,PUBDATE,STATUS,IS_HOT,TAG,PC_VALID,IS_ACTIVITY
+	</sql>
+
+	<sql id="set">
+		<set>
+			PUBDATE=SYSDATE,
+			<if test="title != null and title != ''">
+				TITLE = #{title},
+			</if>
+			<if test="coversrc != null and coversrc != ''">
+				COVERSRC = #{coversrc},
+			</if>
+			<if test="intro != null and intro != ''">
+				INTRO = #{intro},
+			</if>
+			<if test="content != null and content != ''">
+				CONTENT = #{content},
+			</if>
+			<if test="views != null and views != ''">
+				VIEWS = #{views},
+			</if>
+			<if test="good != null and good != ''">
+				GOOD = #{good},
+			</if>
+			<if test="store != null and store != ''">
+				STORE = #{store},
+			</if>
+			<if test="reply != null and reply != ''">
+				REPLY = #{reply},
+			</if>
+			<if test="status != null and status != ''">
+				STATUS = #{status},
+			</if>
+			<if test="is_hot != null and is_hot != ''">
+				IS_HOT = #{is_hot},
+			</if>
+			<if test="tag != null and tag != ''">
+				TAG = #{tag},
+			</if>
+			<if test="pc_valid != null and pc_valid != ''">
+				PC_VALID = #{pc_valid},
+			</if>
+			<if test="is_activity != null and is_activity != ''">
+				IS_ACTIVITY = #{is_activity},
+			</if>
+		</set>
+	</sql>
+	<sql id="where">
+		<where>
+			<if test="id != null and id != ''">
+				ID = #{id}
+			</if>
+			<if test="title != null and title != ''">
+				AND TITLE = #{title}
+			</if>
+			<if test="coversrc != null and coversrc != ''">
+				AND COVERSRC = #{coversrc}
+			</if>
+			<if test="intro != null and intro != ''">
+				AND INTRO = #{intro}
+			</if>
+			<if test="content != null and content != ''">
+				AND CONTENT = #{content}
+			</if>
+			<if test="views != null and views != ''">
+				AND VIEWS = #{views}
+			</if>
+			<if test="good != null and good != ''">
+				AND GOOD = #{good}
+			</if>
+			<if test="store != null and store != ''">
+				AND STORE = #{store}
+			</if>
+			<if test="reply != null and reply != ''">
+				AND REPLY = #{reply}
+			</if>
+			<if test="pubdate != null and pubdate != ''">
+				AND PUBDATE = #{pubdate}
+			</if>
+			<if test="status != null and status != ''">
+				AND STATUS = #{status}
+			</if>
+			<if test="is_hot != null and is_hot != ''">
+				AND IS_HOT = #{is_hot}
+			</if>
+			<if test="tag != null and tag != ''">
+				AND TAG = #{tag}
+			</if>
+			<if test="pcValidList != null">
+				AND PC_VALID IN
+				<foreach collection="pcValidList" index="index" item="item"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="is_activity != null and is_activity != ''">
+				AND IS_ACTIVITY = #{is_activity}
+			</if>
+		</where>
+	</sql>
+
+
+
+</mapper>

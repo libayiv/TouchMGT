@@ -1,5 +1,6 @@
 package com.security.modules.sys.service.impl;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,8 +49,8 @@ public class SysRoleServiceImpl implements SysRoleService {
 
 	@Override
 	@DataFilter(tableAlias = "r", user = false)
-	public List<SysRoleEntity> queryList(Map<String, Object> map) {
-		return sysRoleDao.queryList(map);
+	public List<SysRoleEntity> queryList(Map<String, Object> map, RowBounds rowBounds) {
+		return sysRoleDao.queryList(map,rowBounds);
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.security.common.utils.CommonUtils;
 import com.security.modules.sys.dao.MessageDao;
@@ -18,6 +19,7 @@ import com.security.modules.touch.dao.BFBannerDao;
  * @author hejun
  * @时间 2018年3月6日 下午5:11:31
  */
+@Service("MessageService")
 public class MessageServiceImpl implements MessageService {
 	
 	@Autowired

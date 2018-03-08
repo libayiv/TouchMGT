@@ -23,5 +23,43 @@
 			"VALUE": "有效"
 		}
 		
+	],
+	"COMPANY":[
+		{
+			"KEY": "EAST",
+			"VALUE":"EAST"	
+		},
+		{
+			"KEY": "CAMEROON",
+			"VALUE":"CAMEROON"	
+		},
+		{
+			"KEY": "TANZANIA",
+			"VALUE":"TANZANIA"		
+		},
+		{
+			"KEY": "GHANA",
+			"VALUE":"GHANA"		
+		},
+		{
+			"KEY": "UGANDA",
+			"VALUE":"UGANDA"		
+		},
+		{
+			"KEY": "ABUJA",
+			"VALUE":"ABUJA"		
+		},
+		{
+			"KEY": "KENYA",
+			"VALUE":"KENYA"		
+		},
+		{
+			"KEY": "ZAMBIA",
+			"VALUE":"ZAMBIA"		
+		},
+		{
+			"KEY": "LAGOS",
+			"VALUE":"LAGOS"		
+		}
 	]
 }

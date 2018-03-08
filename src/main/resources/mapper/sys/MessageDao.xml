@@ -84,16 +84,33 @@
 			</if>
 		</where>
 	</sql>
-	
+	<insert id="save">
+		INSERT INTO
+		<include refid="tableName" />
+		(
+			<include refid="saveBase" />
+		)
+		VALUES(
+			#{id},
+			#{tag, jdbcType=VARCHAR},
+			#{title, jdbcType=VARCHAR},
+			#{coversrc, jdbcType=VARCHAR},
+			#{intro, jdbcType=VARCHAR},
+			#{content, jdbcType=VARCHAR},
+			sysdate,
+			1,
+			#{acceptor,jdbcType=VARCHAR}
+		)
+	</insert>
 	<select id="queryList" resultMap="MessageInfoMap" parameterType="java.util.Map">
 		SELECT 
-		<include refid="base" />
+		<include refid="queryBase" />
 		FROM
 		<include refid="tableName" />
 		<include refid="where" />
 		ORDER BY PUBDATE DESC 
 	</select>
-	<select id="queryTotal" resultType="java.lang.Integer" parameterMap="java.util.Map">
+	<select id="queryTotal" resultType="java.lang.Integer" parameterType="java.util.Map">
 		SELECT 
 		COUNT(1)
 		FROM
@@ -102,7 +119,7 @@
 	</select>
 	<select id="queryObject" resultMap="MessageInfoMap" parameterType="java.lang.String">
 		SELECT 
-		<include refid="base" />
+		<include refid="queryBase" />
 		FROM
 		<include refid="tableName" />
 		WHERE

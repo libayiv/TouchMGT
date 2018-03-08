@@ -1,170 +1,195 @@
 $(function () {
-    $("#jqGrid").jqGrid({
-        url: baseURL + 'touch/news/list',
-        datatype: "json",
-        colModel: [			
+	$("#jqGrid").jqGrid({
+		url: baseURL + 'touch/news/list',
+		datatype: "json",
+		colModel: [			
 			{ label: '编号', name: 'id', index: "pid", width: 45, key: true, hidden: true},
-			{ label: '封面', name: 'coversrc', formatter: function(value, options, row){
-				return '<img src="'+ localStorage.fileUrlPath + value +'" width="100px;" height="100px;" />';
+			{ label: '封面', name: 'coversrc',width: 60, formatter: function(value, options, row){
+				return '<img src="'+ localStorage.fileUrlPath + value +'" width="50px;" />';
 			} },
 			{ label: '标题', name: 'title' },
 			{ label: '是否显示', name: 'status', width: 60, formatter: function(value, options, row){
 				var id='checked_' + row.id;
 				return value == 1 ? 
 						'<input id="' + id + '" type="checkbox" class="switch" onclick="vm.disable(\'' + row.id + '\')" checked/><label for="'+id+'" class="newlabel"></label>' : 
-						'<input id="' + id + '" type="checkbox" class="switch" onclick="vm.enable(\'' + row.id + '\')"/><label for="'+id+'" class="newlabel"></label>';
+							'<input id="' + id + '" type="checkbox" class="switch" onclick="vm.enable(\'' + row.id + '\')"/><label for="'+id+'" class="newlabel"></label>';
 			} },
-			{ label: '操作', name: 'operation', width: 80, formatter: function(value, options, row){
+			{ label: '操作', name: 'operation', width: 150, formatter: function(value, options, row){
 				if(hasPermission == null){
 					$.ajax({
-		                type: "GET",
-		                url: baseURL + "sys/permitted/hasPermission?permission=touch:news:save",
-		                contentType: "application/json",
-		                async:false,
-		                success: function(r){
-		                    if(r.code === 0){
-		                    	hasPermission = r.hasPermission;
-		                    }else{
-		                    	hasPermission = false;
-		                    }
-		                }
-		            });
+						type: "GET",
+						url: baseURL + "sys/permitted/hasPermission?permission=touch:news:update",
+						contentType: "application/json",
+						async:false,
+						success: function(r){
+							if(r.code === 0){
+								hasPermission = r.hasPermission;
+							}else{
+								hasPermission = false;
+							}
+						}
+					});
 				}
 				if(hasPermission){
-					return '<a class="btn btn-primary" onclick="vm.update(\'' + row.id + '\')"><i class="fa fa-pencil-square-o"></i>&nbsp;编辑</a>';
+					var hotStr=row.is_hot==0?'<a class="btn btn-success btn-sm" style="margin-right:5px;" onclick="vm.updateType(\'' + row.id + '\',\'hot\',1)"><i class="fa fa-thumbs-up"></i>&nbsp;推荐到首页</a>':
+						'<a class="btn btn-danger btn-sm" style="margin-right:5px;" onclick="vm.updateType(\'' + row.id + '\',\'hot\',0)" ><i class="fa fa-thumbs-up"></i>&nbsp;取消到首页</a>'
+					var activityStr=row.is_activity==0?'<a class="btn btn-success btn-sm" onclick="vm.updateType(\'' + row.id + '\',\'activity\',1)"><i class="fa fa-heart"></i>&nbsp;设为活动咨询</a>':
+						'<a class="btn btn-danger btn-sm" onclick="vm.updateType(\'' + row.id + '\',\'activity\',0)"><i class="fa fa-heart"></i>&nbsp;取消活动咨询</a>'
+							
+					var str= '<a class="btn btn-primary btn-sm" style="margin-right:5px;" onclick="vm.update(\'' + row.id + '\')"><i class="fa fa-pencil-square-o"></i>&nbsp;编辑</a>';
+						str+='<a class="btn btn-warning btn-sm" style="margin-right:5px;" onclick="vm.updateStatus(\'' + row.id + '\')"><i class="fa fa-reply"></i>&nbsp;查看回复内容</a>';
+						str+=hotStr+activityStr;
+						return str;
 				}
 				return '';
 			} },
-        ],
-		viewrecords: true,
-        height: 'auto',
-        rowNum: 10,
-		rowList : [10,30,50],
-        rownumbers: true, 
-        rownumWidth: 25, 
-        autowidth:true,
-        multiselect: true,
-        cellEdit:true,
-        cellurl: baseURL +"touch/news/updateSortNum",
-        pager: "#jqGridPager",
-        jsonReader : {
-            root: "page.list",
-            page: "page.currPage",
-            total: "page.totalPage",
-            records: "page.totalCount"
-        },
-        prmNames : {
-            page:"page", 
-            rows:"limit", 
-            order: "order"
-        },
-        gridComplete:function(){
-        	//隐藏grid底部滚动条
-        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
-        },
-        beforeSubmitCell :function(rowid, cellname, value, iRow, iCol){  
-            // 传递参数  
-        	var platform= $("#jqGrid").getCell(rowid,'platform');
-        	var data = {'pid':rowid, 'sortNum':value, 'platform':platform};  
-            return data;
-         },
-         afterSubmitCell:function(serverresponse, rowid, cellname, value, iRow, iCol){
-        	 //修改失败
-        	 if(serverresponse.responseJSON.code == 500){
-        		 alert(serverresponse.responseJSON.msg);
-        	 }else{
-                 alert('操作成功', function(){
-                     vm.reload();
-                 });        		 
-        	 }
-         }
-    });
-    
-    new AjaxUpload('#news_upload', {
-        action: baseURL + "touch/fileupload/upload?modularName=news",
-        name: 'file',
-        autoSubmit:true,
-        responseType:"json",
-        onSubmit:function(file, extension){
-            if (!(extension && /^(jpg|jpeg|png|gif)$/.test(extension.toLowerCase()))){
-                alert('只支持jpg、png、gif格式的图片！');
-                return false;
-            }
-        },
-        onComplete : function(file, r){
-            if(r.code == 0){
-            	vm.news.coversrc = r.fileName;
-            	vm.news.oriFileName = r.oriFileName;
-/*            	$("#news_img").removeAttr("width");
-            	$("#news_img").removeAttr("height");
-*/            	$("#news_img").attr("src", r.url);
-                alert("图片上传成功");
-            }else{
-                alert(r.msg);
-            }
-        }
-    });
-    
+			],
+			viewrecords: true,
+			height: 'auto',
+			rowNum: 10,
+			rowList : [10,30,50],
+			rownumbers: true, 
+			rownumWidth: 25, 
+			autowidth:true,
+			multiselect: true,
+			cellEdit:true,
+			cellurl: baseURL +"touch/news/updateSortNum",
+			pager: "#jqGridPager",
+			jsonReader : {
+				root: "page.list",
+				page: "page.currPage",
+				total: "page.totalPage",
+				records: "page.totalCount"
+			},
+			prmNames : {
+				page:"page", 
+				rows:"limit", 
+				order: "order"
+			},
+			gridComplete:function(){
+				//隐藏grid底部滚动条
+				$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
+			},
+			beforeSubmitCell :function(rowid, cellname, value, iRow, iCol){  
+				// 传递参数  
+				var platform= $("#jqGrid").getCell(rowid,'platform');
+				var data = {'pid':rowid, 'sortNum':value, 'platform':platform};  
+				return data;
+			},
+			afterSubmitCell:function(serverresponse, rowid, cellname, value, iRow, iCol){
+				//修改失败
+				if(serverresponse.responseJSON.code == 500){
+					alert(serverresponse.responseJSON.msg);
+				}else{
+					alert('操作成功', function(){
+						vm.reload();
+					});        		 
+				}
+			}
+	});
+
+	new AjaxUpload('#news_upload', {
+		action: baseURL + "touch/fileupload/upload?modularName=news",
+		name: 'file',
+		autoSubmit:true,
+		responseType:"json",
+		onSubmit:function(file, extension){
+			if (!(extension && /^(jpg|jpeg|png|gif)$/.test(extension.toLowerCase()))){
+				alert('只支持jpg、png、gif格式的图片！');
+				return false;
+			}
+		},
+		onComplete : function(file, r){
+			if(r.code == 0){
+				vm.news.coversrc = r.fileName;
+				vm.news.oriFileName = r.oriFileName;
+				 $("#news_img").attr("src", r.url);
+				 alert("图片上传成功");
+			}else{
+				alert(r.msg);
+			}
+		}
+	});
+
 });
 var hasPermission;
 var platformList = getDictList("PLATFORM");
 
 var vm = new Vue({
-    el:'#rrapp',
-    data:{
-        q:{
-            title: null
-        },
-        showList: true,
-        title:null,
-        platformList:platformList,
-        news:{
-            status:1,
-            is_hot:0,
-            is_activity:0
-        }
-    },
-    methods: {
-        query: function () {
-            vm.reload();
-        },
-        add: function(){
-        	$("#news_img").removeAttr("src");
-            vm.showList = false;
-            vm.title = "新增";
-        	$("#url").hide();
-            vm.news = {status:1,is_hot:0, is_activity:0,pc_valid:1, fileName:'', oriFileName:'',playbackLength:10};
+	el:'#rrapp',
+	data:{
+		q:{
+			title: null
+		},
+		uedata :[],
+		showList: true,
+		title:null,
+		platformList:platformList,
+		news:{
+			status:1,
+			is_hot:0,
+			is_activity:0
+		}
+	},
+	mounted: function() { 
+		this.ue = UE.getEditor('editor',{ 
+			BaseUrl: '', 
+			UEDITOR_HOME_URL: '../../statics/ueditor/', 
+		}); 
+	},
+	methods: {
+		query: function () {
+			vm.reload();
+		},
+		add: function(){
+			$("#news_img").removeAttr("src");
+			vm.showList = false;
+			vm.title = "新增";
+			$("#url").hide();
+            UE.getEditor('editor').setContent("");
+			vm.news = {status:1,is_hot:0,is_activity:0,pc_valid:1, fileName:'', oriFileName:'',views:0,good:0,store:0,reply:0};
 
-        },
-        update: function (pid) {
-            vm.showList = false;
-            vm.title = "编辑";
-            vm.getnews(pid);
-        },
-        del: function () {
-            var pids = getSelectedRows();
-            if(pids == null){
-                return ;
-            }
-            confirm("确定要删除选中的记录？", function(){
-            	vm.updateStatus(pids.toString(), '0');
-            });
-        },
-        saveOrUpdate: function () {
-              	
-        	if(vm.news.title==null || vm.news.title==''){
-        		alert("请填写标题！");
-        		return;
-        	}else if(vm.news.title.length > 100){
-        		alert("标题不能大于100字！");
-        		return;
-        	}
-        	if(vm.news.coversrc == null || vm.news.coversrc==''){
-        		alert("请上传图片！");
-        		return;
-        	}
-        	
-            var url = vm.news.id == null ? "touch/news/save" : "touch/news/update";
+		},
+		update: function (pid) {
+			vm.showList = false;
+			vm.title = "编辑";
+			vm.getnews(pid);
+		},
+		del: function () {
+			var pids = getSelectedRows();
+			if(pids == null){
+				return ;
+			}
+			confirm("确定要删除选中的记录？", function(){
+				vm.updateStatus(pids.toString(), '0');
+			});
+		},
+		saveOrUpdate: function () {
+			var is_valid=false;
+			$("[requires]").each(function () {
+				temp_val = $(this).val();
+				if (temp_val.trim().length == 0) {
+					is_valid=true;
+					alert($(this).attr("msg_txt"));
+					return false;
+				}
+			});
+			if(is_valid){
+				return false;
+
+			}
+			if(vm.news.title.length > 100){
+				alert("标题不能大于100字！");
+				return;
+			}
+			if(vm.news.coversrc == null || vm.news.coversrc==''){
+				alert("请上传图片！");
+				return;
+			}
+			var content =  UE.getEditor('editor').getContent();
+			content=encodeURIComponent(content);
+			vm.news.content =content;
+			var url = vm.news.id == null ? "touch/news/save" : "touch/news/update";
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
@@ -180,56 +205,73 @@ var vm = new Vue({
                     }
                 }
             });
-        },
-        getnews: function(pid){
-        	$("#news_img").removeAttr("src");
-            $.get(baseURL + "touch/news/info/"+pid, function(r){
-                vm.news = r.news;
-                if(r.news.coversrc != null && r.news.coversrc != ''){
-                	/*$("#news_img").removeAttr("width");
-                	$("#news_img").removeAttr("height");*/
-                	$("#news_img").attr("src", localStorage.fileUrlPath + r.news.coversrc);
-                } else {
-                	/*$("#news_img").attr("width", "100px");
-                	$("#news_img").attr("height", "100px");*/
-                }
-               
-            });
-        },
-        reload: function () {
-            vm.showList = true;
-            var page = $("#jqGrid").jqGrid('getGridParam','page');
-            $("#jqGrid").jqGrid('setGridParam',{
-                postData:{'title': vm.q.title},
-                page:page
-            }).trigger("reloadGrid");
-        },
-        updateStatus: function(pids, status){
-        	var data = {'pids':pids, 'status': status};
-            $.ajax({
-                type: "POST",
-                url: baseURL + "touch/news/updateStatus",
-                contentType: "application/json",
-                data: JSON.stringify(data),
-                success: function(r){
-                    if(r.code == 0){
-                        alert('操作成功', function(){
-                            vm.reload();
-                        });
-                    }else{
-                        alert(r.msg);
-                    }
-                }
-            });
-        },
-        enable: function(pid){
-        	vm.updateStatus(pid, "1");
-        },
-        disable: function(pid){
-        	vm.updateStatus(pid, "0");
-        }
-       
-    }
+		},
+		getnews: function(pid){
+			$("#news_img").removeAttr("src");
+			$.get(baseURL + "touch/news/info/"+pid, function(r){
+				vm.news = r.news;
+                UE.getEditor('editor').setContent(vm.news.content);
+				if(r.news.coversrc != null && r.news.coversrc != ''){
+					$("#news_img").attr("src", localStorage.fileUrlPath + r.news.coversrc);
+				}
+				
+
+			});
+		},
+		reload: function () {
+			vm.showList = true;
+			var page = $("#jqGrid").jqGrid('getGridParam','page');
+			$("#jqGrid").jqGrid('setGridParam',{
+				postData:{'title': vm.q.title},
+				page:page
+			}).trigger("reloadGrid");
+		},
+		updateStatus: function(pids, status){
+			var data = {'pids':pids, 'status': status};
+			$.ajax({
+				type: "POST",
+				url: baseURL + "touch/news/updateStatus",
+				contentType: "application/json",
+				data: JSON.stringify(data),
+				success: function(r){
+					if(r.code == 0){
+						alert('操作成功', function(){
+							vm.reload();
+						});
+					}else{
+						alert(r.msg);
+					}
+				}
+			});
+		},
+		updateType: function(pids, type,status){
+			var data = {'pids':pids,'type':type,'status': status};
+			confirm('是否确认该修改操作？',function(){
+				$.ajax({
+					type: "POST",
+					url: baseURL + "touch/news/updateStatus",
+					contentType: "application/json",
+					data: JSON.stringify(data),
+					success: function(r){
+						if(r.code == 0){
+							vm.reload();
+							alert('操作成功');
+						}else{
+							alert(r.msg);
+						}
+					}
+				});
+			})	
+			
+		},
+		enable: function(pid){
+			vm.updateStatus(pid, "1");
+		},
+		disable: function(pid){
+			vm.updateStatus(pid, "0");
+		}
+
+	}
 });
 
 

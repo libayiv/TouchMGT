@@ -9,6 +9,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.qiniu.util.StringUtils;
 import com.security.common.utils.CommonUtils;
 import com.security.modules.touch.dao.BFNewsListDao;
 import com.security.modules.touch.entity.BFNewsEntity;
@@ -58,9 +59,17 @@ public class BFNewsListServiceImpl implements BFNewsListService {
 	}
 
 	@Override
-	public void updateStatus(String pids, String status) throws Exception {
+	public void updateStatus(String pids,String type,String status) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("status", status);
+		if(StringUtils.isNullOrEmpty(type)){
+			params.put("status", status);
+		}else{
+			if("hot".equals(type)){
+				params.put("is_hot", status);
+			}else{
+				params.put("is_activity", status);
+			}
+		}
 		List<String> list = new ArrayList<String>();
 		String[] split = pids.split(",");
 		for(String pid : split){

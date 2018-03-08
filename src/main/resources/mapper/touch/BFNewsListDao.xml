@@ -3,124 +3,138 @@
 <mapper namespace="com.security.modules.touch.dao.BFNewsListDao">
 
 	<resultMap type="BFNewsEntity" id="BFNewsEntityMap">
-		<result column="ID" property="id"/>
-		<result column="TITLE" property="title"/>
-		<result column="COVERSRC" property="coversrc"/>
-		<result column="INTRO" property="intro"/>
-		<result column="CONTENT" property="content"/>
-		<result column="VIEWS" property="views"/>
-		<result column="GOOD" property="good"/>
-		<result column="STORE" property="store"/>
-		<result column="REPLY" property="reply"/>
-		<result column="PUBDATE" property="pubdate"/>
-		<result column="STATUS" property="status"/>
-		<result column="IS_HOT" property="is_hot"/>
-		<result column="TAG" property="tag"/>
-		<result column="PC_VALID" property="pc_valid"/>
-		<result column="IS_ACTIVITY" property="is_activity"/>
-		
+		<result column="ID" property="id" />
+		<result column="TITLE" property="title" />
+		<result column="COVERSRC" property="coversrc" />
+		<result column="INTRO" property="intro" />
+		<result column="CONTENT" property="content" />
+		<result column="VIEWS" property="views" />
+		<result column="GOOD" property="good" />
+		<result column="STORE" property="store" />
+		<result column="REPLY" property="reply" />
+		<result column="PUBDATE" property="pubdate" />
+		<result column="STATUS" property="status" />
+		<result column="IS_HOT" property="is_hot" />
+		<result column="TAG" property="tag" />
+		<result column="PC_VALID" property="pc_valid" />
+		<result column="IS_ACTIVITY" property="is_activity" />
+
 	</resultMap>
-	
+
 	<insert id="save" parameterType="BFNewsEntity">
 		INSERT INTO
 		<include refid="tableName" />
 		(
-			<include refid="base" />
+		<include refid="base" />
 		)
 		VALUES(
-			#{id},
-			#{title, jdbcType=VARCHAR},
-			#{coversrc, jdbcType=VARCHAR},
-			#{intro, jdbcType=VARCHAR},
-			#{content, jdbcType=VARCHAR},
-			#{views, jdbcType=VARCHAR},
-			#{good, jdbcType=VARCHAR},
-			#{store, jdbcType=VARCHAR},
-			#{reply, jdbcType=VARCHAR},
-			SYSDATE,
-			#{status, jdbcType=VARCHAR},
-			#{is_hot, jdbcType=VARCHAR},
-			#{tag, jdbcType=VARCHAR},
-			#{pc_valid, jdbcType=VARCHAR},
-			#{is_activity, jdbcType=VARCHAR}
-			
+		#{id},
+		#{title, jdbcType=VARCHAR},
+		#{coversrc, jdbcType=VARCHAR},
+		#{intro, jdbcType=VARCHAR},
+		#{content, jdbcType=VARCHAR},
+		#{views, jdbcType=VARCHAR},
+		#{good, jdbcType=VARCHAR},
+		#{store, jdbcType=VARCHAR},
+		#{reply, jdbcType=VARCHAR},
+		SYSDATE,
+		#{status, jdbcType=VARCHAR},
+		#{is_hot, jdbcType=VARCHAR},
+		#{tag, jdbcType=VARCHAR},
+		#{pc_valid, jdbcType=VARCHAR},
+		#{is_activity, jdbcType=VARCHAR}
+
 		)
 	</insert>
-	
+
 	<delete id="delete" parameterType="java.lang.String">
-		DELETE FROM 
+		DELETE FROM
 		<include refid="tableName" />
 		WHERE
 		ID = #{pid}
 	</delete>
-	
+
 	<delete id="deleteBatch" parameterType="java.util.List">
-		DELETE FROM 
+		DELETE FROM
 		<include refid="tableName" />
 		WHERE
 		ID IN
-		<foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+		<foreach collection="array" item="item" index="index" open="("
+			separator="," close=")">
 			#{item}
 		</foreach>
 	</delete>
-	
-	<update id="update" parameterType="BFNewsEntity" >
+
+	<update id="update" parameterType="BFNewsEntity">
 		UPDATE
 		<include refid="tableName" />
 		<include refid="set" />
 		WHERE
 		ID = #{id}
 	</update>
-	
+
 	<update id="updateStatus" parameterType="java.util.Map">
 		UPDATE
 		<include refid="tableName" />
-		SET STATUS = #{status}
+		<set>
+			<if test="status != null and status != ''">
+				STATUS = #{status},
+			</if>
+			<if test="is_hot != null and is_hot != ''">
+				IS_HOT = #{is_hot},
+			</if>
+			<if test="is_activity != null and is_activity != ''">
+				IS_ACTIVITY = #{is_activity}
+			</if>
+		</set>
 		WHERE
 		ID IN
-		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
 			#{item}
 		</foreach>
 	</update>
-	
-	<select id="queryObject" parameterType="java.lang.String" resultMap="BFNewsEntityMap">
-		SELECT 
+
+	<select id="queryObject" parameterType="java.lang.String"
+		resultMap="BFNewsEntityMap">
+		SELECT
 		<include refid="base" />
 		FROM
 		<include refid="tableName" />
 		WHERE
 		ID = #{id}
 	</select>
-	
+
 	<select id="queryList" parameterType="java.util.Map" resultMap="BFNewsEntityMap">
-		SELECT 
+		SELECT
 		<include refid="base" />
 		FROM
 		<include refid="tableName" />
 		<include refid="where" />
 		ORDER BY PUBDATE DESC
 	</select>
-	
 
-	
-	<select id="queryTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
-		SELECT 
+
+
+	<select id="queryTotal" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT
 		COUNT(1)
 		FROM
 		<include refid="tableName" />
 		<include refid="where" />
 	</select>
-	
-	
-	
+
+
+
 	<sql id="tableName">
 		BFCMS_NEWS
 	</sql>
-	
+
 	<sql id="base">
 		ID,TITLE,COVERSRC,INTRO,CONTENT,VIEWS,GOOD,STORE,REPLY,PUBDATE,STATUS,IS_HOT,TAG,PC_VALID,IS_ACTIVITY
 	</sql>
-	
+
 	<sql id="set">
 		<set>
 			PUBDATE=SYSDATE,
@@ -137,31 +151,31 @@
 				CONTENT = #{content},
 			</if>
 			<if test="views != null and views != ''">
-				VIEWS = #{views}, 
+				VIEWS = #{views},
 			</if>
 			<if test="good != null and good != ''">
-				GOOD = #{good}, 
+				GOOD = #{good},
 			</if>
 			<if test="store != null and store != ''">
-				STORE = #{store}, 
+				STORE = #{store},
 			</if>
 			<if test="reply != null and reply != ''">
-				REPLY = #{reply}, 
+				REPLY = #{reply},
 			</if>
 			<if test="status != null and status != ''">
-				STATUS = #{status}, 
+				STATUS = #{status},
 			</if>
 			<if test="is_hot != null and is_hot != ''">
-				IS_HOT = #{is_hot}, 
+				IS_HOT = #{is_hot},
 			</if>
 			<if test="tag != null and tag != ''">
-				TAG = #{tag}, 
+				TAG = #{tag},
 			</if>
 			<if test="pc_valid != null and pc_valid != ''">
-				PC_VALID = #{pc_valid}, 
+				PC_VALID = #{pc_valid},
 			</if>
 			<if test="is_activity != null and is_activity != ''">
-				IS_ACTIVITY = #{is_activity}, 
+				IS_ACTIVITY = #{is_activity},
 			</if>
 		</set>
 	</sql>
@@ -208,8 +222,9 @@
 			</if>
 			<if test="pcValidList != null">
 				AND PC_VALID IN
-				<foreach collection="pcValidList" index="index" item="item" open="(" separator="," close=")">
-					#{item}				
+				<foreach collection="pcValidList" index="index" item="item"
+					open="(" separator="," close=")">
+					#{item}
 				</foreach>
 			</if>
 			<if test="is_activity != null and is_activity != ''">
@@ -217,7 +232,7 @@
 			</if>
 		</where>
 	</sql>
-	
-	
-	
+
+
+
 </mapper>

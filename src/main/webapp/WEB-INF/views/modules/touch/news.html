@@ -26,11 +26,11 @@
 
 	<div v-show="!showList" class="panel panel-default">
 		<div class="panel-heading">{{title}}</div>
-		<form class="form-horizontal">
+		<form class="form-horizontal" style="width:100%">
 			<input type="hidden" id="news_fileName" class="form-control" v-model="news.fileName" />
 			<input type="hidden" id="news_oriFileName" class="form-control" v-model="news.oriFileName" />
 			<div class="form-group">
-				<div class="col-sm-2 control-label">显示到</div>
+				<div class="col-sm-1 control-label">显示到</div>
 				<template v-for="platform in platformList">
 					<label class="radio-inline">
 						<input type="radio" name="platform" v-bind:value="platform.KEY" v-model="news.pc_valid"/> {{ platform.VALUE }}
@@ -38,34 +38,35 @@
 				</template>
 			</div>
 			<div class="form-group">
-				<div class="col-sm-2 control-label">资讯标签</div>
+				<div class="col-sm-1 control-label">资讯标签</div>
 				<div class="col-sm-10">
-					<input type="number" class="form-control" v-model="news.tag"/>
+					<input type="text" class="form-control" v-model="news.tag" requires="require" placeholder="资讯标签" msg_txt="请填写标签！"/>
 				</div>
 			</div>
 			<div class="form-group">
-				<div class="col-sm-2 control-label">资讯标题</div>
+				<div class="col-sm-1 control-label">资讯标题</div>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="news.title" placeholder="标题"/>
+					<input type="text" class="form-control" v-model="news.title" requires="require" placeholder="资讯标题" msg_txt="请填写标题"/>
 				</div>
 			</div>
 			<div class="form-group">
-				<div class="col-sm-2 control-label">资讯图标</div>
+				<div class="col-sm-1 control-label">资讯图标</div>
 				<div class="col-sm-10">
-					<img id="news_img"/>
+					<img id="news_img" style="width:100px;height:100px"/>
 					<a class="btn btn-primary" id="news_upload"><i class="fa fa-plus"></i>&nbsp;图片上传</a>
 				</div>
 			</div>
 
-			<div class="form-group" style="display:none" id="url">
-				<div class="col-sm-2 control-label">资讯简介</div>
+			<div class="form-group" >
+				<div class="col-sm-1 control-label">资讯简介</div>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="news.url"/>
+					<textarea class="form-control" rows="4" cols="50" requires="require" v-model="news.intro"></textarea>
 				</div>
-			</div> 
+			</div>
+			
 			
 			<div class="form-group">
-				<div class="col-sm-2 control-label">是否显示</div>
+				<div class="col-sm-1 control-label">是否显示</div>
 				<!-- <label class="radio-inline">
 					<input type="radio" name="status" value="0" v-model="news.status"/> 删除
 				</label> -->
@@ -75,6 +76,14 @@
 				<label class="radio-inline">
 					<input type="radio" name="status" value="0" v-model="news.status"/> 否
 				</label>
+			</div>
+			
+			<div class="form-group">
+					<div class="col-sm-1 control-label">咨询内容</div>
+					<div class="col-sm-10">
+						<!-- 富文本编辑器 -->
+						<div id="editor" type="text/plain" style="height:300px;"></div>
+					</div>
 			</div>
 			
 			
@@ -89,6 +98,9 @@
 
 
 <script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
+<script src="${request.contextPath}/statics/ueditor/ueditor.config.js"></script>
+	<script src="${request.contextPath}/statics/ueditor/ueditor.all.js"></script>
+	<script src="${request.contextPath}/statics/ueditor/lang/zh-cn/zh-cn.js"></script>
 <script src="${request.contextPath}/statics/js/modules/touch/news.js?_${.now?long}"></script>
 
 </body>

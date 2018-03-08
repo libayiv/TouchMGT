@@ -1,6 +1,7 @@
 package com.security.modules.touch.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.security.modules.touch.utils.JsonConfigUtils;
 
@@ -27,7 +28,7 @@ public class BFNewsEntity  extends BaseBean implements Serializable  {
 	private String tag;//标签 hot
 	private String pc_valid;//是否推荐到PC 0=PC  1=APP 2=APP+PC
 	private String is_activity;// 是否为活动新闻  0=不是 1是
-
+	
 	public String getId() {
 		return id;
 	}

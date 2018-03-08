@@ -2,6 +2,7 @@ package com.security.modules.sys.controller;
 
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.ibatis.session.RowBounds;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,7 @@ public class SysUserController extends AbstractController {
 	public R list(@RequestParam Map<String, Object> params){
 		//查询列表数据
 		Query query = new Query(params);
-		List<SysUserEntity> userList = sysUserService.queryList(query);
+		List<SysUserEntity> userList = sysUserService.queryList(query,new RowBounds(query.getOffset(), query.getLimit()));
 		int total = sysUserService.queryTotal(query);
 		
 		PageUtils pageUtil = new PageUtils(userList, total, query.getLimit(), query.getPage());

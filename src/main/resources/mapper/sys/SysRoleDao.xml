@@ -7,19 +7,17 @@
 		select * from sys_role where role_id = #{value}
 	</select>
 	
-	<select id="queryList" resultType="com.security.modules.sys.entity.SysRoleEntity">
+	<select id="queryList" resultType="com.security.modules.sys.entity.SysRoleEntity" parameterType="java.util.Map">
 		select r.* from sys_role r
 		<where>
 			<if test="roleName != null and roleName.trim() != ''">
-				and r.role_name like concat('%',#{roleName},'%')
+				and r.role_name like  concat(concat('%',#{roleName}),'%')
 			</if>
 
 			<!--  数据过滤  -->
 			${filterSql}
 			
-			<if test="offset != null and limit != null">
-				and ROWNUM > #{offset} AND ROWNUM <![CDATA[ <= ]]> (#{limit}+#{offset})
-			</if>
+			
 		</where>
 		<choose>
 			<when test="sidx != null and sidx.trim() != ''">
@@ -36,7 +34,7 @@
 		select count(*) from sys_role r
 		<where>
 			<if test="roleName != null and roleName.trim() != ''">
-				and r.role_name like concat('%',#{roleName},'%')
+				and r.role_name like  concat(concat('%',#{roleName}),'%')
 			</if>
 
 			<!--  数据过滤  -->

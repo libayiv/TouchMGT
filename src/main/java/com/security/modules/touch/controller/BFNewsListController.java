@@ -1,5 +1,6 @@
 package com.security.modules.touch.controller;
 
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qiniu.util.StringUtils;
 import com.security.common.annotation.SysLog;
 import com.security.common.exception.TouchException;
 import com.security.common.utils.PageUtils;
@@ -83,8 +85,12 @@ public class BFNewsListController extends AbstractController {
 		log.info("news:{}", news);
 		ValidatorUtils.validateEntity(news, AddGroup.class);
 		log.info("添加图片news:{}", news);
-		
+		String content=news.getContent();
 		try {
+			if(!StringUtils.isNullOrEmpty(content)){
+				content= URLDecoder.decode(content,"UTF-8"); 
+		        news.setContent(content);
+			}
 			bfNewsService.save(news);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -103,6 +109,11 @@ public class BFNewsListController extends AbstractController {
 	public R update(@RequestBody BFNewsEntity news){
 		ValidatorUtils.validateEntity(news, UpdateGroup.class);
 		try {
+			String content=news.getContent();
+			if(!StringUtils.isNullOrEmpty(content)){
+				content= URLDecoder.decode(content,"UTF-8"); 
+		        news.setContent(content);
+			}
 			bfNewsService.update(news);
 		} catch(TouchException e){
 			log.error(e.getMessage(), e);
@@ -169,20 +180,22 @@ public class BFNewsListController extends AbstractController {
 	/**
 	 * 修改news状态
 	 */
-	@SysLog("修改news状态")
 	@RequestMapping("/updateStatus")
 	@RequiresPermissions("touch:news:updateStatus")
-	public R updateStatus(@RequestBody Map<String, Object> params){
+	public R updateStatus(@RequestBody Map<String, String> params){
 		try {
 			log.info("params:{}", params);
-			String pids = params.get("pids").toString();
-			String status = params.get("status").toString();
-			bfNewsService.updateStatus(pids, status);
+			String pids = params.get("pids");
+			String type = params.get("type");
+			String status = params.get("status");
+			bfNewsService.updateStatus(pids,type,status);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return R.error("删除news异常");
+			return R.error("修改news状态异常");
 		}
 		return R.ok();
 	}
+	
+
 
 }

@@ -6,19 +6,16 @@
 		select * from sys_user where user_id = #{value}
 	</select>
 	
-	<select id="queryList" resultType="com.security.modules.sys.entity.SysUserEntity">
+	<select id="queryList" resultType="com.security.modules.sys.entity.SysUserEntity" parameterType="java.util.Map">
 		select u.* from sys_user u
 		<where>
 			<if test="username != null and username.trim() != ''">
-				and u.username like concat('%',#{username},'%')
+				and u.username like  concat(concat('%',#{username}),'%')
 			</if>
 
 			<!--  数据过滤  -->
 			${filterSql}
 			
-			<if test="offset != null and limit != null">
-				and ROWNUM > #{offset} AND ROWNUM <![CDATA[ <= ]]> (#{limit}+#{offset})
-			</if>
 		</where>
 		<choose>
 			<when test="sidx != null and sidx.trim() != ''">
@@ -35,7 +32,7 @@
 		select count(*) from sys_user u
 		<where>
 			<if test="username != null and username.trim() != ''">
-				and u.username like concat('%',#{username},'%')
+				and u.username like  concat(concat('%',#{username}),'%')
 			</if>
 
 			<!--  数据过滤  -->

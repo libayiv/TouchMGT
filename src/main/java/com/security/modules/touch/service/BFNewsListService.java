@@ -49,7 +49,7 @@ public interface BFNewsListService {
 	 * @param pids  多个pid
 	 * @param status  状态
 	 */
-	void updateStatus(String pids, String status) throws Exception;
+	void updateStatus(String pids,String type,String status) throws Exception;
 	
 
 

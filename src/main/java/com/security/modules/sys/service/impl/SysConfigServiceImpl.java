@@ -8,6 +8,7 @@ import com.security.modules.sys.redis.SysConfigRedis;
 import com.security.modules.sys.service.SysConfigService;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,8 +56,8 @@ public class SysConfigServiceImpl implements SysConfigService {
 	}
 
 	@Override
-	public List<SysConfigEntity> queryList(Map<String, Object> map) {
-		return sysConfigDao.queryList(map);
+	public List<SysConfigEntity> queryList(Map<String, Object> map, RowBounds rowBounds) {
+		return sysConfigDao.queryList(map,rowBounds);
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class MessageInfo implements Serializable{
 	 */
 	private String pubdate;
 	/**
-	 * 状态 0无效 1有效
+	 * 状态 0无效 1未发送 2已发送
 	 */
 	private int status;
 	/**
@@ -52,14 +52,26 @@ public class MessageInfo implements Serializable{
 	 * 范围：国家【UGANDA】 会员等级【6,7】 PV范围【50,52】 GPV范围【13000,14000】
 	 */
 	private String acceptor;
+	/**
+	 * 发送类型 1手动发送 2定时发送
+	 */
+	private int type;
+	/**
+	 *  发送范围类型 1全部 2人员 3范围
+	 */
+	private int acc_type;
 	
-	private String rank;// 排序编号
-	
-	public String getRank() {
-		return rank;
+	public int getType() {
+		return type;
 	}
-	public void setRank(String rank) {
-		this.rank = rank;
+	public void setType(int type) {
+		this.type = type;
+	}
+	public int getAcc_type() {
+		return acc_type;
+	}
+	public void setAcc_type(int acc_type) {
+		this.acc_type = acc_type;
 	}
 	public String getId() {
 		return id;

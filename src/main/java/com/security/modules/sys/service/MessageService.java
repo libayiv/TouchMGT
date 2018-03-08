@@ -20,5 +20,7 @@ public interface MessageService {
 	void deleteBatch(String[] pids);
 
 	MessageInfo queryEntity(String pid);
+	
+	void sendMsg(String[] pids);
 
 }

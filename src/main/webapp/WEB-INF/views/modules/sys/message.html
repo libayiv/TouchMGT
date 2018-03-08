@@ -10,7 +10,7 @@
 	<div id="rrapp" v-cloak>
 		<div v-show="showList">
 			<div class="grid-btn">
-				<div class="form-group col-sm-2">
+				<div class="form-group col-md-2">
 					<input type="text" class="form-control" v-model="q.title"
 						@keyup.enter="query" placeholder="标题">
 				</div>
@@ -28,47 +28,48 @@
 
 		<div v-show="!showList" class="panel panel-default">
 			<div class="panel-heading">{{title}}</div>
-			<form class="form-horizontal">
+			<form class="form-horizontal" style="width:100%">
 				<input type="hidden" id="message_fileName" class="form-control"
 					v-model="message.coversrc" />
 				<div v-if="title == '新增'">
 					<div class="form-group">
-						<div class="col-sm-2 control-label">选择国家</div>
+						<div class="col-md-2 control-label">选择国家</div>
+						<div class="col-md-10">
 						<template v-for="company in companys"> <label
 							class="radio-inline"> <input type="checkbox"
 							name="platform" v-bind:value="company.VALUE"
 							v-model="acceptor.country" /> {{ company.VALUE }}
-						</label> </template>
+						</label> </template></div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-2 control-label">会员等级</div>
-						<div class="col-sm-4">
+						<div class="col-md-2 control-label">会员等级</div>
+						<div class="col-md-4">
 							<input type="number" class="form-control"
 								v-model="acceptor.rankmin" placeholder="需要推送的下限会员等级" />
 						</div>
-						<div class="col-sm-4">
+						<div class="col-md-4">
 							<input type="number" class="form-control"
 								v-model="acceptor.rankmax" placeholder="需要推送的上限会员等级" />
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-2 control-label">PV范围</div>
-						<div class="col-sm-4">
+						<div class="col-md-2 control-label">PV范围</div>
+						<div class="col-md-4">
 							<input type="text" class="form-control" v-model="acceptor.pvmin"
 								placeholder="需要推送会员的下限PV" />
 						</div>
-						<div class="col-sm-4">
+						<div class="col-md-4">
 							<input type="text" class="form-control" v-model="acceptor.pvmax"
 								placeholder="需要推送会员的上限PV" />
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-2 control-label">GPV范围</div>
-						<div class="col-sm-4">
+						<div class="col-md-2 control-label">GPV范围</div>
+						<div class="col-md-4">
 							<input type="text" class="form-control" v-model="acceptor.gpvmin"
 								placeholder="需要推送会员的下限GPV" />
 						</div>
-						<div class="col-sm-4">
+						<div class="col-md-4">
 							<input type="text" class="form-control" v-model="acceptor.gpvmax"
 								placeholder="需要推送会员的上限GPV" />
 						</div>
@@ -76,50 +77,50 @@
 				</div>
 				<div v-else>
 					<div class="form-group">
-						<div class="col-sm-2 control-label">消息发送范围</div>
-						<div class="col-sm-10">
+						<div class="col-md-2 control-label">消息发送范围</div>
+						<div class="col-md-10">
 							<input type="text" class="form-control" v-model="message.acceptor" />
 						</div>
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-2 control-label">消息标签</div>
-					<div class="col-sm-10">
+					<div class="col-md-2 control-label">消息标签</div>
+					<div class="col-md-10">
 						<input type="text" class="form-control" v-model="message.tag"
 							placeholder="消息标签" />
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-2 control-label">消息显示图片</div>
-					<div class="col-sm-10">
+					<div class="col-md-2 control-label">消息显示图片</div>
+					<div class="col-md-10">
 						<img id="message_img" /> <a class="btn btn-primary"
 							id="message_upload"><i class="fa fa-plus"></i>&nbsp;图片上传</a>
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-2 control-label">消息标题</div>
-					<div class="col-sm-10">
+					<div class="col-md-2 control-label">消息标题</div>
+					<div class="col-md-10">
 						<input type="text" class="form-control" v-model="message.title"
 							placeholder="消息标题" />
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-2 control-label">消息简介</div>
-					<div class="col-sm-10">
+					<div class="col-md-2 control-label">消息简介</div>
+					<div class="col-md-10">
 						<input type="text" class="form-control" v-model="message.intro"
 							placeholder="消息标题" />
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-2 control-label">消息内容</div>
-					<div class="col-sm-10">
+					<div class="col-md-2 control-label">消息内容</div>
+					<div class="col-md-10">
 						<!-- 富文本编辑器 -->
 						<div id="editor" type="text/plain" style="height:300px;"></div>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<div class="col-sm-2 control-label"></div>
+					<div class="col-md-2 control-label"></div>
 					<input type="button" id="sure" class="btn btn-primary" @click="saveOrUpdate"
 						value="确定" /> &nbsp;&nbsp;<input type="button"
 						class="btn btn-warning" @click="reload" value="返回" />

@@ -28,6 +28,7 @@ import com.security.common.validator.group.UpdateGroup;
 import com.security.modules.sys.controller.AbstractController;
 import com.security.modules.touch.entity.BFBannerConfig;
 import com.security.modules.touch.entity.BFNewsEntity;
+import com.security.modules.touch.entity.BFNewsReply;
 import com.security.modules.touch.service.BFBannerService;
 import com.security.modules.touch.service.BFNewsListService;
 import com.security.modules.touch.service.GetSortNumService;
@@ -74,6 +75,30 @@ public class BFNewsListController extends AbstractController {
 		return R.ok().put("page", pageUtil);
 	}
 
+	/**
+	 * 回复列表
+	 */
+	@RequestMapping("/reply")
+	@RequiresPermissions("touch:news:list")
+	public R reply(@RequestParam Map<String, Object> params){
+		//查询列表数据
+		if(params.get("news_id")==null){
+			return R.ok().put("page", null);
+		}
+		Query query = new Query(params);
+		List<BFNewsReply> replyList = null;
+	
+		int total = 0;
+		try {
+			replyList = bfNewsService.queryReplyList(query, new RowBounds(query.getOffset(), query.getLimit()));
+			total = bfNewsService.Replycount(query);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return R.error("获取回复列表失败");
+		}
+		PageUtils pageUtil = new PageUtils(replyList, total, query.getLimit(), query.getPage());
+		return R.ok().put("page", pageUtil);
+	}
 	
 	/**
 	 * 保存news
@@ -196,6 +221,23 @@ public class BFNewsListController extends AbstractController {
 		return R.ok();
 	}
 	
+	/**
+	 * 修改news状态
+	 */
+	@RequestMapping("/updateReply")
+	@RequiresPermissions("touch:news:updateStatus")
+	public R updateReply(@RequestBody Map<String, String> params){
+		try {
+			log.info("params:{}", params);
+			String pids = params.get("pids");
+			String status = params.get("status");
+			bfNewsService.updateReply(pids,status);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return R.error("修改回复状态异常");
+		}
+		return R.ok();
+	}
 
 
 }

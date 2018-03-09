@@ -23,8 +23,14 @@
 	    <table id="jqGrid"></table>
 	    <div id="jqGridPager"></div>
     </div>
-
-	<div v-show="!showList" class="panel panel-default">
+	<div v-show="showReply">
+			<div class="grid-btn">
+				<a class="btn btn-default" @click="reload">返回列表</a>
+			</div>
+			<table id="jqGrid2"></table>
+	    	<div id="jqGridPager2"></div>
+	</div>
+	<div v-show="!showList && !showReply" class="panel panel-default">
 		<div class="panel-heading">{{title}}</div>
 		<form class="form-horizontal" style="width:100%">
 			<input type="hidden" id="news_fileName" class="form-control" v-model="news.fileName" />

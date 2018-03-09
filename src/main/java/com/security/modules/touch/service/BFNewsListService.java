@@ -7,6 +7,7 @@ import org.apache.ibatis.session.RowBounds;
 
 import com.security.modules.touch.entity.BFBannerConfig;
 import com.security.modules.touch.entity.BFNewsEntity;
+import com.security.modules.touch.entity.BFNewsReply;
 
 /**
  * 新闻咨询service
@@ -23,6 +24,12 @@ public interface BFNewsListService {
 	
 	List<BFNewsEntity> queryPageList(Map<String, Object> map, RowBounds rowBounds) throws Exception;
 	
+	List<BFNewsReply> queryReplyList(Map<String, Object> map, RowBounds rowBounds) throws Exception;
+	
+	/**
+	 * 统计回复数量
+	 */
+	int Replycount(Map<String, Object> map) throws Exception;
 	/**
 	 * 统计数量
 	 */
@@ -51,6 +58,6 @@ public interface BFNewsListService {
 	 */
 	void updateStatus(String pids,String type,String status) throws Exception;
 	
-
+	void updateReply(String pids,String status) throws Exception;
 
 }

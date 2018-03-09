@@ -13,6 +13,7 @@ import com.qiniu.util.StringUtils;
 import com.security.common.utils.CommonUtils;
 import com.security.modules.touch.dao.BFNewsListDao;
 import com.security.modules.touch.entity.BFNewsEntity;
+import com.security.modules.touch.entity.BFNewsReply;
 import com.security.modules.touch.service.BFNewsListService;
 
 @Service
@@ -39,7 +40,7 @@ public class BFNewsListServiceImpl implements BFNewsListService {
 
 	@Override
 	public int count(Map<String, Object> map) throws Exception {
-		return bfNewsListDao.queryTotal();
+		return bfNewsListDao.queryTotal(map);
 	}
 
 	@Override
@@ -81,6 +82,34 @@ public class BFNewsListServiceImpl implements BFNewsListService {
 			params.put("list", list);
 			bfNewsListDao.updateStatus(params);
 		}
+	}
+
+	@Override
+	public void updateReply(String pids,String status) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("status", status);
+		List<String> list = new ArrayList<String>();
+		String[] split = pids.split(",");
+		for(String pid : split){
+			if(pid != null && !"".equals(pid.trim())){
+				list.add(pid);
+			}
+		}
+		if(list.size() > 0){
+			params.put("list", list);
+			bfNewsListDao.updateReply(params);
+		}
+	}
+	@Override
+	public List<BFNewsReply> queryReplyList(Map<String, Object> map, RowBounds rowBounds) throws Exception {
+		// TODO Auto-generated method stub
+		return bfNewsListDao.queryReply(map,rowBounds);
+
+	}
+
+	@Override
+	public int Replycount(Map<String, Object> map) throws Exception {
+		return bfNewsListDao.queryReplyTotal(map);
 	}
 
 }

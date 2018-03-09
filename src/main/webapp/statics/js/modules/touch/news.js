@@ -37,7 +37,7 @@ $(function () {
 						'<a class="btn btn-danger btn-sm" onclick="vm.updateType(\'' + row.id + '\',\'activity\',0)"><i class="fa fa-heart"></i>&nbsp;取消活动咨询</a>'
 							
 					var str= '<a class="btn btn-primary btn-sm" style="margin-right:5px;" onclick="vm.update(\'' + row.id + '\')"><i class="fa fa-pencil-square-o"></i>&nbsp;编辑</a>';
-						str+='<a class="btn btn-warning btn-sm" style="margin-right:5px;" onclick="vm.updateStatus(\'' + row.id + '\')"><i class="fa fa-reply"></i>&nbsp;查看回复内容</a>';
+						str+='<a class="btn btn-warning btn-sm" style="margin-right:5px;" onclick="vm.checkReply(\'' + row.id + '\')"><i class="fa fa-reply"></i>&nbsp;查看回复内容</a>';
 						str+=hotStr+activityStr;
 						return str;
 				}
@@ -52,8 +52,6 @@ $(function () {
 			rownumWidth: 25, 
 			autowidth:true,
 			multiselect: true,
-			cellEdit:true,
-			cellurl: baseURL +"touch/news/updateSortNum",
 			pager: "#jqGridPager",
 			jsonReader : {
 				root: "page.list",
@@ -69,22 +67,49 @@ $(function () {
 			gridComplete:function(){
 				//隐藏grid底部滚动条
 				$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
+			}
+	});
+	
+
+	$("#jqGrid2").jqGrid({
+		url: baseURL + 'touch/news/reply',
+		datatype: "json",
+		colModel: [			
+			{ label: '编号', name: 'id', index: "pid", width: 45, key: true, hidden: true},
+			{ label: '回复人头像', name: 'memb_photo',width: 60, formatter: function(value, options, row){
+				return '<img src="'+ localStorage.fileUrlPath + value +'" width="50px;" />';
+			} },
+			{ label: '回复人编号',width: 60, name: 'user_id' },
+			{ label: '回复人名称',width: 60, name: 'memb_name' },
+			{ label: '回复内容',width: 200, name: 'content' },
+			{ label: '是否显示', name: 'status', width: 60, formatter: function(value, options, row){
+				var id='checked_' + row.id;
+				return value == 1 ? 
+						'<input id="' + id + '" type="checkbox" class="switch" onclick="vm.replyDisable(\'' + row.id + '\',\'' + row.news_id + '\')" checked/><label for="'+id+'" class="newlabel"></label>' : 
+							'<input id="' + id + '" type="checkbox" class="switch" onclick="vm.replyEnable(\'' + row.id + '\',\'' + row.news_id+ '\')"/><label for="'+id+'" class="newlabel"></label>';
+			} }
+			],
+			viewrecords: true,
+			height: 'auto',
+			rowNum: 10,
+			rowList : [10,30,50],
+			rownumWidth: 25, 
+			multiselect: true,
+			pager: "#jqGridPager2",
+			jsonReader : {
+				root: "page.list",
+				page: "page.currPage",
+				total: "page.totalPage",
+				records: "page.totalCount"
 			},
-			beforeSubmitCell :function(rowid, cellname, value, iRow, iCol){  
-				// 传递参数  
-				var platform= $("#jqGrid").getCell(rowid,'platform');
-				var data = {'pid':rowid, 'sortNum':value, 'platform':platform};  
-				return data;
+			prmNames : {
+				page:"page", 
+				rows:"limit", 
+				order: "order"
 			},
-			afterSubmitCell:function(serverresponse, rowid, cellname, value, iRow, iCol){
-				//修改失败
-				if(serverresponse.responseJSON.code == 500){
-					alert(serverresponse.responseJSON.msg);
-				}else{
-					alert('操作成功', function(){
-						vm.reload();
-					});        		 
-				}
+			gridComplete:function(){
+				//隐藏grid底部滚动条
+				$("#jqGrid2").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
 			}
 	});
 
@@ -123,6 +148,7 @@ var vm = new Vue({
 		},
 		uedata :[],
 		showList: true,
+		showReply:false,
 		title:null,
 		platformList:platformList,
 		news:{
@@ -144,6 +170,7 @@ var vm = new Vue({
 		add: function(){
 			$("#news_img").removeAttr("src");
 			vm.showList = false;
+			vm.showReply= false;
 			vm.title = "新增";
 			$("#url").hide();
             UE.getEditor('editor').setContent("");
@@ -152,6 +179,7 @@ var vm = new Vue({
 		},
 		update: function (pid) {
 			vm.showList = false;
+			vm.showReply= false;
 			vm.title = "编辑";
 			vm.getnews(pid);
 		},
@@ -220,6 +248,7 @@ var vm = new Vue({
 		},
 		reload: function () {
 			vm.showList = true;
+			vm.showReply= false;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{
 				postData:{'title': vm.q.title},
@@ -264,13 +293,46 @@ var vm = new Vue({
 			})	
 			
 		},
+		updateReply: function(pids,status,newId){
+			var data = {'pids':pids, 'status': status};
+			$.ajax({
+				type: "POST",
+				url: baseURL + "touch/news/updateReply",
+				contentType: "application/json",
+				data: JSON.stringify(data),
+				success: function(r){
+					if(r.code == 0){
+						alert('操作成功', function(){
+							vm.checkReply(newId);
+						});
+					}else{
+						alert(r.msg);
+					}
+				}
+			});
+		},
 		enable: function(pid){
 			vm.updateStatus(pid, "1");
 		},
 		disable: function(pid){
 			vm.updateStatus(pid, "0");
+		},
+		replyEnable: function(pid,newId){
+			vm.updateReply(pid, "1",newId);
+		},
+		replyDisable: function(pid,newId){
+			vm.updateReply(pid, "0",newId);
+		},
+		checkReply:function(pid){
+			vm.showReply=true;
+			vm.showList=false;
+			var page = $("#jqGrid2").jqGrid('getGridParam','page');
+			$("#jqGrid2").jqGrid('setGridParam',{
+				postData:{'news_id': pid},
+				page:page
+			}).trigger("reloadGrid");
 		}
-
+		
 	}
 });
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.security.modules.touch.dao.FileListDao">
+<mapper namespace="com.security.modules.sys.dao.FileListDao">
 
 	<resultMap type="FileListEntity" id="FileListEntityMap">
 		<result column="FILE_ID" property="file_id"/>

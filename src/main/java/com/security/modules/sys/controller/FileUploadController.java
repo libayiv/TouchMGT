@@ -1,4 +1,4 @@
-package com.security.modules.touch.controller;
+package com.security.modules.sys.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.security.common.annotation.SysLog;
-import com.security.common.exception.TouchException;
 import com.security.common.utils.FileUploaderUtils;
 import com.security.common.utils.PageUtils;
 import com.security.common.utils.Query;
@@ -26,9 +25,8 @@ import com.security.common.utils.R;
 import com.security.common.validator.ValidatorUtils;
 import com.security.common.validator.group.AddGroup;
 import com.security.common.validator.group.UpdateGroup;
-import com.security.modules.touch.entity.BFBannerInf;
-import com.security.modules.touch.entity.FileListEntity;
-import com.security.modules.touch.service.FileListService;
+import com.security.modules.sys.entity.FileListEntity;
+import com.security.modules.sys.service.FileListService;
 
 /*
  * 文件上传

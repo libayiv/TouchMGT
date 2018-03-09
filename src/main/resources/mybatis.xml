@@ -13,7 +13,7 @@
 			alias="BFBannerInf" />
 		<typeAlias type="com.security.modules.touch.entity.BFBannerConfig"
 			alias="BFBannerConfig" />
-		<typeAlias type="com.security.modules.touch.entity.FileListEntity"
+		<typeAlias type="com.security.modules.sys.entity.FileListEntity"
 			alias="FileListEntity" />
 		<typeAlias type="com.security.modules.sys.entity.MessageInfo"
 			alias="MessageInfo" />

@@ -1,5 +1,6 @@
 package com.security.modules.sys.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -53,6 +54,23 @@ public class MessageServiceImpl implements MessageService {
 	@Override
 	public MessageInfo queryEntity(String pid) {
 		return messageDao.queryObject(pid);
+	}
+
+	@Override
+	public void sendMsg(String[] pids) {
+		// TODO Auto-generated method stub
+		//  获取未发送信息的MessageInfo
+		List<MessageInfo> list = messageDao.queryHandSendList(pids);
+		for(int index = 0 ; index<=list.size() ; index++){
+			MessageInfo msg = list.get(index);
+			if( msg.getAcc_type() == 1 ){//全部
+				
+			}else if(msg.getAcc_type() == 2){ //人员
+				
+			}else{ // 取值范围
+				
+			}	
+		}
 	}
 
 }

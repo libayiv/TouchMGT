@@ -79,7 +79,7 @@ $(function () {
     });
     
     new AjaxUpload('#message_upload', {
-        action: baseURL + "touch/fileupload/uploadimg?modularName=message",
+        action: baseURL + "touch/fileupload/upload?modularName=message",
         name: 'file',
         autoSubmit:true,
         responseType:"json",
@@ -163,6 +163,21 @@ var vm = new Vue({
             }
             confirm("确定要删除选中的记录？", function(){
             	/*vm.updateStatus(pids.toString(), '0');*/
+            	 $.ajax({
+                     type: "POST",
+                     url: baseURL + "sys/message/delete",
+                     contentType: "application/json",
+                     data: JSON.stringify(vm.message),
+                     success: function(r){
+                         if(r.code === 0){
+                             alert('操作成功', function(){
+                                 vm.reload();
+                             });
+                         }else{
+                             alert(r.msg);
+                         }
+                     }
+                 });
             });
         },
         saveOrUpdate: function () {

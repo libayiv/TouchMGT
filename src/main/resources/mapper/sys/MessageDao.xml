@@ -55,8 +55,9 @@
 	</sql>
 	<sql id="where">
 		<where>
+			1=1
 			<if test="id != null and id != ''">
-				ID = #{id}
+				AND ID = #{id}
 			</if>
 			<if test="tag != null and tag != ''">
 				AND TAG = #{tag}
@@ -148,4 +149,14 @@
 			#{item}
 		</foreach>
 	</delete>
+	
+	<select id="queryHandSendList" resultMap="MessageInfoMap" parameterType="java.util.List">
+		SELECT <include refid="queryBase" /> FROM 
+		<include refid="tableName" />
+		WHERE TYPE = 1 AND STATUS = 1 AND 
+		ID IN
+		<foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

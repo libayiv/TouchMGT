@@ -42,7 +42,7 @@ public class BFBannerServiceImpl implements BFBannerService {
 
 	@Override
 	public int count(Map<String, Object> map) throws Exception {
-		return BFBannerDao.queryTotal();
+		return BFBannerDao.queryTotal(map);
 	}
 
 	@Override

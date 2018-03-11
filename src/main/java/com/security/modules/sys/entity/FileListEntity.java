@@ -1,4 +1,4 @@
-package com.security.modules.touch.entity;
+package com.security.modules.sys.entity;
 
 import java.io.Serializable;
 import java.util.Date;

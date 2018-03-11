@@ -1,9 +1,8 @@
-package com.security.modules.touch.dao;
+package com.security.modules.sys.dao;
 
 import java.util.Map;
 
-import com.security.modules.sys.dao.BaseDao;
-import com.security.modules.touch.entity.FileListEntity;
+import com.security.modules.sys.entity.FileListEntity;
 
 /**
  * 文件上传

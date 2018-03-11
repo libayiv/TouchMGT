@@ -18,7 +18,18 @@
 		<result column="TAG" property="tag" />
 		<result column="PC_VALID" property="pc_valid" />
 		<result column="IS_ACTIVITY" property="is_activity" />
-
+	</resultMap>
+	
+	<resultMap type="com.security.modules.touch.entity.BFNewsReply" id="BFNewsReplyMap">
+		<result column="ID" property="id" />
+		<result column="NEWS_ID" property="news_id" />
+		<result column="USER_ID" property="user_id" />
+		<result column="CONTENT" property="content" />
+		<result column="GOOD" property="good" />
+		<result column="PUBDATE" property="pubdate" />
+		<result column="STATUS" property="status" />
+		<result column="MEMB_NAME" property="memb_name" />
+		<result column="MEMB_PHOTO" property="memb_photo" />
 	</resultMap>
 
 	<insert id="save" parameterType="BFNewsEntity">
@@ -95,6 +106,16 @@
 		</foreach>
 	</update>
 
+	<update id="updateReply" parameterType="java.util.Map">
+		UPDATE
+		BFCMS_NEWS_REPLY SET STATUS = #{status}
+		WHERE
+		ID IN
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
 	<select id="queryObject" parameterType="java.lang.String"
 		resultMap="BFNewsEntityMap">
 		SELECT
@@ -105,6 +126,10 @@
 		ID = #{id}
 	</select>
 
+	<select id="queryReply" parameterType="java.util.Map" resultMap="BFNewsReplyMap">
+		SELECT RE.*,MS.MEMB_NAME,MS.MEMB_PHOTO FROM BFCMS_NEWS_REPLY RE LEFT JOIN BFAFRICA_4.MEMB_MS MS ON RE.USER_ID = MS.MEMB_ID WHERE NEWS_ID= #{news_id} ORDER BY PUBDATE DESC
+	</select>
+	
 	<select id="queryList" parameterType="java.util.Map" resultMap="BFNewsEntityMap">
 		SELECT
 		<include refid="base" />
@@ -114,7 +139,12 @@
 		ORDER BY PUBDATE DESC
 	</select>
 
-
+	<select id="queryReplyTotal" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(1)
+		FROM BFCMS_NEWS_REPLY RE LEFT JOIN BFAFRICA_4.MEMB_MS MS ON RE.USER_ID = MS.MEMB_ID WHERE NEWS_ID= #{news_id}
+	</select>
 
 	<select id="queryTotal" parameterType="java.util.Map"
 		resultType="java.lang.Integer">
@@ -185,7 +215,7 @@
 				ID = #{id}
 			</if>
 			<if test="title != null and title != ''">
-				AND TITLE = #{title}
+				AND TITLE like concat(concat('%',#{title}),'%')
 			</if>
 			<if test="coversrc != null and coversrc != ''">
 				AND COVERSRC = #{coversrc}

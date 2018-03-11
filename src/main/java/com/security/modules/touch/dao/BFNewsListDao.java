@@ -1,9 +1,13 @@
 package com.security.modules.touch.dao;
 
+import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.session.RowBounds;
 
 import com.security.modules.sys.dao.BaseDao;
 import com.security.modules.touch.entity.BFNewsEntity;
+import com.security.modules.touch.entity.BFNewsReply;
 
 /**
  * 新闻咨询Dao
@@ -19,5 +23,9 @@ public interface BFNewsListDao extends BaseDao<BFNewsEntity> {
 	 */
 	int updateStatus(Map<String, Object> params) throws Exception;
 	
+	int updateReply(Map<String, Object> params) throws Exception;
+
+	List<BFNewsReply> queryReply(Map<String, Object> map, RowBounds rowBoounds);
 	
+	int queryReplyTotal(Map<String, Object> map);
 }

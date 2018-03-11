@@ -195,7 +195,7 @@
 				AND ID = #{id}
 			</if>
 			<if test="title != null and title != ''">
-				AND TITLE = #{title}
+				AND TITLE like concat(concat('%',#{title}),'%')
 			</if>
 			<if test="value != null and value != ''">
 				AND VALUE = #{value}

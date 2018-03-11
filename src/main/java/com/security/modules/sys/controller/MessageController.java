@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.security.common.annotation.SysLog;
 import com.security.common.exception.TouchException;
+import com.security.common.utils.FireBaseUtil;
 import com.security.common.utils.PageUtils;
 import com.security.common.utils.Query;
 import com.security.common.utils.R;
@@ -58,6 +59,7 @@ public class MessageController {
 		List<MessageInfo> messageList = null;
 		int total = 0;
 		try {
+			/*FireBaseUtil.pushFCMNotification();*/
 			messageList = messageService.queryPageList(query, new RowBounds(query.getOffset(), query.getLimit()));
 			total = messageService.count(query);
 		} catch (Exception e) {
@@ -185,5 +187,21 @@ public class MessageController {
 			return R.error("获取Message信息异常");
 		}
 		return R.ok().put("message", message);
+	}
+	
+	/**
+	 * 
+	 */
+	@SysLog("发送Message")
+	@RequestMapping("/sendGoogle")
+	@RequiresPermissions("sys:message:sendGoogle")
+	public R sendGoogle(@RequestBody String[] pids){
+		try {
+			messageService.sendMsg(pids);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return R.error("发送Message异常");
+		}
+		return R.ok();
 	}
 }

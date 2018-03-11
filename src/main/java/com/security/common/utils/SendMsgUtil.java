@@ -6,7 +6,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class MessageUtil {
+import com.alibaba.fastjson.JSONObject;
+
+public class SendMsgUtil {
 
     //队列大小  
     private final int QUEUE_LENGTH = 10000*10;  
@@ -18,7 +20,7 @@ public class MessageUtil {
     /** 
      * 构造函数，执行execute方法 
      */  
-    public MessageUtil() {  
+    public SendMsgUtil() {  
       
     }  
       
@@ -33,7 +35,8 @@ public class MessageUtil {
     /** 
      * 初始化执行 
      */  
-    public void execute() {  
+    public void execute(final JSONObject msgJson) {  
+    	
         //每30s执行一次  
         es.scheduleWithFixedDelay(new Runnable(){  
             public void run() {  
@@ -42,6 +45,8 @@ public class MessageUtil {
                 	for(count = 1;count <= 1;count++){
                 		String content = queue.take();  
                 		//处理队列中的信息。。。。。   发送google推送信息
+                		String to = "/topics/"+content+"_dev";
+                		FireBaseUtil.pushFCMNotification(to,msgJson);
                 		System.out.println(content); 
                 		if(count > queue.size()){
                 			es.shutdown();
@@ -52,14 +57,8 @@ public class MessageUtil {
                     e.printStackTrace();  
                 }  
             }   
-        }, 0, 2, TimeUnit.SECONDS);  
+        }, 0, 5, TimeUnit.SECONDS);  
     } 
     
-    public static void main(String[] args) {
-    	MessageUtil s = new MessageUtil();
-    	s.addQueue("计划1");
-    	s.addQueue("计划2");
-    	s.execute();
-    	
-	}
+
 }

@@ -1,5 +1,6 @@
 package com.security.modules.sys.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +10,12 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.security.common.utils.CommonUtils;
+import com.security.common.utils.SendMsgUtil;
 import com.security.modules.sys.dao.MessageDao;
 import com.security.modules.sys.entity.MessageInfo;
 import com.security.modules.sys.service.MessageService;
-import com.security.modules.touch.dao.BFBannerDao;
 /**
  * 
  * @说明  消息配置service实现类
@@ -63,13 +65,30 @@ public class MessageServiceImpl implements MessageService {
 		List<MessageInfo> list = messageDao.queryHandSendList(pids);
 		for(int index = 0 ; index<=list.size() ; index++){
 			MessageInfo msg = list.get(index);
+			JSONObject sendJson = new JSONObject();
+			Map<String,Object> paramMap = new HashMap<String, Object>();
+			List<String> membList = new ArrayList<String>();
 			if( msg.getAcc_type() == 1 ){//全部
 				
 			}else if(msg.getAcc_type() == 2){ //人员
-				
+				String[] membs  = msg.getAcceptor().split(",");
+				for(String membId:membs){
+					membList.add(membId);
+				}
+				paramMap.put("membList", membList);
 			}else{ // 取值范围
-				
-			}	
+				String acceptors = msg.getAcceptor();
+				paramMap = CommonUtils.getAcceptorParams(acceptors);
+			}
+			paramMap.put("type", msg.getAcc_type());
+			membList = messageDao.getAcceptMembs(paramMap);
+			sendJson.put("title", msg.getTitle());
+			sendJson.put("body", msg.getIntro());
+			SendMsgUtil mUtil = new SendMsgUtil();
+			for(String membs:membList){
+				mUtil.addQueue(membs);
+			}
+			mUtil.execute(sendJson);
 		}
 	}
 

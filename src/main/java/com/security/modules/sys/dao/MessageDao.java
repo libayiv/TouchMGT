@@ -1,6 +1,7 @@
 package com.security.modules.sys.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.security.modules.sys.entity.MessageInfo;
 import com.security.modules.sys.entity.SysConfigEntity;
@@ -19,5 +20,7 @@ public interface MessageDao extends BaseDao<MessageInfo> {
 	 * @时间 2018年3月8日 下午2:54:48
 	 */
 	List<MessageInfo> queryHandSendList(String[] pids);
+
+	List<String> getAcceptMembs(Map<String, Object> paramMap);
 	
 }

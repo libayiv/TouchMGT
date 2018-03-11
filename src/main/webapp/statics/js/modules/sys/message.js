@@ -180,6 +180,30 @@ var vm = new Vue({
                  });
             });
         },
+        send: function () {
+            var pids = getSelectedRows();
+            if(pids == null){
+                return ;
+            }
+            confirm("确定要发送选中的消息？", function(){
+            	/*vm.updateStatus(pids.toString(), '0');*/
+            	 $.ajax({
+                     type: "POST",
+                     url: baseURL + "sys/message/delete",
+                     contentType: "application/json",
+                     data: {"pids":pids},
+                     success: function(r){
+                         if(r.code === 0){
+                             alert('操作成功', function(){
+                                 vm.reload();
+                             });
+                         }else{
+                             alert(r.msg);
+                         }
+                     }
+                 });
+            });
+        },
         saveOrUpdate: function () {
         	var re = /^[0-9]+$/ ;
         	/*if(vm.message.rank==null || vm.banner.rank==''){    

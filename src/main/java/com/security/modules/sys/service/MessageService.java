@@ -23,4 +23,6 @@ public interface MessageService {
 	
 	void sendMsg(String[] pids);
 
+	
+
 }

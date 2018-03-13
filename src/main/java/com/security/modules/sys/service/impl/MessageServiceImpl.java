@@ -88,8 +88,10 @@ public class MessageServiceImpl implements MessageService {
 			for(String membs:membList){
 				mUtil.addQueue(membs);
 			}
-			mUtil.execute(sendJson);
+			mUtil.execute(sendJson);	
 		}
+		
+		messageDao.updateSendStatus(pids);
 	}
 
 }

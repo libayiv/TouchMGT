@@ -5,6 +5,12 @@
 <#include "/header.html">
 <link rel="stylesheet"
 	href="${request.contextPath}/statics/css/switch.css">
+<link rel="stylesheet"
+	href="${request.contextPath}/statics/plugins/datepicker/vue.datepicker.css">
+<script type="text/javascript"
+	src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
+<script type="text/javascript"
+	src="${request.contextPath}/statics/plugins/datepicker/vue.datepicker.js"></script>
 </head>
 <body>
 	<div id="rrapp" v-cloak>
@@ -31,50 +37,86 @@
 
 		<div v-show="!showList" class="panel panel-default">
 			<div class="panel-heading">{{title}}</div>
-			<form class="form-horizontal" style="width:100%">
+			<form class="form-horizontal" style="width: 100%">
 				<input type="hidden" id="message_fileName" class="form-control"
 					v-model="message.coversrc" />
 				<div v-if="title == '新增'">
 					<div class="form-group">
-						<div class="col-md-2 control-label">选择国家</div>
+						<div class="col-md-2 control-label">选择发送方式</div>
+						<div class="col-md-4">
+							<label class="radio-inline"><input type="radio"
+								name="sendtype" v-model="message.type" value="1" />手动发送</label> <label
+								class="radio-inline"><input type="radio" name="sendtype"
+								v-model="message.type" value="2" />定时发送</label>
+						</div>
+						<div class="col-md-4" v-if="message.type == 2">
+							<mz-datepicker format="yyyy-MM-dd HH:mm:ss" :time.sync="message.autoSendTime"></mz-datepicker>
+							
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-2 control-label">选择发送范围</div>
 						<div class="col-md-10">
-						<template v-for="company in companys"> <label
-							class="radio-inline"> <input type="checkbox"
-							name="platform" v-bind:value="company.VALUE"
-							v-model="acceptor.country" /> {{ company.VALUE }}
-						</label> </template></div>
-					</div>
-					<div class="form-group">
-						<div class="col-md-2 control-label">会员等级</div>
-						<div class="col-md-4">
-							<input type="number" class="form-control"
-								v-model="acceptor.rankmin" placeholder="需要推送的下限会员等级" />
-						</div>
-						<div class="col-md-4">
-							<input type="number" class="form-control"
-								v-model="acceptor.rankmax" placeholder="需要推送的上限会员等级" />
+							<label class="radio-inline"><input type="radio"
+								name="acctype" v-model="message.acc_type" value="1" />全部</label> <label
+								class="radio-inline"><input type="radio" name="acctype"
+								v-model="message.acc_type" value="2" />人员</label> <label
+								class="radio-inline"><input type="radio" name="acctype"
+								v-model="message.acc_type" value="3" />条件范围</label>
 						</div>
 					</div>
-					<div class="form-group">
-						<div class="col-md-2 control-label">PV范围</div>
-						<div class="col-md-4">
-							<input type="text" class="form-control" v-model="acceptor.pvmin"
-								placeholder="需要推送会员的下限PV" />
+					<div v-if="message.acc_type == 3">
+						<div class="form-group">
+							<div class="col-md-2 control-label">选择国家</div>
+							<div class="col-md-10">
+								<template v-for="company in companys"> <label
+									class="radio-inline"> <input type="checkbox"
+									name="platform" v-bind:value="company.VALUE"
+									v-model="acceptorRange.country" /> {{ company.VALUE }}
+								</label> </template>
+							</div>
 						</div>
-						<div class="col-md-4">
-							<input type="text" class="form-control" v-model="acceptor.pvmax"
-								placeholder="需要推送会员的上限PV" />
+						<div class="form-group">
+							<div class="col-md-2 control-label">会员等级</div>
+							<div class="col-md-4">
+								<input type="number" class="form-control"
+									v-model="acceptorRange.rankmin" placeholder="需要推送的下限会员等级" />
+							</div>
+							<div class="col-md-4">
+								<input type="number" class="form-control"
+									v-model="acceptorRange.rankmax" placeholder="需要推送的上限会员等级" />
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-2 control-label">PV范围</div>
+							<div class="col-md-4">
+								<input type="text" class="form-control"
+									v-model="acceptorRange.pvmin" placeholder="需要推送会员的下限PV" />
+							</div>
+							<div class="col-md-4">
+								<input type="text" class="form-control"
+									v-model="acceptorRange.pvmax" placeholder="需要推送会员的上限PV" />
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-2 control-label">GPV范围</div>
+							<div class="col-md-4">
+								<input type="text" class="form-control"
+									v-model="acceptorRange.gpvmin" placeholder="需要推送会员的下限GPV" />
+							</div>
+							<div class="col-md-4">
+								<input type="text" class="form-control"
+									v-model="acceptorRange.gpvmax" placeholder="需要推送会员的上限GPV" />
+							</div>
 						</div>
 					</div>
-					<div class="form-group">
-						<div class="col-md-2 control-label">GPV范围</div>
-						<div class="col-md-4">
-							<input type="text" class="form-control" v-model="acceptor.gpvmin"
-								placeholder="需要推送会员的下限GPV" />
-						</div>
-						<div class="col-md-4">
-							<input type="text" class="form-control" v-model="acceptor.gpvmax"
-								placeholder="需要推送会员的上限GPV" />
+					<div v-if="message.acc_type == 2">
+						<div class="form-group">
+							<div class="col-md-2 control-label">经销商卡号</div>
+							<div class="col-md-10">
+								<input type="text" class="form-control"
+									v-model="acceptorRange.membs" placeholder="经销商卡号(多个用,分开)" />
+							</div>
 						</div>
 					</div>
 				</div>
@@ -82,7 +124,8 @@
 					<div class="form-group">
 						<div class="col-md-2 control-label">消息发送范围</div>
 						<div class="col-md-10">
-							<input type="text" class="form-control" v-model="message.acceptor" />
+							<input type="text" class="form-control"
+								v-model="message.acceptor" />
 						</div>
 					</div>
 				</div>
@@ -118,15 +161,15 @@
 					<div class="col-md-2 control-label">消息内容</div>
 					<div class="col-md-10">
 						<!-- 富文本编辑器 -->
-						<div id="editor" type="text/plain" style="height:300px;"></div>
+						<div id="editor" type="text/plain" style="height: 300px;"></div>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<div class="col-md-2 control-label"></div>
-					<input type="button" id="sure" class="btn btn-primary" @click="saveOrUpdate"
-						value="确定" /> &nbsp;&nbsp;<input type="button"
-						class="btn btn-warning" @click="reload" value="返回" />
+					<input type="button" id="sure" class="btn btn-primary"
+						@click="saveOrUpdate" value="确定" /> &nbsp;&nbsp;<input
+						type="button" class="btn btn-warning" @click="reload" value="返回" />
 				</div>
 			</form>
 		</div>
@@ -136,7 +179,8 @@
 	<script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
 	<script src="${request.contextPath}/statics/ueditor/ueditor.config.js"></script>
 	<script src="${request.contextPath}/statics/ueditor/ueditor.all.js"></script>
-	<script src="${request.contextPath}/statics/ueditor/lang/zh-cn/zh-cn.js"></script>
+	<script
+		src="${request.contextPath}/statics/ueditor/lang/zh-cn/zh-cn.js"></script>
 	<script
 		src="${request.contextPath}/statics/js/modules/sys/message.js?_${.now?long}"></script>
 

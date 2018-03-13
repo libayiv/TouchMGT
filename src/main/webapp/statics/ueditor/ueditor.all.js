@@ -24568,6 +24568,42 @@ UE.plugin.register('simpleupload', function (){
                 domUtils.on(iframe, 'load', callback);
                 form.action = utils.formatUrl(imageActionUrl + (imageActionUrl.indexOf('?') == -1 ? '?':'&') + params);
                 form.submit();
+                /**
+                 * 2018-03-12 改掉了ueditor源码，将本身的单文件上传的方法改为ajax上传，主要目的是为了解决跨域的问题
+                 * @author hejun
+                 */
+                /*var params = utils.serializeParam(me.queryCommandValue('serverparam')) || '';
+                var action = utils.formatUrl(imageActionUrl + (imageActionUrl.indexOf('?') == -1 ? '?' : '&') + params);
+                var formData = new FormData();
+                formData.append("upfile", form[0].files[0] );
+                $.ajax({
+                  url: action,
+                  type: 'POST',
+                  cache: false,
+                  data: formData,
+                  processData: false,
+                  contentType: false,
+                  success: function (data) {
+                    data = JSON.parse(data);
+                    var link, loader,
+                      body = (iframe.contentDocument || iframe.contentWindow.document).body,
+                      result = body.innerText || body.textContent || '';
+                    link = me.options.imageUrlPrefix + data.url;
+
+                    if(data.state == 'SUCCESS' && data.url) {
+                      loader = me.document.getElementById(loadingId);
+                      loader.setAttribute('src', link);
+                      loader.setAttribute('_src', link);
+                      loader.setAttribute('title', data.title || '');
+                      loader.setAttribute('alt', data.original || '');
+                      loader.removeAttribute('id');
+                      domUtils.removeClasses(loader, 'loadingclass');
+                    } else {
+                      showErrorLoader && showErrorLoader(data.state);
+                    }
+                    form.reset();
+                  }
+                });*/
             });
 
             var stateTimer;

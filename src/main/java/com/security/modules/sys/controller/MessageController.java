@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONArray;
 import com.security.common.annotation.SysLog;
 import com.security.common.exception.TouchException;
 import com.security.common.utils.FireBaseUtil;
@@ -163,8 +164,15 @@ public class MessageController {
 	@SysLog("删除Message")
 	@RequestMapping("/delete")
 	@RequiresPermissions("sys:message:delete")
-	public R delete(@RequestBody String[] pids){
+	public R delete(@RequestBody Map<String, Object> paramMap){
 		try {
+			JSONArray pidsJson =  (JSONArray) paramMap.get("pids");
+			String[] pids = new String[pidsJson.size()];
+			Object[] objects =  pidsJson.toArray();
+			for(int len =0 ; len < objects.length ;len ++){
+				pids[len] = (String) objects[len];
+			}
+			System.out.println(pids.toString());
 			messageService.deleteBatch(pids);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -195,8 +203,12 @@ public class MessageController {
 	@SysLog("发送Message")
 	@RequestMapping("/sendGoogle")
 	@RequiresPermissions("sys:message:sendGoogle")
-	public R sendGoogle(@RequestBody String[] pids){
+	public R sendGoogle(@RequestBody Map<String, Object> paramMap){
 		try {
+			JSONArray pidsJson =  (JSONArray) paramMap.get("pids");
+			//String[] pids = new String[pidsJson.size()];
+			String[] pids = (String[]) pidsJson.toArray();
+			//System.out.println(a.toString());
 			messageService.sendMsg(pids);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

@@ -22,5 +22,7 @@ public interface MessageDao extends BaseDao<MessageInfo> {
 	List<MessageInfo> queryHandSendList(String[] pids);
 
 	List<String> getAcceptMembs(Map<String, Object> paramMap);
+
+	void updateSendStatus(String[] pids);
 	
 }

@@ -4,12 +4,37 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 /**
  * 公共类
  *  
  */
 public class CommonUtils{
+	
+	 /** 
+     * 获取指定位数的随机数 
+     * @param num 
+     * @return 
+     */  
+    public static String getRandom(int num){  
+        Random random = new Random();  
+        StringBuilder sb = new StringBuilder();  
+        for(int i = 0;i < num; i++){  
+            sb.append(String.valueOf(random.nextInt(10)));  
+        }  
+        return sb.toString();  
+    }  
+    /** 
+     * 获取名称后缀 
+     * @param name 
+     * @return 
+     */  
+    public static String getExt(String name){  
+        if(name == null || "".equals(name) || !name.contains("."))  
+            return "";  
+        return name.substring(name.lastIndexOf(".")+1);  
+    }  
 	/**
 	 * 获取32位随机数字
 	 * 

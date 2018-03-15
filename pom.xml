@@ -64,11 +64,11 @@
 
 	<dependencies>
 		 <!-- Oracle Jdbc Driver -->
-    	<!-- <dependency>
+    	 <dependency>
         	<groupId>com.oracle</groupId>
-        	<artifactId>ojdbc14</artifactId>
-        	<version>11.2.0</version>
-    	</dependency> -->
+        	<artifactId>ojdbc6</artifactId>
+        	<version>11.2.0.3</version>
+    	</dependency> 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

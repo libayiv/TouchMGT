@@ -173,7 +173,7 @@ var vm = new Vue({
 	},
 	mounted : function() {
 		this.ue = UE.getEditor('editor', {
-			BaseUrl : 'http://localhost:8080',
+			BaseUrl : '',
 			UEDITOR_HOME_URL : '../../statics/ueditor/',
 		});
 	},
@@ -201,7 +201,7 @@ var vm = new Vue({
 			UE.getEditor('editor').addListener("ready", function () {  
 	               // editor准备好之后才可以使用  
 				UE.getEditor('editor').setContent("");  
-	       }); 
+	        }); 
 		},
 		update : function(pid) {
 			vm.showList = false;

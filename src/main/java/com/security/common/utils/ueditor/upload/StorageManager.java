@@ -16,6 +16,7 @@ import org.apache.commons.io.FileUtils;
 
 import org.springframework.stereotype.Component;
 
+import com.security.common.utils.CommonUtils;
 import com.security.common.utils.ueditor.define.AppInfo;
 import com.security.common.utils.ueditor.define.BaseState;
 import com.security.common.utils.ueditor.define.State;
@@ -97,16 +98,16 @@ public class StorageManager {
 			/**
 			 * 此处调用文件上传服务，并获取返回结果返回
 			 */
-//			UploadResult result = baseFileService.upload(dataBuf, picName, "OM", null);
+			//UploadResult result = baseFileService.upload(dataBuf, picName, "OM", null);
 			
-			boolean success = true;
+			boolean success = CommonUtils.uploadFile(dataBuf, picName,path);
 			//如果上传成功
 			if (success) {
 				state = new BaseState(true);
 				state.putInfo( "size", tmpFile.length() );
-				state.putInfo( "title", "");//文件名填入此处
+				state.putInfo( "title", picName);//文件名填入此处
 				state.putInfo( "group", "");//所属group填入此处
-				state.putInfo( "url", "");//文件访问的url填入此处
+				state.putInfo( "url", "/"+path+"/"+picName);//文件访问的url填入此处
 				tmpFile.delete();
 			}else{
 				state = new BaseState(false, 4);

@@ -8090,8 +8090,10 @@ UE.Editor.defaultOptions = function(editor){
                     'dataType': isJsonp ? 'jsonp':'',
                     'onsuccess':function(r){
                         try {
-                            var config = isJsonp ? r:eval("("+r.responseText+")");
-                            utils.extend(me.options, config);
+                            var config = isJsonp ? r : eval("("+r.responseText+")") ;
+                            // 修改 by hejun 
+                            var config2 = eval("("+config+")")
+                            utils.extend(me.options, config2);
                             me.fireEvent('serverConfigLoaded');
                             me._serverConfigLoaded = true;
                         } catch (e) {
@@ -9389,6 +9391,7 @@ var htmlparser = UE.htmlparser = function (htmlstr,ignoreBlank) {
         b:1,code:1,i:1,u:1,strike:1,s:1,tt:1,strong:1,q:1,samp:1,em:1,span:1,
         sub:1,img:1,sup:1,font:1,big:1,small:1,iframe:1,a:1,br:1,pre:1
     };
+    console.log(htmlstr);
     htmlstr = htmlstr.replace(new RegExp(domUtils.fillChar, 'g'), '');
     if(!ignoreBlank){
         htmlstr = htmlstr.replace(new RegExp('[\\r\\t\\n'+(ignoreBlank?'':' ')+']*<\/?(\\w+)\\s*(?:[^>]*)>[\\r\\t\\n'+(ignoreBlank?'':' ')+']*','g'), function(a,b){
@@ -24521,6 +24524,7 @@ UE.plugin.register('simpleupload', function (){
                             body = (iframe.contentDocument || iframe.contentWindow.document).body,
                             result = body.innerText || body.textContent || '';
                         json = (new Function("return " + result))();
+                        json = eval("("+json+")");
                         link = me.options.imageUrlPrefix + json.url;
                         if(json.state == 'SUCCESS' && json.url) {
                             loader = me.document.getElementById(loadingId);

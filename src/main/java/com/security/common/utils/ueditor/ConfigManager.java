@@ -167,7 +167,7 @@ public final class ConfigManager {
 		}
 		//判断是否为本地环境，如果为本地环境，则需要更换json文件的读取路径
 		if( file.toString().contains(":\\") ){
-			file = new File("src/main/resources/ueditorConfig.json");
+			file = new File( this.getClass().getResource("/").getPath() +  ConfigManager.configFileName );
 			if ( !file.isAbsolute() ) {
 				file = new File( file.getAbsolutePath() );
 			}

@@ -17,6 +17,8 @@
 			alias="FileListEntity" />
 		<typeAlias type="com.security.modules.sys.entity.MessageInfo"
 			alias="MessageInfo" />
+		<typeAlias type="com.security.modules.touch.entity.BFBusCenter"
+			alias="BFBusCenter" />	
 		<typeAlias type="com.security.modules.touch.entity.BFBlackList"
 			alias="BFBlackList" />
 	</typeAliases>

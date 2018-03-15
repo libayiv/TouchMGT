@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>直销事业部</title>
+<#include "/header.html">
+<link rel="stylesheet"
+	href="${request.contextPath}/statics/css/switch.css">
+<script src="${request.contextPath}/statics/ueditor/ueditor.config.js"></script>
+<script src="${request.contextPath}/statics/ueditor/ueditor.all.js"></script>
+<script src="${request.contextPath}/statics/ueditor/lang/zh-cn/zh-cn.js"></script>
+</head>
+
+<body>
+	<div id="rrapp" v-cloak>
+		<div class="panel panel-default">
+			<form class="form-horizontal" style="width: 100%">
+				<div class="form-group">
+					<div class="col-sm-2 control-label">标题</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" v-model="outlets.title" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">內容</div>
+					<div class="col-sm-10">
+						<!-- 富文本编辑器 -->
+						<!-- <UEditor :config=config ref="ueditor"></UEditor> -->
+						<div id="editor" type="text/plain" style="height: 300px;"></div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label"></div>
+					<input type="button" id="sure" class="btn btn-primary"
+						@click="saveOrUpdate" value="保存" /> &nbsp;&nbsp;<input
+						type="button" class="btn btn-warning" @click="cancel" value="取消" />
+				</div>
+			</form>
+		</div>
+	</div>
+	<script
+		src="${request.contextPath}/statics/js/modules/touch/department.js?_${.now?long}"></script>
+</body>
+</html>

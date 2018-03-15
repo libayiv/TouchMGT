@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="com.security.modules.touch.dao.BFBusCenterDao">
+	<resultMap type="BFBusCenter" id="BFBusCenterMap">
+		<result column="TYPE" property="type"/>
+		<result column="TITLE" property="title"/>
+		<result column="CONTENT" property="content"/>
+		<result column="PUBDATE" property="pubdate"/>
+	</resultMap>
+	<sql id="table">BFCMS_OUTLETS</sql>
+	<sql id="queryBase">
+		TYPE,TITLE,CONTENT,TO_CHAR(PUBDATE,'YYYY-MM-DD HH24:MI:DD') AS PUBDATE
+	</sql>
+	<select id="getInfo" parameterType="java.lang.String" resultMap="BFBusCenterMap">
+		SELECT <include refid="queryBase"/> 
+		FROM <include refid="table"/>
+		WHERE TYPE=#{type}
+	</select>
+
+</mapper>

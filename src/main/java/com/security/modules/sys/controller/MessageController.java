@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONArray;
 import com.security.common.annotation.SysLog;
 import com.security.common.exception.TouchException;
+import com.security.common.utils.CommonUtils;
 import com.security.common.utils.FireBaseUtil;
 import com.security.common.utils.PageUtils;
 import com.security.common.utils.Query;
@@ -81,8 +83,10 @@ public class MessageController {
 		//log.info("message:{}", message);
 		ValidatorUtils.validateEntity(message, AddGroup.class);
 		log.info("添加message:{}", message);
-		
 		try {
+			String contentBase64 = message.getContent();
+			String content =CommonUtils.decodeBase64(contentBase64);
+			message.setContent(content);
 			messageService.save(message);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -102,6 +106,9 @@ public class MessageController {
 		ValidatorUtils.validateEntity(message, UpdateGroup.class);
 		try {
 			//checkSortNum(message);
+			String contentBase64 = message.getContent();
+			String content =CommonUtils.decodeBase64(contentBase64);
+			message.setContent(content);
 			messageService.update(message);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -206,9 +213,11 @@ public class MessageController {
 	public R sendGoogle(@RequestBody Map<String, Object> paramMap){
 		try {
 			JSONArray pidsJson =  (JSONArray) paramMap.get("pids");
-			//String[] pids = new String[pidsJson.size()];
-			String[] pids = (String[]) pidsJson.toArray();
-			//System.out.println(a.toString());
+			String[] pids = new String[pidsJson.size()];
+			Object[] objects =  pidsJson.toArray();
+			for(int len =0 ; len < objects.length ;len ++){
+				pids[len] = (String) objects[len];
+			}
 			messageService.sendMsg(pids);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

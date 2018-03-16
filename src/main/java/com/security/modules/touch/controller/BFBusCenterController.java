@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -15,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
 import com.security.common.annotation.SysLog;
+import com.security.common.utils.CommonUtils;
 import com.security.common.utils.PageUtils;
 import com.security.common.utils.Query;
 import com.security.common.utils.R;
@@ -62,10 +66,15 @@ public class BFBusCenterController {
 	@SysLog("修改事业中心信息")
 	@RequestMapping("/update")
 	@RequiresPermissions("touch:buscenter:update")
-	public R update(@RequestBody BFBusCenter busCenter){
+	public R update(@RequestBody Map<String,Object> paramsMap){
+		BFBusCenter busCenter =  JSONObject.toJavaObject(JSONObject.parseObject(paramsMap.get("outlets").toString()),
+				BFBusCenter.class);
 		ValidatorUtils.validateEntity(busCenter, UpdateGroup.class);
 		try {
-			//checkSortNum(message);
+			//checkSortNum(message)
+			String contentBase64 = busCenter.getContent();
+			String content = CommonUtils.decodeBase64(contentBase64);
+			busCenter.setContent(content);
 			busCenterService.update(busCenter);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

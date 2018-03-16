@@ -3,7 +3,8 @@ var vm = new Vue({
 	data : {
 		outlets : {},
 		uedata : [],
-		ue : ""
+		ue : "",
+		typeName:""
 	},
 	created : function() {
 		
@@ -22,19 +23,18 @@ var vm = new Vue({
 
 		},
 		saveOrUpdate : function() {
-			var content = vm.uedata.push(UE.getEditor('editor').getContent());
-			console.log(vm.uedata.join("\n"));
-			vm.outlets.content = content;
+			var content = vm.ue.getContent();
+			var contentBase64 = encodeBase64(content);
+			vm.outlets.content =contentBase64;
+			var param = {"outlets":vm.outlets}
 			$.ajax({
 				type : "POST",
 				url : baseURL + "touch/buscenter/update",
 				contentType : "application/json",
-				data : JSON.stringify(vm.outlets),
+				data : JSON.stringify(param),
 				success : function(r) {
 					if (r.code === 0) {
-						alert('操作成功', function() {
-							vm.reload();
-						});
+						alert("保存成功");
 					} else {
 						alert(r.msg);
 					}
@@ -42,7 +42,16 @@ var vm = new Vue({
 			});
 		},
 		load : function() {
-			var type = "department";
+			var type = getUrlQueryString("type");
+			if(type=="department"){
+				vm.typeName = "直销事业部";
+			}else if(type=="join"){
+				vm.typeName = "加入BFSuma";
+			}else if(type=="plan"){
+				vm.typeName = "事业计划";
+			}else if(type=="basics"){
+				vm.typeName = "直销基础知识";
+			}
 			$.post(baseURL + "touch/buscenter/getInfo", {
 				"type" : type
 			}, function(r) {
@@ -53,6 +62,7 @@ var vm = new Vue({
                 });
 			}, 'json');
 		}
+		
 		
 
 	}

@@ -108,3 +108,34 @@ function isPositiveInt(val) {
 		return false;
 	}	 
 }
+
+
+function getUrlQueryString(name) { 
+    var reg = new RegExp("(^|&\?)" + name + "=([^&]*)(&|$)", "i"); //这里用了蓝色那个问号是因为有可能获取的是第一个参数
+    var r = window.location.search.substr(1).match(reg); 
+    if (r != null) return unescape(r[2]); return null; 
+}
+
+
+/**
+ * 加密（明文,几次）
+ */
+function encodeBase64(content,times){
+	var code="";    
+    var num=1;    
+    if(typeof times=='undefined'||times==null||times==""){    
+       num=1;    
+    }else{    
+       var vt=times+"";    
+       num=parseInt(vt);    
+    }    
+    if(typeof content=='undefined'||content==null||content==""){    
+    }else{    
+        $.base64.utf8encode = true;    
+        code=content;    
+        for(var i=0;i<num;i++){    
+           code=$.base64.btoa(code);    
+        }    
+    }    
+    return code;  
+}

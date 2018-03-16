@@ -172,10 +172,12 @@ var vm = new Vue({
 		}
 	},
 	mounted : function() {
-		this.ue = UE.getEditor('editor', {
-			BaseUrl : '',
-			UEDITOR_HOME_URL : '../../statics/ueditor/',
-		});
+		this.$nextTick(function() {
+			vm.ue = UE.getEditor('editor', {
+				BaseUrl : '',
+				UEDITOR_HOME_URL : '../../statics/ueditor/',
+			});
+		})
 	},
 	methods : {
 
@@ -198,10 +200,10 @@ var vm = new Vue({
 				acc_type : 1
 			};
 			$('#sure').attr('disabled', false);
-			UE.getEditor('editor').addListener("ready", function () {  
-	               // editor准备好之后才可以使用  
-				UE.getEditor('editor').setContent("");  
-	        }); 
+			UE.getEditor('editor').addListener("ready", function () {
+				// editor准备好之后才可以使用
+				UE.getEditor('editor').setContent('');
+			}); 
 		},
 		update : function(pid) {
 			vm.showList = false;
@@ -290,9 +292,9 @@ var vm = new Vue({
 				return;
 			}
 
-			var content = vm.uedata.push(UE.getEditor('editor').getContent());
-			console.log(vm.uedata.join("\n"));
-			vm.message.content = content;
+			var content = vm.ue.getContent();
+			var contentBase64 = encodeBase64(content);
+			vm.message.content = contentBase64;
 			var url = vm.message.id == null ? "sys/message/save"
 					: "sys/message/update";
 			if (url == "sys/message/save") {

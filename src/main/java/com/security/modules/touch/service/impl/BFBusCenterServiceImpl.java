@@ -17,4 +17,10 @@ public class BFBusCenterServiceImpl implements BFBusCenterService {
 		return busCenterDao.getInfo(type);
 	}
 
+	@Override
+	public void update(BFBusCenter busCenter) {
+		// TODO Auto-generated method stub
+		busCenterDao.update(busCenter);
+	}
+
 }

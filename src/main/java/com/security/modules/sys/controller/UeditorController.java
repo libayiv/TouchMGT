@@ -32,17 +32,13 @@ import com.security.common.utils.ueditor.ActionEnter;
 @CrossOrigin
 @RequestMapping("/sys/ueditor")
 public class UeditorController {
-	InputStream in = FileUploaderUtils.class.getClassLoader()  
-            .getResourceAsStream("config.properties");
-	Properties prop = new  Properties(); 
+ 
 	
 	@RequestMapping(value = "/exec")
 	@ResponseBody
 	public String exec(HttpServletRequest request) throws UnsupportedEncodingException{ 
-		System.out.println("刁颖");
 		request.setCharacterEncoding("utf-8");
 		String rootPath = request.getRealPath("/");
-		System.out.println("调用ueditor------- " + rootPath);
 		return new ActionEnter( request, rootPath ).exec();
 	}
 /*	

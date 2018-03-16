@@ -9391,7 +9391,7 @@ var htmlparser = UE.htmlparser = function (htmlstr,ignoreBlank) {
         b:1,code:1,i:1,u:1,strike:1,s:1,tt:1,strong:1,q:1,samp:1,em:1,span:1,
         sub:1,img:1,sup:1,font:1,big:1,small:1,iframe:1,a:1,br:1,pre:1
     };
-    console.log(htmlstr);
+    //console.log(htmlstr);
     htmlstr = htmlstr.replace(new RegExp(domUtils.fillChar, 'g'), '');
     if(!ignoreBlank){
         htmlstr = htmlstr.replace(new RegExp('[\\r\\t\\n'+(ignoreBlank?'':' ')+']*<\/?(\\w+)\\s*(?:[^>]*)>[\\r\\t\\n'+(ignoreBlank?'':' ')+']*','g'), function(a,b){
@@ -24517,7 +24517,7 @@ UE.plugin.register('simpleupload', function (){
 
                 me.focus();
                 me.execCommand('inserthtml', '<img class="loadingclass" id="' + loadingId + '" src="' + me.options.themePath + me.options.theme +'/images/spacer.gif" title="' + (me.getLang('simpleupload.loading') || '') + '" >');
-
+                //edit by hejun 20180315
                 function callback(){
                     try{
                         var link, json, loader,
@@ -24525,7 +24525,7 @@ UE.plugin.register('simpleupload', function (){
                             result = body.innerText || body.textContent || '';
                         json = (new Function("return " + result))();
                         json = eval("("+json+")");
-                        link = me.options.imageUrlPrefix + json.url;
+                        link = json.url;//me.options.imageUrlPrefix + json.url;
                         if(json.state == 'SUCCESS' && json.url) {
                             loader = me.document.getElementById(loadingId);
                             loader.setAttribute('src', link);

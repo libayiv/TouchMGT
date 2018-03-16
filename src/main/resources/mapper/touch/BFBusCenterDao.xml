@@ -11,10 +11,30 @@
 	<sql id="queryBase">
 		TYPE,TITLE,CONTENT,TO_CHAR(PUBDATE,'YYYY-MM-DD HH24:MI:DD') AS PUBDATE
 	</sql>
+	<sql id="set">
+		<set>
+			<if test="title != null and title != ''">
+				TITLE = #{title}, 
+			</if>
+			<if test="content != null and content != ''">
+				CONTENT = #{content}, 
+			</if>
+			<if test="pubdate != null and pubdate != ''">
+				PUBDATE = sysdate, 
+			</if>
+		</set>
+	</sql>
+	
 	<select id="getInfo" parameterType="java.lang.String" resultMap="BFBusCenterMap">
 		SELECT <include refid="queryBase"/> 
 		FROM <include refid="table"/>
 		WHERE TYPE=#{type}
 	</select>
-
+	<update id="update" parameterType="BFBusCenter" >
+		UPDATE
+		<include refid="table" />
+		<include refid="set" />
+		WHERE
+		TYPE = #{type}
+	</update>
 </mapper>

@@ -3,12 +3,15 @@ package com.security.common.utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * 公共类
@@ -115,6 +118,11 @@ public class CommonUtils {
 			return false;
 		}
 		return true;
+	}
+	public static String decodeBase64(String base64Str) throws UnsupportedEncodingException{
+		byte[] contentByte = Base64.decodeBase64(base64Str.getBytes("UTF-8"));
+		String content = new String(contentByte);
+		return content;
 	}
 	
 /*	public static void main(String[] args) {

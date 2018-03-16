@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="com.security.modules.touch.dao.BFBlackListDao">
+	
+
+	<resultMap type="BFBlackList" id="BFBlackListMap">
+		<result column="ID" property="id"/>
+		<result column="MEMB_ID" property="membId"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="MODIFY_DATE" property="modifyDate"/>
+		<result column="STATUS" property="status"/>
+		<result column="REMARK" property="remark"/>
+	</resultMap>
+	
+	<insert id="save" parameterType="BFBlackList">
+		INSERT INTO
+		<include refid="tableName" />
+		(
+			<include refid="base" />
+		)
+		VALUES(
+			sys_guid(),
+			#{membId, jdbcType=VARCHAR},
+			sysdate,
+			null,
+			1,
+			#{remark, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM 
+		<include refid="tableName" />
+		WHERE
+		ID = #{pid}
+	</delete>
+	
+	<delete id="deleteBatch" parameterType="java.util.List">
+		DELETE FROM 
+		<include refid="tableName" />
+		WHERE
+		ID IN
+		<foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<update id="update" parameterType="BFBannerInf" >
+		UPDATE
+		<include refid="tableName" />
+		<include refid="set" />
+		WHERE
+		ID = #{id}
+	</update>
+	
+	<update id="updateStatus" parameterType="java.util.Map">
+		UPDATE
+		<include refid="tableName" />
+		SET STATUS = #{status}
+		WHERE
+		ID IN
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<select id="queryObject" parameterType="java.lang.String" resultMap="BFBlackListMap">
+		SELECT 
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		WHERE
+		ID = #{id}
+	</select>
+	
+	<select id="queryList" parameterType="java.util.Map" resultMap="BFBlackListMap">
+		SELECT 
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		<include refid="where"/>
+		ORDER BY CREATE_DATE DESC
+	</select>
+	
+	<select id="queryTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT 
+		COUNT(1)
+		FROM
+		<include refid="tableName" />
+		<include refid="where"/>
+	</select>
+	
+	<select id="queryByMmebId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT 
+		COUNT(1)
+		FROM
+		<include refid="tableName" />
+		WHERE STATUS = 1 AND MEMB_ID = #{membId} 
+	</select>
+	
+	<update id="updateBatch" parameterType="java.util.Map" >
+		UPDATE 
+		<include refid="tableName" /> 
+		SET STATUS = 0, MODIFY_DATE = SYSDATE WHERE ID IN
+		<foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<sql id="tableName">
+		BFCMS_BLACKLIST
+	</sql>
+	<sql id="base">
+		ID,MEMB_ID,CREATE_DATE,MODIFY_DATE,STATUS,REMARK
+	</sql>
+	<sql id="set">
+		<set>
+			<if test="id != null and id != ''">
+				ID = #{id},
+			</if>
+			<if test="membId != null and membId != ''">
+				MEMB_ID = #{membId},
+			</if>
+			<if test="createDate != null and createDate != ''">
+				CREATE_DATE = #{createDate},
+			</if>
+			<if test="modifyDate != null and modifyDate != ''">
+				MODIFY_DATE = #{modifyDate},
+			</if>
+			<if test="status != null and status != ''">
+				STATUS = #{status}, 
+			</if>
+		</set>
+	</sql>
+	<sql id="where">
+		<where>
+			<if test="id != null and id != ''">
+				AND ID = #{id}
+			</if>
+			<if test="membId != null and membId.trim() != ''">
+				AND MEMB_ID LIKE CONCAT(CONCAT('%',#{membId}),'%') 
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND CREATE_DATE = #{createDate}
+			</if>
+			<if test="modifyDate != null and modifyDate != ''">
+				AND MODIFY_DATE = #{modifyDate}
+			</if>
+			<if test="status != null and status != ''">
+				AND STATUS = #{status}
+			</if>
+		</where>
+	</sql>
+	
+	
+	
+</mapper>

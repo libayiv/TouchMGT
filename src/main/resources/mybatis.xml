@@ -19,6 +19,8 @@
 			alias="MessageInfo" />
 		<typeAlias type="com.security.modules.touch.entity.BFBusCenter"
 			alias="BFBusCenter" />	
+		<typeAlias type="com.security.modules.touch.entity.BFBlackList"
+			alias="BFBlackList" />
 	</typeAliases>
 
 	<!-- 分页插件 -->

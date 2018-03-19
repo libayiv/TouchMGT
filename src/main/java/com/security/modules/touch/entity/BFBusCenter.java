@@ -1,6 +1,12 @@
 package com.security.modules.touch.entity;
 
-public class BFBusCenter {
+import java.io.Serializable;
+
+public class BFBusCenter extends BaseBean implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6800641383859773906L;
 	private String type;
 	private String title;
 	private String content;

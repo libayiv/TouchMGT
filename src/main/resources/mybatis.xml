@@ -21,6 +21,8 @@
 			alias="BFBusCenter" />	
 		<typeAlias type="com.security.modules.touch.entity.BFBlackList"
 			alias="BFBlackList" />
+		<typeAlias type="com.security.modules.touch.entity.ProdCatEntity" 
+			alias="ProdCatEntity" />
 	</typeAliases>
 
 	<!-- 分页插件 -->

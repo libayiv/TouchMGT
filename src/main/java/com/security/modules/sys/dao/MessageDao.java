@@ -20,9 +20,28 @@ public interface MessageDao extends BaseDao<MessageInfo> {
 	 * @时间 2018年3月8日 下午2:54:48
 	 */
 	List<MessageInfo> queryHandSendList(String[] pids);
-
+	/**
+	 * @说明 获取接受信息的会员id数组
+	 * @param paramMap
+	 * @返回 List<String>
+	 * @创建者 hejun
+	 * @时间 2018年3月22日 上午11:46:55
+	 */
 	List<String> getAcceptMembs(Map<String, Object> paramMap);
-
+	/**
+	 * @说明 修改状态为已发送
+	 * @param pids
+	 * @返回 void
+	 * @创建者 hejun
+	 * @时间 2018年3月22日 上午11:47:25
+	 */
 	void updateSendStatus(String[] pids);
+	/**
+	 * @说明 获取未发送的自动发送类型的消息列表
+	 * @返回 List<MessageInfo>
+	 * @创建者 hejun
+	 * @时间 2018年3月22日 上午11:47:43
+	 */
+	List<MessageInfo> queryAutoSendList();
 	
 }

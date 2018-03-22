@@ -11,16 +11,19 @@
 		<result column="PUBDATE" property="pubdate"/>
 		<result column="STATUS" property="status"/>
 		<result column="ACCEPTOR" property="acceptor"/>
+		<result column="TYPE" property="type"/>
+		<result column="ACC_TYPE" property="acc_type"/>
+		<result column="AUTO_DATE" property="auto_date"/>
 	</resultMap>
 
 	<sql id="tableName">
 		BFCMS_MESSAGE_INFO
 	</sql>
 	<sql id="queryBase">
-		ID,TAG,TITLE,COVERSRC,INTRO,CONTENT,TO_CHAR(PUBDATE,'YYYY-MM-DD HH24:MI:SS') AS PUBDATE,STATUS,ACCEPTOR
+		ID,TAG,TITLE,COVERSRC,INTRO,CONTENT,TO_CHAR(PUBDATE,'YYYY-MM-DD HH24:MI:SS') AS PUBDATE,STATUS,ACCEPTOR,TYPE,ACC_TYPE,TO_CHAR(AUTO_DATE,'YYYY-MM-DD') AS AUTO_DATE
 	</sql>
 	<sql id="saveBase">
-		ID,TAG,TITLE,COVERSRC,INTRO,CONTENT,PUBDATE,STATUS,ACCEPTOR
+		ID,TAG,TITLE,COVERSRC,INTRO,CONTENT,PUBDATE,STATUS,ACCEPTOR,TYPE,ACC_TYPE,AUTO_DATE
 	</sql>
 	<sql id="set">
 		<set>
@@ -50,6 +53,15 @@
 			</if>
 			<if test="acceptor != null and acceptor != ''">
 				ACCEPTOR = #{acceptor}, 
+			</if>
+			<if test="auto_date != null and auto_date != ''">
+				AUTO_DATE = to_date(#{auto_date},'yyyy-mm-dd hh24:mi:ss'), 
+			</if>
+			<if test="type != null and type != ''">
+				TYPE = #{type}, 
+			</if>
+			<if test="acc_type != null and acc_type != ''">
+				ACC_TYPE = #{acc_type}, 
 			</if>
 		</set>
 	</sql>
@@ -100,7 +112,10 @@
 			#{content, jdbcType=VARCHAR},
 			sysdate,
 			1,
-			#{acceptor,jdbcType=VARCHAR}
+			#{acceptor,jdbcType=VARCHAR},
+			#{type,jdbcType=INTEGER},
+			#{acc_type,jdbcType=INTEGER},
+			to_date(#{auto_date,jdbcType=DATE},'yyyy-mm-dd')
 		)
 	</insert>
 	<select id="queryList" resultMap="MessageInfoMap" parameterType="java.util.Map">
@@ -159,6 +174,13 @@
 			#{item}
 		</foreach>
 	</select>
+	<select id="queryAutoSendList"  resultMap="MessageInfoMap" >
+		SELECT <include refid="queryBase" /> FROM 
+		<include refid="tableName" />
+		WHERE TYPE = 2 AND STATUS = 1 
+	</select>
+	
+	
 	<update id="updateSendStatus" parameterType="java.util.List"> 
 		UPDATE <include refid="queryBase" /> SET STATUS = 2 
 		WHERE ID IN 

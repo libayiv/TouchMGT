@@ -53,16 +53,27 @@ public class MessageInfo implements Serializable{
 	 */
 	private String acceptor;
 	/**
-	 * 发送类型 1手动发送 2定时发送
+	 * 发送类型 1手动发送 2定时发送 (new)
 	 */
 	private int type;
 	/**
-	 *  发送范围类型 1全部 2人员 3范围
+	 *  发送范围类型 1全部 2人员 3范围 (new)
 	 */
 	private int acc_type;
-	
+	/**
+	 * 自动发送时间
+	 */
+	private String auto_date;
+	/**
+	 */
 	public int getType() {
 		return type;
+	}
+	public String getAuto_date() {
+		return auto_date;
+	}
+	public void setAuto_date(String auto_date) {
+		this.auto_date = auto_date;
 	}
 	public void setType(int type) {
 		this.type = type;

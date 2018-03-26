@@ -38,8 +38,7 @@ $(function() {
 									width : 80,
 									formatter : function(value, options, row) {
 										if (hasPermission == null) {
-											$
-													.ajax({
+											$.ajax({
 														type : "GET",
 														url : baseURL
 																+ "sys/permitted/hasPermission?permission=sys:message:save",

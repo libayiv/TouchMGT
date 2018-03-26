@@ -26,13 +26,19 @@ $(function() {
 									name : 'intro'
 								},
 								{
+									label : '类型',
+									name : 'type',
+									formatter: function(value, options, row){
+										 return value == 1 ? '手动发送' : '自动定时发送';
+									}
+								},
+								{
 									label : '操作',
 									name : 'operation',
 									width : 80,
 									formatter : function(value, options, row) {
 										if (hasPermission == null) {
-											$
-													.ajax({
+											$.ajax({
 														type : "GET",
 														url : baseURL
 																+ "sys/permitted/hasPermission?permission=sys:message:save",
@@ -292,7 +298,7 @@ var vm = new Vue({
 				return;
 			}
 
-			var content = vm.ue.getContent();
+			var content = UE.getEditor('editor').getContent();
 			var contentBase64 = encodeBase64(content);
 			vm.message.content = contentBase64;
 			var url = vm.message.id == null ? "sys/message/save"

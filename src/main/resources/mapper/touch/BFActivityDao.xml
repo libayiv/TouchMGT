@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="com.security.modules.touch.dao.BFActivityDao">
+	
+
+	<resultMap type="BFActivityList" id="BFActivityListMap">
+		<result column="ID" property="id"/>
+		<result column="TITLE" property="title"/>
+		<result column="PUBDATE" property="pubdate"/>
+		<result column="START_TIME" property="start_time"/>
+		<result column="END_TIME" property="end_time"/>
+		<result column="RANK" property="rank"/>
+		<result column="STATUS" property="status"/>
+		<result column="VIEWS" property="views"/>
+		<result column="STAGE" property="stage"/>	
+		<result column="COVERSRC" property="coversrc"/>
+		<result column="CONTENT" property="content"/>	
+	</resultMap>
+	<resultMap type="BFActivityFBack" id="BFActivityFBackMap">
+		<result column="ID" property="id"/>
+		<result column="USER_ID" property="user_id"/>
+		<result column="ACTIVITY_ID" property="activity_id"/>
+		<result column="CONTENT" property="content"/>
+		<result column="PUBDATE" property="pubdate"/>
+		<result column="STATUS" property="status"/>
+		<result column="MEMB_NAME" property="memb_name"/>
+		<result column="MEMB_PHOTO" property="memb_photo"/>
+		<result column="TITLE" property="title"/>	
+	</resultMap>
+	
+	<resultMap type="BFActivityApplication" id="BFActivityApplicationMap">
+		<result column="ID" property="id"/>
+		<result column="USER_ID" property="user_id"/>
+		<result column="ACTIVITY_ID" property="activity_id"/>
+		<result column="PUBDATE" property="pubdate"/>
+		<result column="STATUS" property="status"/>
+		<result column="MEMB_NAME" property="memb_name"/>
+		<result column="MEMB_PHOTO" property="memb_photo"/>
+		<result column="STAGE" property="stage"/>
+		<result column="TITLE" property="title"/>	
+	</resultMap>
+	
+	<insert id="save" parameterType="BFActivityList">
+		INSERT INTO
+		<include refid="tableName" />
+		(
+			<include refid="base" />
+		)
+		VALUES(
+			#{id},
+			#{title, jdbcType=VARCHAR},
+			SYSDATE,
+			TO_DATE(#{start_time, jdbcType=VARCHAR},'yyyy-mm-dd'),
+			TO_DATE(#{end_time, jdbcType=VARCHAR},'yyyy-mm-dd'),
+			#{rank, jdbcType=VARCHAR},
+			#{status, jdbcType=VARCHAR},
+			#{views, jdbcType=VARCHAR},
+			#{stage, jdbcType=VARCHAR}
+			
+		)
+	</insert>
+	
+		<insert id="saveDetail" parameterType="BFActivityList">
+		INSERT INTO
+		BFCMS_ACTIVITY_DETAIL
+		(
+			ID,STAGE,ACTIVITY_ID,COVERSRC,CONTENT,STATUS
+		)
+		VALUES(
+			#{detail_id},
+			#{stage, jdbcType=VARCHAR},	
+			#{id, jdbcType=VARCHAR},
+			#{coversrc, jdbcType=VARCHAR},
+			#{content, jdbcType=VARCHAR},
+			'1'
+			)
+	</insert>
+	
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM 
+		<include refid="tableName" />
+		WHERE
+		ID = #{pid}
+	</delete>
+	
+	<delete id="deleteBatch" parameterType="java.util.List">
+		DELETE FROM 
+		<include refid="tableName" />
+		WHERE
+		ID IN
+		<foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<update id="update" parameterType="BFActivityList" >
+		UPDATE
+		<include refid="tableName" />
+		<include refid="set" />
+		WHERE
+		ID = #{id}
+	</update>
+	
+	<update id="updateDetail" parameterType="BFActivityList" >
+		UPDATE
+		BFCMS_ACTIVITY_DETAIL
+		<include refid="detailSet" />
+		WHERE
+		ACTIVITY_ID = #{id}
+	</update>
+	
+	<update id="updateStatus" parameterType="java.util.Map">
+		UPDATE
+		<include refid="tableName" />
+		SET STATUS = #{status}
+		WHERE
+		ID IN
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<update id="updateFeedStatus" parameterType="java.util.Map">
+		UPDATE
+		BFCMS_ACTIVITY_FEEDBACK
+		SET STATUS = #{status}
+		WHERE
+		ID IN
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<select id="queryObject" parameterType="java.lang.String" resultMap="BFActivityListMap">
+		SELECT 
+		DISTINCT L.ID,L.TITLE,D.COVERSRC,D.CONTENT,L.PUBDATE,TO_CHAR(L.START_TIME,'YYYY-MM-DD') AS START_TIME,TO_CHAR(L.END_TIME,'YYYY-MM-DD') AS END_TIME,L.RANK,L.STATUS,L.VIEWS,L.STAGE
+		FROM
+		BFCMS_ACTIVITY_LIST L
+		LEFT JOIN BFCMS_ACTIVITY_DETAIL D ON L.ID = D.ACTIVITY_ID
+		WHERE
+		L.ID = #{id}
+	</select>
+	
+	<select id="queryList" parameterType="java.util.Map" resultMap="BFActivityListMap">
+		SELECT 
+		DISTINCT L.ID,L.TITLE,D.COVERSRC,L.PUBDATE,L.START_TIME,L.END_TIME,L.RANK,L.STATUS,L.VIEWS,L.STAGE
+		FROM
+		BFCMS_ACTIVITY_LIST L
+		LEFT JOIN BFCMS_ACTIVITY_DETAIL D ON L.ID = D.ACTIVITY_ID
+		<include refid="mapWhere" />
+		ORDER BY RANK
+	</select>
+
+	<select id="queryTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT 
+		COUNT(1)
+		FROM
+		<include refid="tableName" />
+		<include refid="mapWhere" />
+	</select>
+	
+	<select id="queryFTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT 
+		COUNT(1)
+		FROM
+		BFCMS_ACTIVITY_FEEDBACK 
+		WHERE ACTIVITY_ID=#{activity_id}
+	</select>
+	
+	<select id="queryAppTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT 
+		COUNT(1)
+		FROM
+		BFCMS_ACTIVITY_APPLICATION 
+		WHERE ACTIVITY_ID=#{activity_id}
+	</select>
+	
+	<select id="queryFeedBackList" parameterType="java.util.Map" resultMap="BFActivityFBackMap">
+		SELECT 
+		L.TITLE,F.ID,F.USER_ID,F.ACTIVITY_ID,F.CONTENT,F.PUBDATE,F.STATUS,MS.MEMB_NAME, MS.MEMB_PHOTO
+		FROM
+		BFCMS_ACTIVITY_FEEDBACK F
+		LEFT JOIN BFCMS_ACTIVITY_LIST L
+    	ON L.ID=F.ACTIVITY_ID
+		LEFT JOIN BFAFRICA_4.MEMB_MS MS
+		ON F.USER_ID = MS.MEMB_ID
+		WHERE ACTIVITY_ID=#{activity_id}
+		ORDER BY STATUS DESC
+	</select>
+	
+	<select id="queryApplicationList" parameterType="java.util.Map" resultMap="BFActivityApplicationMap">
+		SELECT 
+		L.TITLE,L.STAGE,BA.ID,BA.USER_ID,BA.ACTIVITY_ID,BA.PUBDATE,BA.STATUS,MS.MEMB_NAME,MS.MEMB_PHOTO
+		FROM
+		BFCMS_ACTIVITY_APPLICATION BA
+		LEFT JOIN BFCMS_ACTIVITY_LIST L
+    	ON L.ID=BA.ACTIVITY_ID
+		LEFT JOIN BFAFRICA_4.MEMB_MS MS
+		ON BA.USER_ID = MS.MEMB_ID
+		WHERE ACTIVITY_ID=#{activity_id}
+		ORDER BY STATUS DESC
+	</select>
+	
+	<sql id="tableName">
+		BFCMS_ACTIVITY_LIST
+	</sql>
+	<sql id="base">
+		ID,TITLE,PUBDATE,START_TIME,END_TIME,RANK,STATUS,VIEWS,STAGE
+	</sql>
+	
+	<sql id="set">
+		<set>
+			<if test="title != null and title != ''">
+				TITLE = #{title},
+			</if>
+			<if test="start_time != null and start_time != ''">
+				START_TIME =TO_DATE(#{start_time,jdbcType=VARCHAR},'yyyy-mm-dd'),
+			</if>
+			<if test="end_time != null and end_time != ''">
+				END_TIME = TO_DATE(#{end_time,jdbcType=VARCHAR},'yyyy-mm-dd'),
+			</if>
+			<if test="rank != null and rank != ''">
+				RANK = #{rank},
+			</if>
+			<if test="status != null and status != ''">
+				STATUS = #{status}, 
+			</if>
+			<if test="views != null and views != ''">
+				VIEWS = #{views}, 
+			</if>
+			<if test="stage != null and stage != ''">
+				STAGE = #{stage}, 
+			</if>
+		</set>
+	</sql>
+	
+	<sql id="detailSet">
+		<set>
+			
+			<if test="content != null and content != ''">
+				content = #{content},
+			</if>
+			<if test="coversrc != null and coversrc != ''">
+				coversrc = #{coversrc},
+			</if>
+			<if test="stage != null and stage != ''">
+				STAGE = #{stage}, 
+			</if>
+		</set>
+	</sql>
+	
+	<sql id="where">
+		<where>
+			<if test="id != null and id != ''">
+				ID = #{id}
+			</if>
+			<if test="title != null and title != ''">
+				AND TITLE = #{title}
+			</if>
+			<if test="pubdate != null and pubdate != ''">
+				AND PUBDATE = #{pubdate}
+			</if>
+			<if test="start_time != null and start_time != ''">
+				AND START_TIME = #{start_time}
+			</if>
+			<if test="end_time != null and end_time != ''">
+				AND END_TIME = #{end_time}
+			</if>
+			<if test="rank != null and rank != ''">
+				AND RANK = #{rank}
+			</if>
+			<if test="status != null and status != ''">
+				AND STATUS = #{status}
+			</if>
+			<if test="views != null and views != ''">
+				AND VIEWS = #{views}
+			</if>
+			<if test="stage != null and stage != ''">
+				AND STAGE = #{stage}
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="mapWhere">
+		<where>
+			<if test="id != null and id != ''">
+				 ID = #{id}
+			</if>
+			<if test="title != null and title != ''">
+				AND TITLE like concat(concat('%',#{title}),'%')
+			</if>
+			<if test="pubdate != null and pubdate != ''">
+				AND PUBDATE = #{pubdate}
+			</if>
+			<if test="start_time != null and start_time != ''">
+				AND START_TIME = #{start_time}
+			</if>
+			<if test="end_time != null and end_time != ''">
+				AND END_TIME = #{end_time}
+			</if>
+			<if test="status != null and status != ''">
+				AND STATUS = #{status}
+			</if>
+			<if test="views != null and views != ''">
+				AND VIEWS = #{views}
+			</if>
+			<if test="stage != null and stage != ''">
+				AND STAGE = #{stage}
+			</if>	
+		</where>
+	</sql>
+	
+	
+</mapper>

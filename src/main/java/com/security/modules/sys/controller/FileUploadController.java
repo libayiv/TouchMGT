@@ -55,11 +55,12 @@ public class FileUploadController {
 		if(file.getSize()>Integer.valueOf(fileSize)){
 			return R.error("文件大小不能超过10MB！");
 		}
-		String fileName = FileUploaderUtils.saveImage(file, modularName);
+		Map<String,String> fileName = FileUploaderUtils.saveImage(file, modularName);
 		Map<String, Object> fileInf = new HashMap<String, Object>();
-		fileInf.put("fileName", fileName);
+		fileInf.put("fileName", fileName.get("fileName"));
+		fileInf.put("uploadName", fileName.get("uploadName"));
 		fileInf.put("oriFileName", file.getOriginalFilename());
-		fileInf.put("url", fileUrlPath + fileName);
+		fileInf.put("url", fileUrlPath + fileName.get("fileName"));
 		fileInf.put("size", file.getSize());
 		return R.ok(fileInf);
 	}

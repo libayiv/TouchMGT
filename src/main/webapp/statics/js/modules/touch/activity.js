@@ -312,7 +312,11 @@ var vm = new Vue({
                 if(type!=null){
               		 vm.activity.stage=type;
                	}
-                UE.getEditor('editor').setContent(vm.activity.content);
+                if(vm.activity.content != null && vm.activity.content != ''){
+                    UE.getEditor('editor').setContent(vm.activity.content);
+                }else{
+                	 UE.getEditor('editor').setContent('');
+                }
                 if(r.activity.coversrc != null && r.activity.coversrc != ''){
                 	$("#activity_img").attr("src", localStorage.fileUrlPath + r.activity.coversrc);
                 } 

@@ -33,8 +33,12 @@
 			alias="BFActivityFBack" />
 		<typeAlias type="com.security.modules.touch.entity.BFActivityApplication" 
 			alias="BFActivityApplication" />
-			<typeAlias type="com.security.modules.touch.entity.BFProductInf" 
+		<typeAlias type="com.security.modules.touch.entity.BFProductInf" 
 			alias="BFProductInf" />
+		<typeAlias type="com.security.modules.touch.entity.BFVoteInf" 
+			alias="BFVoteInf" />
+		<typeAlias type="com.security.modules.touch.entity.BFVoteDetail" 
+			alias="BFVoteDetail" />
 	</typeAliases>
 
 	<!-- 分页插件 -->

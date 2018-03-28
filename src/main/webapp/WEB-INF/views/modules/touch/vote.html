@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>管理员列表</title>
+<#include "/header.html">
+<link rel="stylesheet" href="${request.contextPath}/statics/css/switch.css">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-sm-2">
+				<input type="text" class="form-control" v-model="q.title" @keyup.enter="query" placeholder="标题">
+			</div>
+			<a class="btn btn-default" @click="query">查询</a>
+			<#if shiro.hasPermission("touch:vote:save")>
+			<a class="btn btn-primary" @click="addVote"><i class="fa fa-plus"></i>&nbsp;新增投票</a>
+			<a class="btn btn-primary" @click="addHealth"><i class="fa fa-plus"></i>&nbsp;新增健康测评</a>
+			
+			</#if>
+		<!-- 	<#if shiro.hasPermission("touch:vote:updateStatus")>
+			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if> -->
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+
+	<div v-show="showResult">
+			<div class="grid-btn">
+				<a class="btn btn-default" @click="reload">返回列表</a>
+				<template v-if="voteStatus=='edit'">
+					<a class="btn btn-primary" @click="addDetail"><i class="fa fa-plus"></i>&nbsp;新增选项</a>
+				</template>
+				
+			</div>
+			<table id="jqGrid2"></table>
+	    	<div id="jqGridPager2"></div>
+	</div>
+	<div v-show="showUser">
+			<div class="grid-btn">
+				<a class="btn btn-default" @click="reloadDetail('views')">返回列表</a>
+			</div>
+			<table id="jqGrid3"></table>
+	    	<div id="jqGridPager3"></div>
+	</div>
+	<div v-show="!showList&&!showResult&&!showUser&&!showDetail" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<input type="hidden" id="vote_fileName" class="form-control" v-model="vote.fileName" />
+			<input type="hidden" id="vote_oriFileName" class="form-control" v-model="vote.oriFileName" />
+		
+			<div class="form-group">
+				<div class="col-sm-2 control-label">序号</div>
+				<div class="col-sm-10">
+					<input type="number" class="form-control" v-model="vote.rank"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"><template v-if="vote.type=='vote'">活动名称</template><template v-else>测评名称</template></div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="vote.title" placeholder="标题"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"><template v-if="vote.type=='vote'">活动banner</template><template v-else>测评banner</template></div>
+				<div class="col-sm-10">
+					<img id="vote_img" width="100px;" height="100px;"/>
+					<a class="btn btn-primary" id="vote_upload"><i class="fa fa-plus"></i>&nbsp;图片上传</a>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">活动结束时间</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control"  id="datetimeEnd" readonly placeholder="结束时间"/>
+				</div>
+			</div>
+			
+			<div class="form-group" >
+				<div class="col-sm-2 control-label"><template v-if="vote.type=='vote'">资讯简介</template><template v-else>测评跳转地址</template></div>
+				<div class="col-sm-10">
+					<textarea class="form-control" rows="4" cols="50" requires="require" v-model="vote.intro"></textarea>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-sm-2 control-label">是否显示</div>
+				<label class="radio-inline">
+					<input type="radio" name="status" value="1" v-model="vote.status"/> 是
+				</label>
+				<label class="radio-inline">
+					<input type="radio" name="status" value="0" v-model="vote.status"/> 否
+				</label>
+			</div>
+			
+			
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+	
+	<div v-show="showDetail" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal" style="width:100%">
+			<input type="hidden" id="detail_fileName" class="form-control" v-model="detail.fileName" />
+			<input type="hidden" id="detail_oriFileName" class="form-control" v-model="detail.oriFileName" />
+		
+		
+			<div class="form-group">
+				<div class="col-sm-1 control-label">选项名称</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="detail.title" placeholder="标题"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-1 control-label">选项展示封面</div>
+				<div class="col-sm-10">
+					<img id="detail_img" width="100px;" height="100px;"/>
+					<a class="btn btn-primary" id="detail_upload"><i class="fa fa-plus"></i>&nbsp;图片上传</a>
+				</div>
+			</div>
+			
+			
+			<div class="form-group" >
+				<div class="col-sm-1 control-label">选项简介</div>
+				<div class="col-sm-10">
+					<textarea class="form-control" rows="4" cols="50" requires="require" v-model="detail.intro"></textarea>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-sm-1 control-label">是否显示</div>
+				<label class="radio-inline">
+					<input type="radio" name="status" value="1" v-model="detail.status"/> 是
+				</label>
+				<label class="radio-inline">
+					<input type="radio" name="status" value="0" v-model="detail.status"/> 否
+				</label>
+			</div>
+			<div class="form-group">
+					<div class="col-sm-1 control-label">选项图文介绍</div>
+					<div class="col-sm-10">
+						<!-- 富文本编辑器 -->
+						<div id="editor" type="text/plain" style="height:300px;"></div>
+					</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-sm-1 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveDetail" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reloadDetail('edit')" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
+<script src="${request.contextPath}/statics/plugins/datepicker/bootstrap-datetimepicker.css"></script>
+<script src="${request.contextPath}/statics/plugins/datepicker/bootstrap-datetimepicker.js"></script>
+<script src="${request.contextPath}/statics/ueditor/ueditor.config.js"></script>
+	<script src="${request.contextPath}/statics/ueditor/ueditor.all.js"></script>
+	<script src="${request.contextPath}/statics/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script src="${request.contextPath}/statics/js/modules/touch/vote.js?_${.now?long}"></script>
+
+</body>
+</html>

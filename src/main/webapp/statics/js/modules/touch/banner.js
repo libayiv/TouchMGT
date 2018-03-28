@@ -70,8 +70,7 @@ $(function () {
         },
         beforeSubmitCell :function(rowid, cellname, value, iRow, iCol){  
             // 传递参数  
-        	var platform= $("#jqGrid").getCell(rowid,'platform');
-        	var data = {'pid':rowid, 'sortNum':value, 'platform':platform};  
+        	var data = {'id':rowid, 'rank':value};  
             return data;
          },
          afterSubmitCell:function(serverresponse, rowid, cellname, value, iRow, iCol){

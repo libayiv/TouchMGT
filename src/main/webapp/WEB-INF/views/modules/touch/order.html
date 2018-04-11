@@ -19,12 +19,14 @@
     </div>
 
 	<div v-show="!showList" class="panel panel-default">
+	
 		<div class="panel-heading">{{title}}</div>
+		<div class="grid-btn" style="margin-top:10px;">
+				<a class="btn btn-default" @click="reload">返回列表</a>
+			</div>
 			<table id="jqGrid2"></table>
 	    <div id="jqGridPager2"></div>
-	    				<div class="col-sm-2 control-label"></div>
-	    
-	    				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+	    				
 	    
 	</div>
 </div>

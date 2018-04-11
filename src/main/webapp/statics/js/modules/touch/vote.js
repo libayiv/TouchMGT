@@ -44,7 +44,7 @@ $(function () {
         height: 'auto',
         rowNum: 10,
 		rowList : [10,30,50],
-        rownumbers: true, 
+        rownumbers: false, 
         rownumWidth: 25, 
         autowidth:true,
         multiselect: true,
@@ -262,6 +262,7 @@ var vm = new Vue({
 			vm.showUser=false;
 			vm.showDetail=false;
             vm.title = "新增投票活动";
+            $("#datetimeEnd").val("");
             vm.vote = {status:1,views:0, type:'vote',fileName:'', oriFileName:'', rank:0, playbackLength:10};
 
         },
@@ -272,6 +273,7 @@ var vm = new Vue({
 			vm.showUser=false;
 			vm.showDetail=false;
             vm.title = "新增健康测评";
+            $("#datetimeEnd").val("");
             vm.vote = {status:1,views:0, type:'health',fileName:'', oriFileName:'', rank:0, playbackLength:10};
 
         },
@@ -368,6 +370,17 @@ var vm = new Vue({
         		alert("请上传图片！");
         		return;
         	}
+        	if(vm.vote.endTime==null || vm.vote.endTime==''){
+        		alert("请选择结束时间！");
+        		return;
+        	}
+        	if(vm.vote.intro==null || vm.vote.intro==''){
+            	var str =vm.vote.type=='vote'?'活动简介':'测评跳转地址';
+
+        		alert("请填写"+str);
+        		return;
+        	}
+        	
             var url = vm.vote.id == null ? "touch/vote/save" : "touch/vote/update";
             $.ajax({
                 type: "POST",
@@ -422,6 +435,8 @@ var vm = new Vue({
         	$("#vote_img").removeAttr("src");
             $.get(baseURL + "touch/vote/info/"+pid, function(r){
                 vm.vote = r.vote;
+                $("#datetimeEnd").val(r.vote.endTime);
+
                 if(r.vote.coversrc != null && r.vote.coversrc != ''){
                
                 	$("#vote_img").attr("src", localStorage.fileUrlPath + r.vote.coversrc);
@@ -450,6 +465,17 @@ var vm = new Vue({
 			vm.showUser=false;
 			vm.showDetail=false;
             var page = $("#jqGrid").jqGrid('getGridParam','page');
+            $("#jqGrid").jqGrid('setGridParam',{
+                postData:{'title': vm.q.title},
+                page:page
+            }).trigger("reloadGrid");
+        },
+        search: function () {
+            vm.showList = true;
+        	vm.showResult=false;
+			vm.showUser=false;
+			vm.showDetail=false;
+            var page = 1;
             $("#jqGrid").jqGrid('setGridParam',{
                 postData:{'title': vm.q.title},
                 page:page

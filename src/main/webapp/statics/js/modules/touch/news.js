@@ -255,6 +255,16 @@ var vm = new Vue({
 				page:page
 			}).trigger("reloadGrid");
 		},
+		search: function () {
+			vm.showList = true;
+			vm.showReply= false;
+			var page = 1;
+			debugger;
+			$("#jqGrid").jqGrid('setGridParam',{
+				postData:{'title': vm.q.title},
+				page:page
+			}).trigger("reloadGrid");
+		},
 		updateStatus: function(pids, status){
 			var data = {'pids':pids, 'status': status};
 			$.ajax({

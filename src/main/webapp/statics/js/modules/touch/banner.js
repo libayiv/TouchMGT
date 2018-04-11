@@ -42,7 +42,7 @@ $(function () {
         height: 'auto',
         rowNum: 10,
 		rowList : [10,30,50],
-        rownumbers: true, 
+        rownumbers: false, 
         rownumWidth: 25, 
         autowidth:true,
         multiselect: true,

@@ -181,7 +181,7 @@ public class BFVoteInfController extends AbstractController {
 			return R.error(e.getMessage());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return R.error("修改投票");
+			return R.error("修改投票异常");
 		}
 		return R.ok();
 	}

@@ -140,7 +140,7 @@
 	<select id="queryObject" parameterType="java.lang.String"
 		resultMap="BFVoteInfMap">
 		SELECT
-		<include refid="base" />
+		ID,TITLE,COVERSRC,INTRO,PUBDATE,TO_CHAR(END_TIME,'YYYY-MM-DD') END_TIME,STATUS,VIEWS,RANK,TYPE
 		FROM
 		<include refid="tableName" />
 		WHERE
@@ -227,15 +227,6 @@
 			</if>
 			<if test="intro != null and intro != ''">
 				INTRO = #{intro},
-			</if>
-			<if test="content != null and content != ''">
-				CONTENT = #{content},
-			</if>
-			<if test="votes != null and votes != ''">
-				VOTES = #{votes},
-			</if>
-			<if test="vote_id != null and vote_id != ''">
-				VOTE_ID = #{vote_id},
 			</if>
 			<if test="endTime != null and endTime != ''">
 				END_TIME = TO_DATE(#{endTime,jdbcType=VARCHAR},'yyyy-mm-dd'),

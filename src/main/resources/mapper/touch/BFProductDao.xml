@@ -162,6 +162,9 @@
 			WHERE BFAFRICA_4.PROD_DETAIL.PROD_STATUS=1
 			AND BFAFRICA_4.PROD_DETAIL.PROD_LANGUAGE_TYPE=1
 			AND BFAFRICA_4.PROD_CAT_LT.LT_PROD_CAT_LANGUAGE_TYPE=1
+			<if test="product_name != null and product_name != ''">
+				AND BFAFRICA_4.PROD_DETAIL.PROD_NAME like concat(concat('%',#{product_name}),'%')
+			</if>
 			ORDER BY BFCMS_PRODUCT_DETAIL.IS_STAR,PROD_NAME
 	</select>
 	
@@ -171,6 +174,9 @@
 		      WHERE BFAFRICA_4.prod_detail.PROD_STATUS=1
 		      AND BFAFRICA_4.prod_detail.PROD_LANGUAGE_TYPE=1
 		      AND BFAFRICA_4.prod_cat_lt.LT_PROD_CAT_LANGUAGE_TYPE=1
+		      <if test="product_name != null and product_name != ''">
+				AND BFAFRICA_4.PROD_DETAIL.PROD_NAME like concat(concat('%',#{product_name}),'%')
+			</if>
 	</select>
 	
 

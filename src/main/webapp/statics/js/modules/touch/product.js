@@ -185,23 +185,23 @@ var vm = new Vue({
         	}else{
         		obj={"status":'0',"image_id":img.image_id};
         	}
-        	var url = "touch/product/imgUpdate";
-            $.ajax({
-                type: "POST",
-                url: baseURL + url,
-                contentType: "application/json",
-                data: JSON.stringify(obj),
-                success: function(r){
-                    if(r.code === 0){
-                        alert('操作成功', function(){
-                            var title=vm.title.split("-");
-                        	vm.updateImg(img.product_id,img.product_code,title[1]);
-                        });
-                    }else{
-                        alert(r.msg);
+        	confirm("你确定要该图片设为封面？", function(){
+        		var url = "touch/product/imgUpdate";
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + url,
+                    contentType: "application/json",
+                    data: JSON.stringify(obj),
+                    success: function(r){
+                        if(r.code === 0){
+                            alert('操作成功');
+                        }else{
+                            alert(r.msg);
+                        }
                     }
-                }
-            });
+                });
+			});
+        	
         },
         saveOrUpdate: function () {
         	var product_intro =  UE.getEditor('editor').getContent();
@@ -320,6 +320,17 @@ var vm = new Vue({
             vm.showImage=false;
 
             var page = $("#jqGrid").jqGrid('getGridParam','page');
+            $("#jqGrid").jqGrid('setGridParam',{
+                postData:{'product_name': vm.q.title},
+                page:page
+            }).trigger("reloadGrid");
+        },
+        search: function () {
+            vm.showList = true;
+            vm.showWeb=false;
+            vm.showImage=false;
+
+            var page = 1;
             $("#jqGrid").jqGrid('setGridParam',{
                 postData:{'product_name': vm.q.title},
                 page:page

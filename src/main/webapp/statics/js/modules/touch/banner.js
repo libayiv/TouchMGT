@@ -210,8 +210,6 @@ var vm = new Vue({
             $.get(baseURL + "touch/banner/info/"+pid, function(r){
                 vm.banner = r.banner;
                 if(r.banner.coversrc != null && r.banner.coversrc != ''){
-                	$("#banner_img").removeAttr("width");
-                	$("#banner_img").removeAttr("height");
                 	$("#banner_img").attr("src", localStorage.fileUrlPath + r.banner.coversrc);
                 } else {
                 	/*$("#banner_img").attr("width", "100px");

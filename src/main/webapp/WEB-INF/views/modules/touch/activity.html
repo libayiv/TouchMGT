@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>管理员列表</title>
+<#include "/header.html">
+<link rel="stylesheet" href="${request.contextPath}/statics/css/switch.css">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-sm-2">
+				<input type="text" class="form-control" v-model="q.title" @keyup.enter="query" placeholder="标题">
+			</div>
+			<a class="btn btn-default" @click="query">查询</a>
+			<#if shiro.hasPermission("touch:activity:save")>
+			<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+		<!-- 	<#if shiro.hasPermission("touch:activity:updateStatus")>
+			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if> -->
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+	<div v-show="showFeed">
+			<div class="grid-btn">
+				<a class="btn btn-default" @click="reload">返回列表</a>
+			</div>
+			<table id="jqGrid2"></table>
+	    	<div id="jqGridPager2"></div>
+	</div>
+	<div v-show="showApp">
+			<div class="grid-btn">
+				<a class="btn btn-default" @click="reload">返回列表</a>
+			</div>
+			<table id="jqGrid3"></table>
+	    	<div id="jqGridPager3"></div>
+	</div>
+	<div v-show="!showList&& !showFeed && !showApp" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal" style="width:100%">
+			<input type="hidden" id="activity_fileName" class="form-control" v-model="activity.fileName" />
+			<input type="hidden" id="activity_oriFileName" class="form-control" v-model="activity.oriFileName" />
+			
+			<div class="form-group">
+				<div class="col-sm-1 control-label">序号</div>
+				<div class="col-sm-10">
+					<input type="number" class="form-control" v-model="activity.rank"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-1 control-label">活动名称</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="activity.title" placeholder="标题"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-1 control-label">活动Banner</div>
+				<div class="col-sm-10">
+					<img id="activity_img" style="width:100px;height:100px;"/>
+					<a class="btn btn-primary" id="activity_upload"><i class="fa fa-plus"></i>&nbsp;图片上传</a>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-1 control-label">活动开始</div>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="datetimeStart" readonly   placeholder="开始时间"/>
+				</div>
+				<div class="col-sm-1 control-label">活动结束</div>
+				<div class="col-sm-4">
+					<input type="text" class="form-control"  id="datetimeEnd" readonly placeholder="结束时间"/>
+				</div>
+			</div>
+			
+		
+		
+			
+			<div class="form-group">
+				<div class="col-sm-1 control-label">是否显示</div>
+				<label class="radio-inline">
+					<input type="radio" name="status" value="1" v-model="activity.status"/> 是
+				</label>
+				<label class="radio-inline">
+					<input type="radio" name="status" value="0" v-model="activity.status"/> 否
+				</label>
+			</div>
+			
+			<div class="form-group">
+					<div class="col-sm-1 control-label">活动简介</div>
+					<div class="col-sm-10">
+						<!-- 富文本编辑器 -->
+						<div id="editor" type="text/plain" style="height:300px;"></div>
+					</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
+<script src="${request.contextPath}/statics/plugins/datepicker/bootstrap-datetimepicker.css"></script>
+<script src="${request.contextPath}/statics/plugins/datepicker/bootstrap-datetimepicker.js"></script>
+
+<script src="${request.contextPath}/statics/ueditor/ueditor.config.js"></script>
+	<script src="${request.contextPath}/statics/ueditor/ueditor.all.js"></script>
+	<script src="${request.contextPath}/statics/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script src="${request.contextPath}/statics/js/modules/touch/activity.js?_${.now?long}"></script>
+
+</body>
+</html>

@@ -42,7 +42,7 @@ $(function () {
         height: 'auto',
         rowNum: 10,
 		rowList : [10,30,50],
-        rownumbers: true, 
+        rownumbers: false, 
         rownumWidth: 25, 
         autowidth:true,
         multiselect: true,
@@ -70,8 +70,7 @@ $(function () {
         },
         beforeSubmitCell :function(rowid, cellname, value, iRow, iCol){  
             // 传递参数  
-        	var platform= $("#jqGrid").getCell(rowid,'platform');
-        	var data = {'pid':rowid, 'sortNum':value, 'platform':platform};  
+        	var data = {'id':rowid, 'rank':value};  
             return data;
          },
          afterSubmitCell:function(serverresponse, rowid, cellname, value, iRow, iCol){
@@ -211,8 +210,6 @@ var vm = new Vue({
             $.get(baseURL + "touch/banner/info/"+pid, function(r){
                 vm.banner = r.banner;
                 if(r.banner.coversrc != null && r.banner.coversrc != ''){
-                	$("#banner_img").removeAttr("width");
-                	$("#banner_img").removeAttr("height");
                 	$("#banner_img").attr("src", localStorage.fileUrlPath + r.banner.coversrc);
                 } else {
                 	/*$("#banner_img").attr("width", "100px");

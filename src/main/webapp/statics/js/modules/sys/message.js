@@ -340,11 +340,8 @@ var vm = new Vue({
 			$("#message_img").removeAttr("src");
 			$.get(baseURL + "sys/message/info/" + pid, function(r) {
 				vm.message = r.message;
-				debugger;
 				UE.getEditor('editor').setContent(vm.message.content);
 				if (r.message.coversrc != null && r.message.coversrc != '') {
-					$("#message_img").removeAttr("width");
-					$("#message_img").removeAttr("height");
 					$("#message_img").attr("src",
 							localStorage.fileUrlPath + r.message.coversrc);
 				} else {

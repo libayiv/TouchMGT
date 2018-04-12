@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="com.security.modules.touch.dao.BFProductDao">
+
+	<resultMap type="BFProductInf" id="BFProductInfMap">
+		<result column="PRODUCT_CODE" property="product_code" />
+		<result column="PRODUCT_ID" property="product_id" />
+		<result column="PRODUCT_NAME" property="product_name" />
+		<result column="PRODUCT_CATE" property="product_cate" />
+		<result column="PRODUCT_PHOTO" property="product_photo" />
+		<result column="PRODUCT_INTRO" property="product_intro" />
+		<result column="PRODUCT_INSTRUCTION" property="product_instruction" />
+		<result column="STAR_NUM" property="star_num" />
+		<result column="PART1" property="part1" />
+		<result column="PART2" property="part2" />
+		<result column="PART3" property="part3" />
+		<result column="PART4" property="part4" />
+		<result column="PART5" property="part5" />
+		<result column="WEB_CONTENT" property="web_content" />
+		<result column="IS_STAR" property="is_star" />
+		<result column="IMAGE_ID" property="image_id" />
+		<result column="RANK" property="rank" />	
+		<result column="STATUS" property="status" />		
+	</resultMap>
+	
+
+	<insert id="save" parameterType="BFProductInf">
+		INSERT INTO
+		<include refid="tableName" />
+		(
+		<include refid="base" />
+		)
+		VALUES(
+		#{product_id, jdbcType=VARCHAR},
+		#{product_code, jdbcType=VARCHAR},
+		#{product_intro, jdbcType=VARCHAR},
+		#{product_instruction, jdbcType=VARCHAR},
+		#{is_star, jdbcType=VARCHAR},
+		#{star_num, jdbcType=VARCHAR},
+		#{part1, jdbcType=VARCHAR},
+		#{part2, jdbcType=VARCHAR},
+		#{part3, jdbcType=VARCHAR},
+		#{part4, jdbcType=VARCHAR},
+		#{part5, jdbcType=VARCHAR},
+		#{web_content, jdbcType=VARCHAR}
+		)
+	</insert>
+
+		<insert id="saveImage" parameterType="BFProductInf">
+		INSERT INTO
+		BFCMS_PRODUCT_IMAGE
+		(
+		PRODUCT_ID,PRODUCT_CODE,PRODUCT_IMAGE,IS_COVERSRC,STATUS,ID,PUBDTAE,RANK
+		)
+		VALUES(
+		#{product_id, jdbcType=VARCHAR},
+		#{product_code, jdbcType=VARCHAR},
+		#{product_photo, jdbcType=VARCHAR},
+		#{is_coversrc, jdbcType=VARCHAR},
+		#{status, jdbcType=VARCHAR},
+		#{image_id, jdbcType=VARCHAR},
+		sysdate,
+		#{rank, jdbcType=VARCHAR}
+	
+		)
+	</insert>
+	
+	<update id="updateStar" parameterType="BFProductInf" >
+		UPDATE
+		<include refid="tableName" />
+		SET 
+		IS_STAR=#{is_star}
+		WHERE
+		PRODUCT_ID = #{product_id}
+	</update>
+	
+	<update id="updateDetail" parameterType="BFProductInf" >
+		UPDATE
+		<include refid="tableName" />
+		SET
+		<if test="web_content != null and web_content != ''">
+			WEB_CONTENT = #{web_content},
+		</if>
+		PART1 = #{part1},
+		PART2 = #{part2},
+		PART3 = #{part3},
+		PART4 = #{part4},
+		PART5 = #{part5}	
+		<include refid="where" />
+	</update>
+	
+	<update id="update" parameterType="BFProductInf" >
+		UPDATE
+		<include refid="tableName" />
+		SET PRODUCT_INSTRUCTION = #{product_instruction},
+		PRODUCT_INTRO = #{product_intro}
+		<include refid="where" />
+	
+	</update>
+	<update id="updateImage" parameterType="BFProductInf" >
+		UPDATE
+		BFCMS_PRODUCT_IMAGE
+		<set>
+		<if test="is_coversrc != null and is_coversrc != ''">
+				IS_COVERSRC = #{is_coversrc},
+		</if>
+		<if test="status != null and status != ''">
+				STATUS = #{status}
+		</if>
+		</set>
+		WHERE 1=1
+			<if test="product_id != null and product_id != ''">
+				AND PRODUCT_ID = #{product_id}
+			</if>
+			<if test="product_code != null and product_code != ''">
+				AND PRODUCT_CODE = #{product_code}
+			</if>
+			<if test="image_id != null and image_id != ''">
+				AND ID = #{image_id}
+			</if>
+	</update>
+	<select id="queryEditProduct" parameterType="BFProductInf" resultMap="BFProductInfMap">
+		SELECT BFAFRICA_4.PROD_DETAIL.PROD_CODE,BFAFRICA_4.PROD_DETAIL.PROD_ID,BFAFRICA_4.PROD_DETAIL.PROD_NAME,BFCMS_PRODUCT_DETAIL.* FROM BFAFRICA_4.PROD_DETAIL
+		LEFT JOIN BFCMS_PRODUCT_DETAIL ON BFCMS_PRODUCT_DETAIL.PRODUCT_CODE = BFAFRICA_4.PROD_DETAIL.PROD_CODE
+		WHERE BFAFRICA_4.PROD_DETAIL.PROD_STATUS=1
+		AND BFAFRICA_4.PROD_DETAIL.PROD_LANGUAGE_TYPE=1
+		AND BFAFRICA_4.PROD_DETAIL.PROD_CODE=#{product_code}
+		AND BFAFRICA_4.PROD_DETAIL.PROD_ID=#{product_id}
+	</select>
+	
+	<select id="queryImageList" parameterType="BFProductInf" resultMap="BFProductInfMap">
+		SELECT PRODUCT_ID,PRODUCT_CODE,PRODUCT_IMAGE AS PRODUCT_PHOTO,ID AS IMAGE_ID FROM BFCMS_PRODUCT_IMAGE 
+		WHERE 	
+		PRODUCT_ID=#{product_id} AND PRODUCT_CODE=#{product_code} AND STATUS=1
+		<if test="is_coversrc != null and is_coversrc != ''">
+			AND IS_COVERSRC=#{is_coversrc}  
+		</if>
+	</select>
+	<select id="queryMaxRank" parameterType="BFProductInf"  resultType="java.lang.Integer">
+		SELECT COUNT(RANK) FROM BFCMS_PRODUCT_IMAGE WHERE
+		PRODUCT_ID=#{product_id} AND PRODUCT_CODE=#{product_code}
+		
+	</select>
+	
+	<select id="queryDetail" parameterType="BFProductInf" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM 
+		<include refid="tableName" />
+		<include refid="where" />
+	</select>
+	
+	<select id="queryList" parameterType="java.util.Map" resultMap="BFProductInfMap">
+			SELECT DISTINCT BFAFRICA_4.PROD_DETAIL.PROD_ID AS
+			PRODUCT_ID,BFAFRICA_4.PROD_DETAIL.PROD_CODE AS
+			PRODUCT_CODE,BFAFRICA_4.PROD_DETAIL.PROD_NAME AS
+			PRODUCT_NAME,BFAFRICA_4.PROD_CAT_LT.LT_PROD_CAT_TITLE AS
+			PRODUCT_CATE,BFCMS_PRODUCT_DETAIL.IS_STAR
+			FROM BFAFRICA_4.PROD_DETAIL
+			LEFT JOIN BFAFRICA_4.PROD_CAT_LT ON
+			BFAFRICA_4.PROD_CAT_LT.LT_PROD_CAT_TYPE=BFAFRICA_4.PROD_DETAIL.PROD_CATEGORY_TYPE
+			LEFT JOIN BFCMS_PRODUCT_DETAIL ON BFCMS_PRODUCT_DETAIL.PRODUCT_ID =
+			BFAFRICA_4.PROD_DETAIL.PROD_ID
+			WHERE BFAFRICA_4.PROD_DETAIL.PROD_STATUS=1
+			AND BFAFRICA_4.PROD_DETAIL.PROD_LANGUAGE_TYPE=1
+			AND BFAFRICA_4.PROD_CAT_LT.LT_PROD_CAT_LANGUAGE_TYPE=1
+			<if test="product_name != null and product_name != ''">
+				AND BFAFRICA_4.PROD_DETAIL.PROD_NAME like concat(concat('%',#{product_name}),'%')
+			</if>
+			ORDER BY BFCMS_PRODUCT_DETAIL.IS_STAR,PROD_NAME
+	</select>
+	
+	<select id="queryTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+		      SELECT  COUNT(*)
+		      FROM BFAFRICA_4.PROD_DETAIL LEFT JOIN  BFAFRICA_4.prod_cat_lt on BFAFRICA_4.prod_cat_lt.lt_prod_cat_type=BFAFRICA_4.prod_detail.prod_category_type
+		      WHERE BFAFRICA_4.prod_detail.PROD_STATUS=1
+		      AND BFAFRICA_4.prod_detail.PROD_LANGUAGE_TYPE=1
+		      AND BFAFRICA_4.prod_cat_lt.LT_PROD_CAT_LANGUAGE_TYPE=1
+		      <if test="product_name != null and product_name != ''">
+				AND BFAFRICA_4.PROD_DETAIL.PROD_NAME like concat(concat('%',#{product_name}),'%')
+			</if>
+	</select>
+	
+
+	
+	<sql id="tableName">
+		BFCMS_PRODUCT_DETAIL
+	</sql>
+	
+	<sql id="base">
+		PRODUCT_ID,PRODUCT_CODE,PRODUCT_INTRO,PRODUCT_INSTRUCTION,IS_STAR,STAR_NUM,PART1,PART2,PART3,PART4,PART5,WEB_CONTENT
+	</sql>
+	<sql id="set">
+		<set>
+			<if test="product_instruction != null and product_instruction != ''">
+				PRODUCT_INSTRUCTION = #{product_instruction},
+			</if>
+			<if test="product_intro != null and product_intro != ''">
+				PRODUCT_INTRO = #{product_intro},
+			</if>
+			<if test="part1 != null and part1 != ''">
+				PART1 = #{part1},
+			</if>
+			<if test="part2 != null and part2 != ''">
+				PART2 = #{part2},
+			</if>
+			<if test="part3 != null and part3 != ''">
+				PART3 = #{part3},
+			</if>
+			<if test="part4 != null and part4 != ''">
+				PART4 = #{part4},
+			</if>
+			<if test="part5 != null and part5 != ''">
+				PART5 = #{part5},
+			</if>
+			<if test="web_content != null and web_content != ''">
+				WEB_CONTENT = #{web_content},
+			</if>
+			<if test="is_star != null and is_star != ''">
+				IS_STAR = #{is_star},
+			</if>
+			<if test="star_num != null and star_num != ''">
+				STAR_NUM = #{star_num},
+			</if>
+		</set>
+	</sql>
+	<sql id="where">
+		<where>
+			1=1 
+			<if test="product_id != null and product_id != ''">
+				AND PRODUCT_ID = #{product_id}
+			</if>
+			<if test="product_code != null and product_code != ''">
+				AND PRODUCT_CODE = #{product_code}
+			</if>
+		</where>
+	</sql>
+	
+	
+	
+	
+</mapper>

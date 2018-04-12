@@ -1,7 +1,7 @@
 $(function () {
 
     new AjaxUpload('#banner_upload', {
-        action: baseURL + "touch/fileupload/uploadimg?modularName=banner",
+        action: baseURL + "touch/fileupload/upload?modularName=banner",
         name: 'file',
         autoSubmit:true,
         responseType:"json",
@@ -55,15 +55,8 @@ var vm = new Vue({
         },
 
         saveOrUpdate: function () {
-        	var re = /^[0-9]+$/ ;
-        	if(vm.banner.rank==null || vm.banner.rank==''){    
-        		alert("请填写序号!");
-       		 	return;
-        	} 
-        	if(!re.test(vm.banner.rank)){    
-        		alert("序号请填写正整数!");
-       		 	return;
-        	}         	
+        
+        	      	
         	if(vm.banner.title==null || vm.banner.title==''){
         		alert("请填写标题！");
         		return;
@@ -114,8 +107,7 @@ var vm = new Vue({
 					 }
 					 vm.banner=r.single;
 		                if(r.single.coversrc != null && r.single.coversrc != ''){
-		                	$("#banner_img").removeAttr("width");
-		                	$("#banner_img").removeAttr("height");
+		                
 		                	$("#banner_img").attr("src", localStorage.fileUrlPath + r.single.coversrc);
 		                }
 		                

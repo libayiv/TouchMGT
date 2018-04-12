@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="com.security.modules.touch.dao.BFOrderListDao">
+	
+
+	<resultMap type="BFOrderInf" id="BFOrderInfMap">
+		<result column="ORDER_ID" property="order_id"/>
+		<result column="USER_ID" property="user_id"/>
+		<result column="ORDER_TIME" property="order_time"/>
+		<result column="TOTAL_PRICE" property="total_price"/>
+		<result column="STATUS" property="status"/>
+	</resultMap>
+	
+	<resultMap type="BFOrderDetail" id="BFOrderDetailMap">
+		<result column="ORDER_ID" property="order_id"/>
+		<result column="PRODUCT_ID" property="product_id"/>
+		<result column="PRODUCT_CODE" property="product_code"/>
+		<result column="PRODUCT_NUM" property="product_num"/>
+		<result column="PRODUCT_PRICE" property="product_price"/>
+		<result column="FINAL_PRICE" property="final_price"/>
+		<result column="PRODUCT_COVERSRC" property="product_coversrc"/>
+		<result column="PRODUCT_NAME" property="product_name"/>
+	</resultMap>
+	
+	
+	
+	
+	
+	
+	
+	
+	<update id="updateStatus" parameterType="java.util.Map">
+		UPDATE
+		<include refid="tableName" />
+		SET STATUS = #{status}
+		WHERE
+		ORDER_ID IN
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<select id="queryObject" parameterType="java.lang.String" resultMap="BFOrderInfMap">
+		SELECT 
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		WHERE
+		ORDER_ID = #{order_id}
+	</select>
+	
+	<select id="queryList" parameterType="java.util.Map" resultMap="BFOrderInfMap">
+		SELECT 
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		<include refid="where" />
+		ORDER BY ORDER_ID 
+	</select>
+	
+	<select id="queryDetailList" parameterType="java.util.Map" resultMap="BFOrderDetailMap">
+		SELECT 
+		<include refid="detailBase" />
+		FROM
+		<include refid="detailName" />
+		WHERE ORDER_ID= #{order_id}
+	</select>
+	
+	
+	<select id="queryTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT 
+		COUNT(1)
+		FROM
+		<include refid="tableName" />
+		<include refid="where" />
+	</select>
+	
+	
+	
+	<sql id="tableName">
+		BFCMS_ORDER_LIST
+	</sql>
+	
+	<sql id="base">
+		ORDER_ID,USER_ID,TO_CHAR(ORDER_TIME,'yyyy/mm/dd HH24:mi:ss'),TOTAL_PRICE,STATUS
+	</sql>
+	
+	<sql id="detailName">
+		BFCMS_ORDER_DETAIL
+	</sql>
+	
+	<sql id="detailBase">
+		ORDER_ID,PRODUCT_ID,PRODUCT_CODE,PRODUCT_NUM,PRODUCT_PRICE,FINAL_PRICE,PRODUCT_COVERSRC,PRODUCT_NAME
+	</sql>
+	
+	<sql id="set">
+		<set>
+			<if test="order_id != null and order_id != ''">
+				ORDER_ID = #{order_id},
+			</if>
+			<if test="user_id != null and user_id != ''">
+				USER_ID = #{user_id},
+			</if>
+			<if test="order_time != null and order_time != ''">
+				ORDER_TIME = #{order_time},
+			</if>
+			<if test="total_price != null and total_price != ''">
+				TOTAL_PRICE = #{total_price},
+			</if>
+			<if test="status != null and status != ''">
+				STATUS = #{status}, 
+			</if>		
+		</set>
+	</sql>
+	<sql id="where">
+		<where>
+			<if test="order_id != null and order_id != ''">
+				ORDER_ID = #{order_id}
+			</if>
+			<if test="user_id != null and user_id != ''">
+				AND USER_ID = #{user_id}
+			</if>
+			<if test="order_time != null and order_time != ''">
+				AND ORDER_TIME = #{order_time}
+			</if>
+			<if test="total_price != null and total_price != ''">
+				AND TOTAL_PRICE = #{total_price}
+			</if>
+			<if test="status != null and status != ''">
+				AND STATUS = #{status}
+			</if>	
+		</where>
+	</sql>
+	
+	
+	
+</mapper>

@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.security.modules.touch.dao.BFVoteListDao">
+
+	<resultMap type="BFVoteInf" id="BFVoteInfMap">
+		<result column="ID" property="id" />
+		<result column="TITLE" property="title" />
+		<result column="COVERSRC" property="coversrc" />
+		<result column="INTRO" property="intro" />
+		<result column="VIEWS" property="views" />
+		<result column="PUBDATE" property="pubdate" />
+		<result column="STATUS" property="status" />
+		<result column="RANK" property="rank" />
+		<result column="TYPE" property="type" />
+		<result column="END_TIME" property="endTime" />
+	</resultMap>
+	
+	<resultMap type="BFVoteDetail" id="BFVoteDetailMap">
+		<result column="ID" property="id" />
+		<result column="TITLE" property="title" />
+		<result column="COVERSRC" property="coversrc" />
+		<result column="INTRO" property="intro" />
+		<result column="VOTES" property="votes" />
+		<result column="PUBDATE" property="pubdate" />
+		<result column="STATUS" property="status" />
+		<result column="VOTE_ID" property="vote_id" />
+		<result column="CONTENT" property="content" />
+		<result column="THUMB" property="thumb" />
+		<result column="NICK" property="nick" />
+	</resultMap>
+	
+
+
+	<insert id="save" parameterType="BFVoteInf">
+		INSERT INTO
+		<include refid="tableName" />
+		(
+		<include refid="base" />
+		)
+		VALUES(
+		#{id},
+		#{title, jdbcType=VARCHAR},
+		#{coversrc, jdbcType=VARCHAR},
+		#{intro, jdbcType=VARCHAR},
+		SYSDATE,
+		TO_DATE(#{endTime, jdbcType=VARCHAR},'yyyy-mm-dd'),
+		#{status, jdbcType=VARCHAR},
+		#{views, jdbcType=VARCHAR},
+		#{rank, jdbcType=VARCHAR},
+		#{type, jdbcType=VARCHAR}
+
+		)
+	</insert>
+	<insert id="saveDetail" parameterType="BFVoteDetail">
+		INSERT INTO
+		BFCMS_VOTE_DETAIL
+		(
+			ID,TITLE,COVERSRC,INTRO,CONTENT,PUBDATE,VOTES,STATUS,VOTE_ID
+		)
+		VALUES(
+		#{id},
+		#{title, jdbcType=VARCHAR},
+		#{coversrc, jdbcType=VARCHAR},
+		#{intro, jdbcType=VARCHAR},
+		#{content, jdbcType=VARCHAR},
+		SYSDATE,
+		#{votes, jdbcType=VARCHAR},
+		#{status, jdbcType=VARCHAR},
+		#{vote_id, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM
+		<include refid="tableName" />
+		WHERE
+		ID = #{pid}
+	</delete>
+
+	<delete id="deleteBatch" parameterType="java.util.List">
+		DELETE FROM
+		<include refid="tableName" />
+		WHERE
+		ID IN
+		<foreach collection="array" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<update id="update" parameterType="BFVoteInf">
+		UPDATE
+		<include refid="tableName" />
+		<include refid="set" />
+		WHERE
+		ID = #{id}
+	</update>
+	
+	<update id="updateDetail" parameterType="BFVoteDetail">
+		UPDATE
+		BFCMS_VOTE_DETAIL
+		<include refid="detailSet" />
+		WHERE
+		ID = #{id}
+	</update>
+
+	<update id="updateStatus" parameterType="java.util.Map">
+		UPDATE
+		<include refid="tableName" />
+		<set>
+			<if test="status != null and status != ''">
+				STATUS = #{status},
+			</if>
+		</set>
+		WHERE
+		ID IN
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<update id="updateDetailStatus" parameterType="java.util.Map">
+		UPDATE
+		BFCMS_VOTE_DETAIL
+		<set>
+			<if test="status != null and status != ''">
+				STATUS = #{status},
+			</if>
+		</set>
+		WHERE
+		ID IN
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+
+	
+	<select id="queryObject" parameterType="java.lang.String"
+		resultMap="BFVoteInfMap">
+		SELECT
+		ID,TITLE,COVERSRC,INTRO,PUBDATE,TO_CHAR(END_TIME,'YYYY-MM-DD') END_TIME,STATUS,VIEWS,RANK,TYPE
+		FROM
+		<include refid="tableName" />
+		WHERE
+		ID = #{id}
+	</select>
+
+	
+	
+	<select id="queryList" parameterType="java.util.Map" resultMap="BFVoteInfMap">
+		SELECT
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		<include refid="where" />
+		ORDER BY RANK
+	</select>
+
+	<select id="queryDetail" parameterType="java.util.Map" resultMap="BFVoteDetailMap">
+		SELECT
+		ID,TITLE,COVERSRC,INTRO,CONTENT,PUBDATE,VOTES,STATUS,VOTE_ID
+		FROM
+		BFCMS_VOTE_DETAIL
+		WHERE
+		1=1
+		<if test="id != null and id != ''">
+				AND ID = #{id}
+		</if>
+		<if test="vote_id != null and vote_id != ''">
+				AND VOTE_ID = #{vote_id}
+		</if>
+	</select>
+
+	
+	
+	<select id="queryDetailTotal" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(1)
+		FROM
+		BFCMS_VOTE_DETAIL
+		WHERE
+		VOTE_ID = #{vote_id}
+		
+	</select>
+	
+	<select id="queryUserDetail" parameterType="java.util.Map" resultMap="BFVoteDetailMap">
+		SELECT BFAFRICA_4.MEMB_MS.MEMB_NAME AS NICK,BFCMS_VOTE_DETAIL.TITLE,BFCMS_VOTE_ACTION.PUBDATE,'http://www.crc360.cn/upload/thumb/default.jpg' AS THUMB FROM BFCMS_VOTE_ACTION 
+		LEFT JOIN BFAFRICA_4.MEMB_MS ON BFAFRICA_4.MEMB_MS.MEMB_ID = BFCMS_VOTE_ACTION.USER_ID
+		LEFT JOIN BFCMS_VOTE_DETAIL ON BFCMS_VOTE_DETAIL.ID=BFCMS_VOTE_ACTION.VOTE_DETAIL_ID
+		WHERE VOTE_DETAIL_ID=#{detail_id}	
+	</select>
+
+	<select id="queryUserTotal" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM BFCMS_VOTE_ACTION 
+		LEFT JOIN BFAFRICA_4.MEMB_MS ON BFAFRICA_4.MEMB_MS.MEMB_ID = BFCMS_VOTE_ACTION.USER_ID
+		LEFT JOIN BFCMS_VOTE_DETAIL ON BFCMS_VOTE_DETAIL.ID=BFCMS_VOTE_ACTION.VOTE_DETAIL_ID
+		WHERE VOTE_DETAIL_ID=#{detail_id}
+		
+	</select>
+	<select id="queryTotal" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(1)
+		FROM
+		<include refid="tableName" />
+		<include refid="where" />
+	</select>
+	<sql id="tableName">
+		BFCMS_VOTE_LIST
+	</sql>
+
+	<sql id="base">
+		ID,TITLE,COVERSRC,INTRO,PUBDATE,END_TIME,STATUS,VIEWS,RANK,TYPE
+	</sql>
+
+	<sql id="set">
+		<set>
+			<if test="title != null and title != ''">
+				TITLE = #{title},
+			</if>
+			<if test="coversrc != null and coversrc != ''">
+				COVERSRC = #{coversrc},
+			</if>
+			<if test="intro != null and intro != ''">
+				INTRO = #{intro},
+			</if>
+			<if test="endTime != null and endTime != ''">
+				END_TIME = TO_DATE(#{endTime,jdbcType=VARCHAR},'yyyy-mm-dd'),
+			</if>
+			<if test="views != null and views != ''">
+				VIEWS = #{views},
+			</if>
+			<if test="status != null and status != ''">
+				STATUS = #{status},
+			</if>
+			<if test="rank != null and rank != ''">
+				RANK = #{rank},
+			</if>
+			<if test="type != null and type != ''">
+				TYPE = #{type},
+			</if>
+		</set>
+	</sql>
+	
+	<sql id="detailSet">
+		<set>
+			<if test="title != null and title != ''">
+				TITLE = #{title},
+			</if>
+			<if test="coversrc != null and coversrc != ''">
+				COVERSRC = #{coversrc},
+			</if>
+			<if test="intro != null and intro != ''">
+				INTRO = #{intro},
+			</if>
+			<if test="content != null">
+				CONTENT = #{content},
+			</if>
+			<if test="votes != null and votes != ''">
+				VOTES = #{votes},
+			</if>
+			<if test="vote_id != null and vote_id != ''">
+				VOTE_ID = #{vote_id},
+			</if>	
+			<if test="status != null and status != ''">
+				STATUS = #{status},
+			</if>
+
+		</set>
+	</sql>
+	<sql id="where">
+		<where>
+			<if test="id != null and id != ''">
+				ID = #{id}
+			</if>
+			<if test="title != null and title != ''">
+				AND TITLE like concat(concat('%',#{title}),'%')
+			</if>
+			<if test="coversrc != null and coversrc != ''">
+				AND COVERSRC = #{coversrc}
+			</if>
+			<if test="intro != null and intro != ''">
+				AND INTRO = #{intro}
+			</if>
+			<if test="views != null and views != ''">
+				AND VIEWS = #{views}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND END_TIME = #{endTime}
+			</if>
+			<if test="status != null and status != ''">
+				AND STATUS = #{status}
+			</if>
+			<if test="rank != null and rank != ''">
+				AND RANK = #{rank}
+			</if>
+			<if test="type != null and type != ''">
+				AND TYPE = #{type}
+			</if>
+		</where>
+	</sql>
+
+
+
+</mapper>

@@ -23,6 +23,22 @@
 			alias="BFBlackList" />
 		<typeAlias type="com.security.modules.touch.entity.ProdCatEntity" 
 			alias="ProdCatEntity" />
+		<typeAlias type="com.security.modules.touch.entity.BFOrderInf" 
+			alias="BFOrderInf" />
+		<typeAlias type="com.security.modules.touch.entity.BFOrderDetail" 
+			alias="BFOrderDetail" />
+		<typeAlias type="com.security.modules.touch.entity.BFActivityList" 
+			alias="BFActivityList" />
+		<typeAlias type="com.security.modules.touch.entity.BFActivityFBack" 
+			alias="BFActivityFBack" />
+		<typeAlias type="com.security.modules.touch.entity.BFActivityApplication" 
+			alias="BFActivityApplication" />
+		<typeAlias type="com.security.modules.touch.entity.BFProductInf" 
+			alias="BFProductInf" />
+		<typeAlias type="com.security.modules.touch.entity.BFVoteInf" 
+			alias="BFVoteInf" />
+		<typeAlias type="com.security.modules.touch.entity.BFVoteDetail" 
+			alias="BFVoteDetail" />
 	</typeAliases>
 
 	<!-- 分页插件 -->

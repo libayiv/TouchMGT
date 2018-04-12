@@ -108,6 +108,7 @@ public class BFBannerController extends AbstractController {
 		log.info("添加图片banner:{}", banner);
 		
 		try {
+			checkSortNum(banner);	
 			bfBannerService.save(banner);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

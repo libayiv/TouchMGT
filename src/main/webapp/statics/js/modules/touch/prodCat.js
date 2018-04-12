@@ -147,8 +147,7 @@ var vm = new Vue({
             $.get(baseURL + "touch/category/info/"+pid, function(r){
                 vm.cat = r.cat;
                 if(r.cat.cate_coversrc != null && r.cat.cate_coversrc != ''){
-                	$("#cat_img").removeAttr("width");
-                	$("#cat_img").removeAttr("height");
+                
                 	$("#cat_img").attr("src", localStorage.fileUrlPath + r.cat.cate_coversrc);
                 } else {
                 	/*$("#banner_img").attr("width", "100px");

@@ -3,6 +3,8 @@ package com.security.common.utils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -33,8 +35,9 @@ public class FileUploaderUtils {
 	 * 
 	 * @return 返回图片保存相对路径
 	 */
-	public static final String saveImage(MultipartFile multipartFile, String modularName) {
+	public static final Map<String,String> saveImage(MultipartFile multipartFile, String modularName) {
 		String fileName = null;
+		Map<String,String> map=new HashMap<String,String>();
 		try {
             // 文件保存路径  
 			String dirname = null;
@@ -49,15 +52,17 @@ public class FileUploaderUtils {
     			file.mkdirs();
     		}
             String fileSuffix= getSuffixByFilename(multipartFile.getOriginalFilename()).toUpperCase();
-            fileName = UUID.randomUUID().toString().replaceAll("-", "") + fileSuffix;
+            String uploadName=UUID.randomUUID().toString().replaceAll("-", "");
+            fileName = uploadName+ fileSuffix;
             // 转存文件  
             multipartFile.transferTo(new File(filePath + fileName));
             fileName = dirname + "/" + fileName ;
-
+            map.put("fileName", fileName);
+            map.put("uploadName", uploadName);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
-		return fileName;
+		return map;
     }
 	
 	/**

@@ -56,3 +56,6 @@ tbody > tr > th {font-weight: normal; }
 .login-bg{
 	background-image: url(bg.png)
 }
+input[readonly]{
+	background-color:#fff!important
+}

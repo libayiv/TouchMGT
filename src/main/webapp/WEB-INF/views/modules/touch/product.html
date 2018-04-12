@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>产品分类列表</title>
+<#include "/header.html">
+<link rel="stylesheet"
+	href="${request.contextPath}/statics/css/switch.css">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<!-- <div class="panel-heading">产品分类列表</div> -->
+		<div class="grid-btn">
+			<div class="form-group col-sm-2">
+				<input type="text" class="form-control" v-model="q.title" @keyup.enter="search" placeholder="产品类别名称">
+			</div>
+			<a class="btn btn-default" @click="search">查询</a>
+			<!-- <#if shiro.hasPermission("touch:banner:save")>
+			<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if> -->
+		<!-- 	<#if shiro.hasPermission("touch:banner:updateStatus")>
+			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if> -->
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+
+	<div v-show="!showList&&!showWeb&&!showImage" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal" style="width:100%">
+			<div class="form-group">
+					<div class="col-sm-2 control-label">产品图文介绍</div>
+					<div class="col-sm-10">
+						<!-- 富文本编辑器 -->
+						<div id="editor" type="text/plain" style="height:300px;"></div>
+					</div>
+			</div>
+			<div class="form-group">
+					<div class="col-sm-2 control-label">产品说明书</div>
+					<div class="col-sm-10">
+						<!-- 富文本编辑器 -->
+						<div id="editor1" type="text/plain" style="height:300px;"></div>
+					</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+	
+	<div v-show="showWeb" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal" style="width:100%">
+			<div class="form-group">
+					<div class="col-sm-2 control-label">Product Description</div>
+					<div class="col-sm-10">
+						<!-- 富文本编辑器 -->
+						<div id="part1" type="text/plain" style="height:300px;"></div>
+					</div>
+			</div>
+			<div class="form-group">
+					<div class="col-sm-2 control-label">Advantanges</div>
+					<div class="col-sm-10">
+						<!-- 富文本编辑器 -->
+						<div id="part2" type="text/plain" style="height:300px;"></div>
+					</div>
+			</div>
+			<div class="form-group">
+					<div class="col-sm-2 control-label">Detailed Information</div>
+					<div class="col-sm-10">
+						<!-- 富文本编辑器 -->
+						<div id="part3" type="text/plain" style="height:300px;"></div>
+					</div>
+			</div>
+			<div class="form-group">
+					<div class="col-sm-2 control-label">Porduct Display</div>
+					<div class="col-sm-10">
+						<!-- 富文本编辑器 -->
+						<div id="part4" type="text/plain" style="height:300px;"></div>
+					</div>
+			</div>
+			<div class="form-group">
+					<div class="col-sm-2 control-label">Product Photos</div>
+					<div class="col-sm-10">
+						<!-- 富文本编辑器 -->
+						<div id="part5" type="text/plain" style="height:300px;"></div>
+					</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveWeb" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+
+	<div v-show="showImage" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal" style="width:100%">
+			<div class="form-group">
+					<div class="col-sm-2 control-label">产品图片</div>
+					<div class="col-sm-10">
+					<a class="btn btn-primary" id="product_upload"><i class="fa fa-plus"></i>&nbsp;图片上传</a>
+					<p>请注意： 上传的图片格式为 jpg,jpeg,png 格式。规格大小≥ 500*500px；</p>
+					</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-12" style="border: solid 1px #cfcfcf;  border-left: 0px; border-right: 0px;">
+					<template v-for="image in uploadImages">
+					<a class="upload_delete" href="javascript:" onclick="vm.deleteImg(this)" style="margin-left: 2em;">删除</a>
+						<img v-bind:src="image" style="width:150px;height:150px;padding: 5px;">
+					</template>
+				</div>
+			</div>
+			
+			<div class="form-group">
+					<template v-for="image in images" :key="image.image_id">
+						<div v-if="image.image_id" class="col-sm-2 control-label" style="width:150px;height:150px;margin-left:10px">
+							 <img v-bind:src="image.product_photo" style="width:150px;height:150px;margin-bottom: 5px;">
+							 <input type="button" class="btn btn-danger btn-xs"  @click="updateImgStatus(image,0)" value="删除"/>
+							 <input type="button" class="btn btn-primary btn-xs" style="margin-left: 3px;" @click="updateImgStatus(image,1)" value="设为封面"/>
+						</div>
+					</template>
+			</div>
+			
+			<div class="form-group" style="margin-top: 6em;">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveImage" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+			
+		</form>
+	</div>
+	
+</div>
+<script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
+<script src="${request.contextPath}/statics/ueditor/ueditor.config.js"></script>
+	<script src="${request.contextPath}/statics/ueditor/ueditor.all.js"></script>
+	<script src="${request.contextPath}/statics/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script src="${request.contextPath}/statics/js/modules/touch/product.js?_${.now?long}"></script>
+</body>
+</html>

@@ -50,7 +50,7 @@
 								v-model="message.type" value="2" />定时发送</label>
 						</div>
 						<div class="col-md-4" v-if="message.type == 2">
-							<mz-datepicker format="yyyy-MM-dd HH:mm:ss" :time.sync="message.autoSendTime"></mz-datepicker>
+							<mz-datepicker format="yyyy-MM-dd HH:mm:ss" :time.sync="message.auto_date"></mz-datepicker>
 							
 						</div>
 					</div>
@@ -70,8 +70,8 @@
 							<div class="col-md-2 control-label">选择国家</div>
 							<div class="col-md-10">
 								<template v-for="company in companys"> <label
-									class="radio-inline"> <input type="checkbox"
-									name="platform" v-bind:value="company.VALUE"
+									class="radio-inline" style="margin-left:10px;padding-left:0px;"> <input type="checkbox"
+									name="platform[]" v-bind:value="company.VALUE"
 									v-model="acceptorRange.country" /> {{ company.VALUE }}
 								</label> </template>
 							</div>

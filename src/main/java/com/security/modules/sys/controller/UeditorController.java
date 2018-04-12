@@ -39,7 +39,8 @@ public class UeditorController {
 	public String exec(HttpServletRequest request) throws UnsupportedEncodingException{ 
 		request.setCharacterEncoding("utf-8");
 		String rootPath = request.getRealPath("/");
-		return new ActionEnter( request, rootPath ).exec();
+		String reStr = new ActionEnter( request, rootPath ).exec();
+		return reStr;
 	}
 /*	
     @RequestMapping(value = "/image")

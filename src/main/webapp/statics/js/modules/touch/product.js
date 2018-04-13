@@ -176,16 +176,19 @@ var vm = new Vue({
         	//1.设为封面，0.删除
         	var status=null;
         	var obj=null;
+        	var str=null;
         	if(img.image_id==null){
         		return false;
         	}
         	if(type==1){
         		img.is_coversrc='1';
         		obj=img;
+        		str="你确定要将该图片设为封面？";
         	}else{
         		obj={"status":'0',"image_id":img.image_id};
+        		str="你确定要将删除该图片？";
         	}
-        	confirm("你确定要该图片设为封面？", function(){
+        	confirm(str, function(){
         		var url = "touch/product/imgUpdate";
                 $.ajax({
                     type: "POST",

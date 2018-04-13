@@ -235,6 +235,9 @@ public class BFVoteInfController extends AbstractController {
 		map.put("rank", vote.getRank()); //序号
 		map.put("id", vote.getId());
 		Map<String, Object> repeatMap = null;
+		if(Integer.valueOf(vote.getRank()) > 100){
+			throw new TouchException("序号长度不得大于100");
+		}
 		try {
 			repeatMap = sortNumService.repeat(map);
 		} catch (Exception e) {

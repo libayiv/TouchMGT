@@ -72,12 +72,7 @@ $(function () {
             // res是服务器返回的数据
         	vm.configList = res.config;
         },
-        beforeSubmitCell :function(rowid, cellname, value, iRow, iCol){  
-            // 传递参数  
-        	var platform= $("#jqGrid").getCell(rowid,'platform');
-        	var data = {'pid':rowid, 'sortNum':value, 'platform':platform};  
-            return data;
-         },
+       
          afterSubmitCell:function(serverresponse, rowid, cellname, value, iRow, iCol){
         	 //修改失败
         	 if(serverresponse.responseJSON.code == 500){
@@ -191,11 +186,14 @@ $(function () {
         }
     });
     
-    $("#datetimeStart").datetimepicker({
-        format: 'yyyy-mm-dd',
-        minView:'month',
-        language: 'zh-CN',
-        autoclose:true,
+ /*   $("#datetimeStart").datetimepicker({
+    	format: 'yyyymm',  
+        weekStart: 1,  
+        autoclose: true,  
+        startView: 3,  
+        minView: 3,  
+        forceParse: false,  
+        language: 'zh-CN'  
     }).on("changeDate",function(){
     	vm.activity.start_time=$("#datetimeStart").val();
     });
@@ -206,7 +204,7 @@ $(function () {
         autoclose:true,
     }).on("changeDate",function(){
     	vm.activity.end_time=$("#datetimeEnd").val();
-    });
+    });*/
 });
 var hasPermission;
 var platformList = getDictList("PLATFORM");
@@ -307,8 +305,8 @@ var vm = new Vue({
         	$("#activity_img").removeAttr("src");
             $.get(baseURL + "touch/activity/info/"+pid, function(r){
                 vm.activity = r.activity;
-                $("#datetimeStart").val(r.activity.start_time);
-                $("#datetimeEnd").val(r.activity.end_time);
+                /*$("#datetimeStart").val(r.activity.start_time);
+                $("#datetimeEnd").val(r.activity.end_time);*/
                 if(type!=null){
               		 vm.activity.stage=type;
                	}

@@ -157,6 +157,9 @@ public class BFActivityController extends AbstractController {
 	//	map.put("pc_valid", activity.getPc_valid()); //所属平台
 		map.put("id", activity.getId());
 		Map<String, Object> repeatMap = null;
+		if(Integer.valueOf(activity.getRank()) > 100){
+			throw new TouchException("序号长度不得大于100");
+		}
 		try {
 			repeatMap = sortNumService.repeat(map);
 		} catch (Exception e) {
@@ -166,6 +169,8 @@ public class BFActivityController extends AbstractController {
 		if((int)repeatMap.get("code") != 0){
 			throw new TouchException(repeatMap.get("msg").toString());
 		}
+		
+		
 	}
 	
 	/**

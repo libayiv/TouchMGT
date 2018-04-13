@@ -177,6 +177,9 @@ public class BFBannerController extends AbstractController {
 		map.put("pc_valid", banner.getPc_valid()); //所属平台
 		map.put("id", banner.getId());
 		Map<String, Object> repeatMap = null;
+		if(Integer.valueOf(banner.getRank()) > 100){
+			throw new TouchException("序号长度不得大于100");
+		}
 		try {
 			repeatMap = sortNumService.repeat(map);
 		} catch (Exception e) {

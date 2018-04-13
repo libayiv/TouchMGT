@@ -265,7 +265,7 @@ var vm = new Vue({
 					data : JSON.stringify(params),
 					success : function(r) {
 						if (r.code === 0) {
-							alert('操作成功', function() {
+							alert('添加消息队列成功！', function() {
 								vm.reload();
 							});
 						} else {

@@ -1,4 +1,5 @@
 $(function() {
+	
 	$("#jqGrid")
 			.jqGrid(
 					{
@@ -166,7 +167,8 @@ var vm = new Vue({
 		companys : companyList,
 		configList : {},
 		message : {
-			status : 1
+			status : 1,
+			
 		},
 		acceptorRange : {
 			rankmin : 0,
@@ -174,7 +176,8 @@ var vm = new Vue({
 			pvmin : 0,
 			pvmax : 0,
 			gpvmin : 0,
-			gpvmax : 0
+			gpvmax : 0,
+			country:[]
 		}
 	},
 	mounted : function() {
@@ -203,7 +206,8 @@ var vm = new Vue({
 			// $("#selectType").find("option:selected").removeAttr("selected");
 			vm.message = {
 				status : 1,
-				acc_type : 1
+				acc_type : 1,
+				type:1
 			};
 			$('#sure').attr('disabled', false);
 			UE.getEditor('editor').addListener("ready", function () {
@@ -272,6 +276,7 @@ var vm = new Vue({
 			});
 		},
 		saveOrUpdate : function() {
+			//return console.warn(this.acceptorRange.country.join(','))
 			var re = /^[0-9]+$/;
 			/*
 			 * if(vm.message.rank==null || vm.banner.rank==''){ alert("请填写序号!");
@@ -315,7 +320,8 @@ var vm = new Vue({
 							+ vm.acceptorRange.gpvmax + "]";
 					var rankRange = "会员等级[" + vm.acceptorRange.rankmin + ","
 							+ vm.acceptorRange.rankmax + "]";
-					var countrys = "国家[" + vm.acceptorRange.country + "]";
+					var countryStr =  vm.acceptorRange.country.join(','); 
+					var countrys = "国家[" + countryStr + "]";
 					vm.message.acceptor = countrys + " " + pvRange + " "
 							+ gpvRange + " " + rankRange;
 				}

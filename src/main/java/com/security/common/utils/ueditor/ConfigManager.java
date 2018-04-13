@@ -187,7 +187,8 @@ public final class ConfigManager {
 	}
 	
 	private String getConfigPath () {
-		return this.getClass().getResource("/").getPath() +  ConfigManager.configFileName;
+		String path = this.getClass().getResource("/").getPath() +  ConfigManager.configFileName;
+		return path;
 		//return this.parentPath + File.separator + ConfigManager.configFileName;
 	}
 

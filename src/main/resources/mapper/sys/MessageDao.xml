@@ -115,7 +115,7 @@
 			#{acceptor,jdbcType=VARCHAR},
 			#{type,jdbcType=INTEGER},
 			#{acc_type,jdbcType=INTEGER},
-			to_date(#{auto_date,jdbcType=DATE},'yyyy-mm-dd')
+			to_date(#{auto_date,jdbcType=DATE},'yyyy-mm-dd hh24:mi:ss')
 		)
 	</insert>
 	<select id="queryList" resultMap="MessageInfoMap" parameterType="java.util.Map">

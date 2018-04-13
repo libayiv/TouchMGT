@@ -66,7 +66,7 @@ public class MessageServiceImpl implements MessageService {
 	public void sendMsg(String[] pids) {
 		//  获取未发送信息的MessageInfo
 		List<MessageInfo> list = messageDao.queryHandSendList(pids);
-		for(int index = 0 ; index<=list.size() ; index++){
+		for(int index = 0 ; index<list.size() ; index++){
 			MessageInfo msg = list.get(index);
 			JSONObject sendJson = new JSONObject();
 			Map<String,Object> paramMap = new HashMap<String, Object>();
@@ -105,7 +105,7 @@ public class MessageServiceImpl implements MessageService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String[] ids = new String[list.size()] ;
 		int sendCount = 0;
-		for(int index = 0 ; index <= list.size() ; index++){
+		for(int index = 0 ; index <list.size() ; index++){
 			MessageInfo msg = list.get(index);
 			JSONObject sendJson = new JSONObject();
 			Map<String,Object> paramMap = new HashMap<String, Object>();

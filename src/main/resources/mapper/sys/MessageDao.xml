@@ -182,7 +182,7 @@
 	
 	
 	<update id="updateSendStatus" parameterType="java.util.List"> 
-		UPDATE <include refid="queryBase" /> SET STATUS = 2 
+		UPDATE <include refid="tableName" /> SET STATUS = 2 
 		WHERE ID IN 
 		<foreach collection="array" item="item" index="index" open="(" separator="," close=")">
 			#{item}

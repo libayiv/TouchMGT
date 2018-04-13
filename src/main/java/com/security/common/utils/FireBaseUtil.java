@@ -8,13 +8,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.security.modules.sys.controller.MessageController;
 
 public class FireBaseUtil {
 	public final static String AUTH_KEY_FCM= "AAAA3uYRTaY:APA91bH7Qfoz3cHcu_JxUSr4WDFymPReKmRbIJvimWE0MDp-HuHNeqnBoWliFKEGzsps705wEcKhWVln4aoesQvEU7P94bEby_KrkkBjyrHu8UXFGpbWzPMHjQpG5AYk3XnO7M5bNy96";//app服务密钥  
     public final static String API_URL_FCM = "https://fcm.googleapis.com/fcm/send";//谷歌推送地址  
-      
+    private Logger log = LoggerFactory.getLogger(FireBaseUtil.class); 
       
 /*    public static void main(String[] args) {  
         pushFCMNotification();  
@@ -62,6 +66,7 @@ public class FireBaseUtil {
             reader.close();  
         } catch (Exception e) {  
             e.printStackTrace();  
+            
         }  
     }  
 }

@@ -24,8 +24,8 @@ var vm = new Vue({
 		},
 		saveOrUpdate : function() {
 			var content = vm.ue.getContent();
-			var contentBase64 = encodeBase64(content);
-			vm.outlets.content =contentBase64;
+        	$.base64.utf8encode = true;  
+        	vm.outlets.content=$.base64.btoa(content);
 			var param = {"outlets":vm.outlets}
 			$.ajax({
 				type : "POST",

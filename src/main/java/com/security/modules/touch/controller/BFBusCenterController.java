@@ -72,10 +72,9 @@ public class BFBusCenterController {
 		ValidatorUtils.validateEntity(busCenter, UpdateGroup.class);
 		try {
 			//checkSortNum(message)
-			System.out.println("编码前-----------"+busCenter.getContent());
 			String contentBase64 = busCenter.getContent();
 			String content = CommonUtils.decodeBase64(contentBase64);
-			System.out.println("编码后-----------"+content);
+
 			busCenter.setContent(content);
 			busCenterService.update(busCenter);
 		} catch (Exception e) {

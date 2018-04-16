@@ -314,13 +314,13 @@ var vm = new Vue({
             $.post(baseURL + "touch/product/info",{"pid":pid,"code":code}, function(r){
             	if(r.product!=null){
             		vm.product = r.product;
-                    UE.getEditor('editor').setContent(r.product.product_intro);
-                    UE.getEditor('editor1').setContent(r.product.product_instruction);
-                    UE.getEditor('part1').setContent(r.product.part1);
-                    UE.getEditor('part2').setContent(r.product.part2);
-                    UE.getEditor('part3').setContent(r.product.part3);
-                    UE.getEditor('part4').setContent(r.product.part4);
-                    UE.getEditor('part5').setContent(r.product.part5);
+                    UE.getEditor('editor').setContent(r.product.product_intro?r.product.product_intro:"");
+                    UE.getEditor('editor1').setContent(r.product.product_instruction?r.product.product_instruction:"");
+                    UE.getEditor('part1').setContent(r.product.part1?r.product.part1:"");
+                    UE.getEditor('part2').setContent(r.product.part2?r.product.part2:"");
+                    UE.getEditor('part3').setContent(r.product.part3?r.product.part3:"");
+                    UE.getEditor('part4').setContent(r.product.part4?r.product.part4:"");
+                    UE.getEditor('part5').setContent(r.product.part5?r.product.part5:"");
             	}     
             });
         },

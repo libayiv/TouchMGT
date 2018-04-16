@@ -55,7 +55,7 @@ public class BFProductInfController {
 				if(productImages.isEmpty()){
 					bfProductInf.setProduct_photo("http://www.crc360.cn/upload/thumb/default.jpg");
 				}else{
-					bfProductInf.setProduct_photo(fileUrlPath+"/image/product/"+productImages.get(0).getProduct_photo()+".JPG");
+					bfProductInf.setProduct_photo(fileUrlPath+"/image/product/"+productImages.get(0).getProduct_photo());
 				}
 			}
 			total = productService.count(query);
@@ -202,7 +202,7 @@ public class BFProductInfController {
 			product.setProduct_code(code);
 			list = productService.queryImageList(product);
 			for (BFProductInf bfProductInf : list) {
-				bfProductInf.setProduct_photo(fileUrlPath+"/image/product/"+bfProductInf.getProduct_photo()+".JPG");
+				bfProductInf.setProduct_photo(fileUrlPath+"/image/product/"+bfProductInf.getProduct_photo());
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

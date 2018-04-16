@@ -58,7 +58,7 @@ public class FileUploaderUtils {
             multipartFile.transferTo(new File(filePath + fileName));
             fileName = dirname + "/" + fileName ;
             map.put("fileName", fileName);
-            map.put("uploadName", uploadName);
+            map.put("uploadName", uploadName+ fileSuffix);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}

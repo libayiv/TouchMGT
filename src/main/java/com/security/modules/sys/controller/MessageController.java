@@ -218,6 +218,7 @@ public class MessageController {
 			for(int len =0 ; len < objects.length ;len ++){
 				pids[len] = (String) objects[len];
 			}
+			
 			messageService.sendMsg(pids);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

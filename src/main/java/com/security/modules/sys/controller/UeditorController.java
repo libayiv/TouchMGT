@@ -1,26 +1,13 @@
 package com.security.modules.sys.controller;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.security.common.utils.CommonUtils;
-import com.security.common.utils.FileUploaderUtils;
 import com.security.common.utils.ueditor.ActionEnter;
 
 /**
@@ -29,6 +16,7 @@ import com.security.common.utils.ueditor.ActionEnter;
  *
  */
 @RestController
+//@CrossOrigin
 @RequestMapping("/sys/ueditor")
 public class UeditorController {
  

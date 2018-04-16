@@ -210,10 +210,11 @@ var vm = new Vue({
 				type:1
 			};
 			$('#sure').attr('disabled', false);
-			UE.getEditor('editor').addListener("ready", function () {
+			UE.getEditor('editor').setContent('');
+			/*UE.getEditor('editor').addListener("ready", function () {
 				// editor准备好之后才可以使用
 				UE.getEditor('editor').setContent('');
-			}); 
+			});*/ 
 		},
 		update : function(pid) {
 			vm.showList = false;
@@ -265,7 +266,7 @@ var vm = new Vue({
 					data : JSON.stringify(params),
 					success : function(r) {
 						if (r.code === 0) {
-							alert('操作成功', function() {
+							alert('添加消息队列成功！', function() {
 								vm.reload();
 							});
 						} else {

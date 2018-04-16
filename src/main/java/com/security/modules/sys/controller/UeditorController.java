@@ -29,7 +29,6 @@ import com.security.common.utils.ueditor.ActionEnter;
  *
  */
 @RestController
-@CrossOrigin
 @RequestMapping("/sys/ueditor")
 public class UeditorController {
  

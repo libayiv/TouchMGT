@@ -153,7 +153,7 @@ public class BFVoteInfController extends AbstractController {
 		log.info("添加投票选项:{}", vote);		
 		try {
 			byte[] contentByte = Base64.decode(vote.getContent().getBytes("UTF-8"));    
-			String content = new String(contentByte);
+			String content = new String(contentByte,"UTF-8");
 			vote.setContent(content);
 			bfVoteListService.saveDetail(vote);
 		}catch (Exception e) {
@@ -196,7 +196,7 @@ public class BFVoteInfController extends AbstractController {
 		ValidatorUtils.validateEntity(vote, UpdateGroup.class);
 		try {
 			byte[] contentByte = Base64.decode(vote.getContent().getBytes("UTF-8"));    
-			String content = new String(contentByte);
+			String content = new String(contentByte,"UTF-8");
 			vote.setContent(content);
 			bfVoteListService.updateDetail(vote);
 		} catch (Exception e) {

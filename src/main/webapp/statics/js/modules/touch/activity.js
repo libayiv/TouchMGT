@@ -91,7 +91,7 @@ $(function () {
 		colModel: [			
 			{ label: '编号', name: 'id', index: "pid", width: 45, key: true, hidden: true},
 			{ label: '用户头像', name: 'memb_photo',width: 60, formatter: function(value, options, row){
-				return '<img src="'+ localStorage.fileUrlPath + value +'" width="50px;" />';
+				return '<img src="' + value +'" width="50px;" />';
 			} },
 			{ label: '用户编号',width: 60, name: 'user_id' },
 			{ label: '用户名称',width: 60, name: 'memb_name' },
@@ -134,7 +134,7 @@ $(function () {
 		colModel: [			
 			{ label: '编号', name: 'id', index: "pid", width: 45, key: true, hidden: true},
 			{ label: '用户头像', name: 'memb_photo',width: 60, formatter: function(value, options, row){
-				return '<img src="'+ localStorage.fileUrlPath + value +'" width="50px;" />';
+				return '<img src="'+ value +'" width="50px;" />';
 			} },
 			{ label: '用户名称',width: 60, name: 'memb_name'},
 			{ label: '活动名称',width: 60, name: 'title' },
@@ -281,6 +281,18 @@ var vm = new Vue({
         		alert("请上传图片！");
         		return;
         	}
+        	if(vm.activity.start_time== null || vm.activity.start_time==''){
+        		alert("请填写开始时间！");
+        		return;
+        	}
+        	if(vm.activity.end_time== null || vm.activity.end_time==''){
+        		alert("请填写结束时间！");
+        		return;
+        	}
+        	if(vm.compareDate(vm.activity.start_time,vm.activity.end_time)){
+        		alert("结束时间需大于开始时间！");
+        		return;
+        	}
         	var content =  UE.getEditor('editor').getContent();
         	$.base64.utf8encode = true;  
         	vm.activity.content=$.base64.btoa(content);
@@ -400,8 +412,11 @@ var vm = new Vue({
         },
         feeDisable: function(pid,activity_id){
         	vm.updateFeed(pid, "0",activity_id);
+        },
+        compareDate:function(d1,d2){
+        	 return ((new Date(d1.replace(/-/g,"\/"))) > (new Date(d2.replace(/-/g,"\/"))));
         }
-    
+        
     }
 });
 

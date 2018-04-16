@@ -216,14 +216,14 @@ $(function () {
             }
         }
     });
-    $("#datetimeEnd").datetimepicker({
+  /*  $("#datetimeEnd").datetimepicker({
         format: 'yyyy-mm-dd',
         minView:'month',
         language: 'zh-CN',
         autoclose:true,
     }).on("changeDate",function(){
     	vm.vote.endTime=$("#datetimeEnd").val();
-    });
+    });*/
 });
 var hasPermission;
 
@@ -262,7 +262,6 @@ var vm = new Vue({
 			vm.showUser=false;
 			vm.showDetail=false;
             vm.title = "新增投票活动";
-            $("#datetimeEnd").val("");
             vm.vote = {status:1,views:0, type:'vote',fileName:'', oriFileName:'', rank:0, playbackLength:10};
 
         },
@@ -273,7 +272,6 @@ var vm = new Vue({
 			vm.showUser=false;
 			vm.showDetail=false;
             vm.title = "新增健康测评";
-            $("#datetimeEnd").val("");
             vm.vote = {status:1,views:0, type:'health',fileName:'', oriFileName:'', rank:0, playbackLength:10};
 
         },
@@ -435,7 +433,6 @@ var vm = new Vue({
         	$("#vote_img").removeAttr("src");
             $.get(baseURL + "touch/vote/info/"+pid, function(r){
                 vm.vote = r.vote;
-                $("#datetimeEnd").val(r.vote.endTime);
 
                 if(r.vote.coversrc != null && r.vote.coversrc != ''){
                

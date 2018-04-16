@@ -121,7 +121,7 @@ public class CommonUtils {
 	}
 	public static String decodeBase64(String base64Str) throws UnsupportedEncodingException{
 		byte[] contentByte = Base64.decodeBase64(base64Str.getBytes("UTF-8"));
-		String content = new String(contentByte);
+		String content = new String(contentByte,"UTF-8");
 		return content;
 	}
 	

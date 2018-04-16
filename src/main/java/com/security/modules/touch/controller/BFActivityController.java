@@ -88,7 +88,7 @@ public class BFActivityController extends AbstractController {
 		try {
 			checkSortNum(activity);
 			byte[] contentByte = Base64.decode(activity.getContent().getBytes("UTF-8"));    
-			String content = new String(contentByte);
+			String content = new String(contentByte,"UTF-8");
 			activity.setContent(content);
 			bfActivityService.save(activity);
 		}catch (TouchException e1) {
@@ -112,7 +112,7 @@ public class BFActivityController extends AbstractController {
 		ValidatorUtils.validateEntity(activity, UpdateGroup.class);
 		try {
 			byte[] contentByte = Base64.decode(activity.getContent().getBytes("UTF-8"));    
-			String content = new String(contentByte);
+			String content = new String(contentByte,"UTF-8");
 			activity.setContent(content);
 			checkSortNum(activity);
 			bfActivityService.update(activity);

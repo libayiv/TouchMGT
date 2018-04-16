@@ -79,8 +79,8 @@ public class BFProductInfController {
 			byte[] contentByte = Base64.decode(product.getProduct_instruction().getBytes("UTF-8")); 
 			byte[] introByte = Base64.decode(product.getProduct_intro().getBytes("UTF-8"));    
 
-			String content = new String(contentByte);
-			String intro = new String(introByte);
+			String content = new String(contentByte,"UTF-8");
+			String intro = new String(introByte,"UTF-8");
 			
 			product.setProduct_intro(intro);
 			product.setProduct_instruction(content);
@@ -110,35 +110,35 @@ public class BFProductInfController {
 			String webPart="";
 			if(!StringUtils.isNullOrEmpty(product.getPart1())){
 				byte[] contentByte = Base64.decode(product.getPart1().getBytes("UTF-8"));    
-				String part1 = new String(contentByte);
+				String part1 = new String(contentByte,"UTF-8");
 				webStr+="<li data-to-part='part1'>Product Descriptions</li>";
 				webPart+="<div id='part1'>"+part1+"</div>";
 				product.setPart1(part1);
 			}
 			if(!StringUtils.isNullOrEmpty(product.getPart2())){
 				byte[] contentByte = Base64.decode(product.getPart2().getBytes("UTF-8"));    
-				String part2 = new String(contentByte);
+				String part2 = new String(contentByte,"UTF-8");
 				webStr+="<li data-to-part='part2'>Why Us</li>";
 				webPart+="<div id='part2'>"+part2+"</div>";
 				product.setPart2(part2);
 			}
 			if(!StringUtils.isNullOrEmpty(product.getPart3())){
 				byte[] contentByte = Base64.decode(product.getPart3().getBytes("UTF-8"));    
-				String part3 = new String(contentByte);
+				String part3 = new String(contentByte,"UTF-8");
 				webStr+="<li data-to-part='part3'>Supplement Facts</li>";
 				webPart+="<div id='part3'>"+part3+"</div>";
 				product.setPart3(part3);
 			}
 			if(!StringUtils.isNullOrEmpty(product.getPart4())){
 				byte[] contentByte = Base64.decode(product.getPart4().getBytes("UTF-8"));    
-				String part4 = new String(contentByte);
+				String part4 = new String(contentByte,"UTF-8");
 				webStr+="<li data-to-part='part4'>Product Displays</li>";
 				webPart+="<div id='part4'>"+part4+"</div>";
 				product.setPart4(part4);
 			}
 			if(!StringUtils.isNullOrEmpty(product.getPart5())){
 				byte[] contentByte = Base64.decode(product.getPart5().getBytes("UTF-8"));    
-				String part5 = new String(contentByte);
+				String part5 = new String(contentByte,"UTF-8");
 				webStr+="<li data-to-part='part5'>Product Photos</li>";
 				webPart+="<div id='part5'>"+part5+"</div>";
 				product.setPart5(part5);

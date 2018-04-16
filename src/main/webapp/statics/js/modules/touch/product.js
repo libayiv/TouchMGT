@@ -186,7 +186,7 @@ var vm = new Vue({
         		str="你确定要将该图片设为封面？";
         	}else{
         		obj={"status":'0',"image_id":img.image_id};
-        		str="你确定要将删除该图片？";
+        		str="确定删除该图片？";
         	}
         	confirm(str, function(){
         		var url = "touch/product/imgUpdate";
@@ -197,7 +197,16 @@ var vm = new Vue({
                     data: JSON.stringify(obj),
                     success: function(r){
                         if(r.code === 0){
-                            alert('操作成功');
+                        	if(type==1){
+                        		alert('操作成功');
+                        	}else{
+                        		alert('操作成功', function(){
+                                    var title=vm.title.split("-");
+                                	vm.updateImg(img.product_id,img.product_code,title[1]);
+                                });
+                        	}
+                        	
+
                         }else{
                             alert(r.msg);
                         }
@@ -212,6 +221,11 @@ var vm = new Vue({
         	$.base64.utf8encode = true;  
         	vm.product.product_intro=$.base64.btoa(product_intro);
         	vm.product.product_instruction=$.base64.btoa(product_instruction);
+        	vm.product.part1=null;
+        	vm.product.part2=null;
+          	vm.product.part3=null;
+        	vm.product.part4=null;
+          	vm.product.part5=null;
             var url = "touch/product/update";
             $.ajax({
                 type: "POST",
@@ -241,6 +255,9 @@ var vm = new Vue({
           	vm.product.part3=$.base64.btoa(part3);
         	vm.product.part4=$.base64.btoa(part4);
           	vm.product.part5=$.base64.btoa(part5);
+          	vm.product.product_intro=null;
+          	vm.product.product_instruction=null;
+          
             var url = "touch/product/web";
             $.ajax({
                 type: "POST",

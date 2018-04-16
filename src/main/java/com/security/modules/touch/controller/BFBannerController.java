@@ -127,7 +127,9 @@ public class BFBannerController extends AbstractController {
 	public R update(@RequestBody BFBannerInf banner){
 		ValidatorUtils.validateEntity(banner, UpdateGroup.class);
 		try {
-			checkSortNum(banner);
+			if(!"1".equals(banner.getIs_single())){
+				checkSortNum(banner);
+			}
 			bfBannerService.update(banner);
 		} catch(TouchException e){
 			log.error(e.getMessage(), e);

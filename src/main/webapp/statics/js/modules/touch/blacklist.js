@@ -132,7 +132,7 @@ var vm = new Vue({
             var membId = String(vm.q.membId);
             var page = $("#jqGrid").jqGrid('getGridParam','page');
             $("#jqGrid").jqGrid('setGridParam',{
-               // postData:{'membId': membId.toUpperCase()},
+                postData:{'membId': membId.toUpperCase()},
                 page:page
             }).trigger("reloadGrid");
         },

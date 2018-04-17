@@ -27,6 +27,14 @@ $(function() {
 									name : 'intro'
 								},
 								{
+									label : '发送状态',
+									name : 'status',
+									width : 50,
+									formatter: function(value, options, row){
+										 return value == 1 ? '未发送' : '已发送';
+									}
+								},
+								{
 									label : '类型',
 									name : 'type',
 									formatter: function(value, options, row){

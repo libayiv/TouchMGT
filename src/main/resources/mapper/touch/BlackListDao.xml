@@ -137,7 +137,7 @@
 			<if test="id != null and id != ''">
 				AND ID = #{id}
 			</if>
-			<if test="membId != null and membId.trim() != ''">
+			<if test="membId != null and membId.trim() != '' and membId.trim() != 'NULL'">
 				AND MEMB_ID LIKE CONCAT(CONCAT('%',#{membId}),'%') 
 			</if>
 			<if test="createDate != null and createDate != ''">

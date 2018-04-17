@@ -31,6 +31,17 @@ $(function () {
 			gridComplete:function(){
 				//隐藏grid底部滚动条
 				$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
+			},
+			afterSubmitCell : function(serverresponse, rowid,
+					cellname, value, iRow, iCol) {
+				// 修改失败
+				if (serverresponse.responseJSON.code == 500) {
+					alert(serverresponse.responseJSON.msg);
+				} else {
+					alert('操作成功', function() {
+						vm.reload();
+					});
+				}
 			}
 	});
 
@@ -118,9 +129,10 @@ var vm = new Vue({
         },
         reload: function () {
             vm.showList = true;
+            var membId = String(vm.q.membId);
             var page = $("#jqGrid").jqGrid('getGridParam','page');
             $("#jqGrid").jqGrid('setGridParam',{
-                postData:{'membId': vm.q.membId.toUpperCase()},
+                postData:{'membId': membId.toUpperCase()},
                 page:page
             }).trigger("reloadGrid");
         },

@@ -205,9 +205,15 @@ $(function () {
     }).on("changeDate",function(){
     	vm.activity.end_time=$("#datetimeEnd").val();
     });*/
+    UE.getEditor('editor').addListener("ready", function () {  
+        // editor准备好之后才可以使用  
+    	 UE.getEditor('editor').setContent("");  
+
+    }); 
 });
 var hasPermission;
 var platformList = getDictList("PLATFORM");
+
 
 var vm = new Vue({
     el:'#rrapp',

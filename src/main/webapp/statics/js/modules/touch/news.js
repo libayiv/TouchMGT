@@ -136,6 +136,11 @@ $(function () {
 		}
 	});
 
+	UE.getEditor('editor').addListener("ready", function () {  
+        // editor准备好之后才可以使用  
+    	 UE.getEditor('editor').setContent("");  
+
+    }); 
 });
 var hasPermission;
 var platformList = getDictList("PLATFORM");

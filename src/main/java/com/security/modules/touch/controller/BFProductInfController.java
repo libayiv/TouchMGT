@@ -55,7 +55,11 @@ public class BFProductInfController {
 				if(productImages.isEmpty()){
 					bfProductInf.setProduct_photo("http://www.crc360.cn/upload/thumb/default.jpg");
 				}else{
-					bfProductInf.setProduct_photo(fileUrlPath+"/image/product/"+productImages.get(0).getProduct_photo());
+					if(productImages.get(0).getProduct_photo().contains(".")){
+						bfProductInf.setProduct_photo(fileUrlPath+"/image/product/"+productImages.get(0).getProduct_photo());
+					}else{
+						bfProductInf.setProduct_photo(fileUrlPath+"/imgonline/md5/"+productImages.get(0).getProduct_photo().substring(0, 2)+"/"+productImages.get(0).getProduct_photo()+".jpg");
+					}
 				}
 			}
 			total = productService.count(query);
@@ -202,7 +206,11 @@ public class BFProductInfController {
 			product.setProduct_code(code);
 			list = productService.queryImageList(product);
 			for (BFProductInf bfProductInf : list) {
-				bfProductInf.setProduct_photo(fileUrlPath+"/image/product/"+bfProductInf.getProduct_photo());
+				if(bfProductInf.getProduct_photo().contains(".")){
+					bfProductInf.setProduct_photo(fileUrlPath+"/image/product/"+bfProductInf.getProduct_photo());
+				}else{
+					bfProductInf.setProduct_photo(fileUrlPath+"/imgonline/md5/"+bfProductInf.getProduct_photo().substring(0, 2)+"/"+bfProductInf.getProduct_photo()+".jpg");
+				}
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

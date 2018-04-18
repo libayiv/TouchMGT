@@ -136,6 +136,15 @@ var vm = new Vue({
                 page:page
             }).trigger("reloadGrid");
         },
+        search: function () {
+            vm.showList = true;
+            var membId = String(vm.q.membId);
+            var page = 1;
+            $("#jqGrid").jqGrid('setGridParam',{
+                postData:{'membId': membId.toUpperCase()},
+                page:page
+            }).trigger("reloadGrid");
+        },
         updateStatus: function(ids){
         	var data = {'ids':ids};
             $.ajax({

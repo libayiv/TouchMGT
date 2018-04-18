@@ -349,6 +349,16 @@ var vm = new Vue({
                 page:page
             }).trigger("reloadGrid");
         },
+        search: function () {
+            vm.showList = true;
+            vm.showFeed = false;
+            vm.showApp = false;
+            var page = 1;
+            $("#jqGrid").jqGrid('setGridParam',{
+                postData:{'title': vm.q.title},
+                page:page
+            }).trigger("reloadGrid");
+        },
         reloadFeed: function (pid) {
             vm.showList = false;
             vm.showFeed = true;

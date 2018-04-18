@@ -163,6 +163,14 @@ var vm = new Vue({
                 postData:{'cate_name': vm.q.title},
                 page:page
             }).trigger("reloadGrid");
+        },
+        search: function () {
+            vm.showList = true;
+            var page = 1;
+            $("#jqGrid").jqGrid('setGridParam',{
+                postData:{'cate_name': vm.q.title},
+                page:page
+            }).trigger("reloadGrid");
         }
     }
 });

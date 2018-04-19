@@ -3,11 +3,13 @@ package com.security.common.utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Random;
 import java.util.UUID;
 
@@ -18,6 +20,20 @@ import org.apache.commons.codec.binary.Base64;
  * 
  */
 public class CommonUtils {
+
+	private static String savePath;
+	
+	static{
+		InputStream in = FileUploaderUtils.class.getClassLoader()  
+                .getResourceAsStream("config.properties");
+		Properties prop = new  Properties(); 
+		try {
+			prop.load(in);
+			savePath = prop.getProperty("FILE_SAVE_PATH");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * 获取指定位数的随机数
@@ -102,8 +118,9 @@ public class CommonUtils {
 	}
 
 	public static boolean uploadFile(byte[] dataBuf, String fileName,String path) {
-		File f = new File(CommonUtils.class.getResource("/").getPath());
-		String webPath = f.getParentFile().getParent();
+		/*File f = new File(CommonUtils.class.getResource("/").getPath());
+		String webPath = f.getParentFile().getParent();*/
+		String webPath=savePath;
 		try {
 			File folder=new File(webPath+"/"+path);
 			if(!folder.exists()){

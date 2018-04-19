@@ -97,6 +97,15 @@ var vm = new Vue({
         query: function () {
             vm.reload();
         },
+        search: function () {
+            vm.showList = true;
+
+            var page = 1;
+            $("#jqGrid").jqGrid('setGridParam',{
+            	postData:{'order_id': vm.q.order_id},
+                page:page
+            }).trigger("reloadGrid");
+        },
         reload: function () {
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam','page');

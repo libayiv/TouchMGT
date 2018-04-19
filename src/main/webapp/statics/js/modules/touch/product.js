@@ -226,6 +226,8 @@ var vm = new Vue({
           	vm.product.part3=null;
         	vm.product.part4=null;
           	vm.product.part5=null;
+          	vm.product.web_content=null;
+
             var url = "touch/product/update";
             $.ajax({
                 type: "POST",
@@ -257,6 +259,7 @@ var vm = new Vue({
           	vm.product.part5=$.base64.btoa(part5);
           	vm.product.product_intro=null;
           	vm.product.product_instruction=null;
+          	vm.product.web_content=null;
           
             var url = "touch/product/web";
             $.ajax({

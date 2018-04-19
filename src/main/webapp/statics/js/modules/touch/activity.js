@@ -205,9 +205,15 @@ $(function () {
     }).on("changeDate",function(){
     	vm.activity.end_time=$("#datetimeEnd").val();
     });*/
+    UE.getEditor('editor').addListener("ready", function () {  
+        // editor准备好之后才可以使用  
+    	 UE.getEditor('editor').setContent("");  
+
+    }); 
 });
 var hasPermission;
 var platformList = getDictList("PLATFORM");
+
 
 var vm = new Vue({
     el:'#rrapp',
@@ -338,6 +344,16 @@ var vm = new Vue({
             vm.showFeed = false;
             vm.showApp = false;
             var page = $("#jqGrid").jqGrid('getGridParam','page');
+            $("#jqGrid").jqGrid('setGridParam',{
+                postData:{'title': vm.q.title},
+                page:page
+            }).trigger("reloadGrid");
+        },
+        search: function () {
+            vm.showList = true;
+            vm.showFeed = false;
+            vm.showApp = false;
+            var page = 1;
             $("#jqGrid").jqGrid('setGridParam',{
                 postData:{'title': vm.q.title},
                 page:page

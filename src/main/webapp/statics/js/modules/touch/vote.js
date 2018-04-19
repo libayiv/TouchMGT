@@ -224,6 +224,11 @@ $(function () {
     }).on("changeDate",function(){
     	vm.vote.endTime=$("#datetimeEnd").val();
     });*/
+    UE.getEditor('editor').addListener("ready", function () {  
+        // editor准备好之后才可以使用  
+    	 UE.getEditor('editor').setContent("");  
+
+    }); 
 });
 var hasPermission;
 

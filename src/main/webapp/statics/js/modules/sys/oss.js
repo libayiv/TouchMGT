@@ -61,7 +61,7 @@ $(function () {
 			}
 	});
 
-	new AjaxUpload('#upload', {
+	/*new AjaxUpload('#upload', {
 		action: baseURL + "touch/fileupload/upload?modularName=fileupload",
 		name: 'file',
 		autoSubmit:true,
@@ -91,7 +91,7 @@ $(function () {
 				alert(r.msg);
 			}
 		}
-	});
+	});*/
 
 });
 var hasPermission;
@@ -213,6 +213,23 @@ var vm = new Vue({
 			$("#jqGrid").jqGrid('setGridParam',{ 
 				page:page
 			}).trigger("reloadGrid");
+		},
+		showDialog:function(){
+			
+		    layer.open({  
+		        type: 2,  
+		        title: 'bsp_apply_source',  
+		        shadeClose: true,  
+		        shade: 0.8,  
+		        area: ['380px', '60%'],  
+		        content: 'image.html', //iframe的url  
+		        end : function(index){  
+		          /*  var retVal = $("#layerResult").val();//返回一个标记用于控制,业务逻辑( 也可不写)  
+		            if(retVal=='0'){  
+		                                           // 当返回值为  0   执行 ,业务逻辑  
+		             }  */
+		                         }  
+		                });
 		}
 	}
 });

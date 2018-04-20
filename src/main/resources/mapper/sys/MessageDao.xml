@@ -121,6 +121,7 @@
 	<select id="queryList" resultMap="MessageInfoMap" parameterType="java.util.Map">
 		SELECT 
 		<include refid="queryBase" />
+		,ROW_NUMBER() OVER(ORDER BY PUBDATE DESC) RN
 		FROM
 		<include refid="tableName" />
 		<include refid="where" />

@@ -9,5 +9,5 @@ import com.security.modules.touch.entity.ProdCatEntity;
  * @时间 2018年3月16日 下午2:28:49
  */
 public interface ProdCatDao extends BaseDao<ProdCatEntity> {
-
+	ProdCatEntity queryBFCat(Object id);
 }

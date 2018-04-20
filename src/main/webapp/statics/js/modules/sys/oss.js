@@ -218,12 +218,13 @@ var vm = new Vue({
 			
 		    layer.open({  
 		        type: 2,  
-		        title: 'bsp_apply_source',  
+		        title: '文件上传',  
 		        shadeClose: true,  
 		        shade: 0.8,  
 		        area: ['380px', '60%'],  
 		        content: 'image.html', //iframe的url  
 		        end : function(index){  
+		        	debugger;
 		          /*  var retVal = $("#layerResult").val();//返回一个标记用于控制,业务逻辑( 也可不写)  
 		            if(retVal=='0'){  
 		                                           // 当返回值为  0   执行 ,业务逻辑  

@@ -9,7 +9,18 @@
 	</resultMap>
 	
 
-	
+	<insert id="save" parameterType="ProdCatEntity">
+		INSERT INTO
+		<include refid="tableName" />
+		(
+			<include refid="base" />
+		)
+		VALUES(
+			#{cate_id},
+			#{cate_name, jdbcType=VARCHAR},
+			#{cate_coversrc, jdbcType=VARCHAR}	
+		)
+	</insert>
 
 
 	
@@ -21,6 +32,13 @@
 		CATE_ID = #{cate_id}
 	</update>
 	<select id="queryObject" parameterType="java.lang.String" resultMap="ProdCatMap">
+		SELECT CAT.LT_PROD_CAT_TYPE AS CATE_ID,CAT.LT_PROD_CAT_TITLE AS CATE_NAME FROM BFAFRICA_4.PROD_CAT_LT CAT   WHERE CAT.LT_PROD_CAT_LANGUAGE_TYPE=1
+		AND CAT.LT_PROD_CAT_DISPLAY='Y'
+		AND
+		CAT.LT_PROD_CAT_TYPE = #{id}
+	</select>
+	
+	<select id="queryBFCat" parameterType="java.lang.String" resultMap="ProdCatMap">
 		SELECT 
 		<include refid="base" />
 		FROM
@@ -30,20 +48,19 @@
 	</select>
 	
 	<select id="queryList" parameterType="java.util.Map" resultMap="ProdCatMap">
-		SELECT 
-		<include refid="base" />
-		FROM
-		<include refid="tableName" />
-		<include refid="where" />
-		ORDER BY CATE_ID
+		SELECT CAT.LT_PROD_CAT_TYPE AS CATE_ID,CAT.LT_PROD_CAT_TITLE AS CATE_NAME FROM BFAFRICA_4.PROD_CAT_LT CAT   WHERE CAT.LT_PROD_CAT_LANGUAGE_TYPE=1
+		AND CAT.LT_PROD_CAT_DISPLAY='Y'
+		<if test="cate_name != null and cate_name != ''">
+				AND CAT.LT_PROD_CAT_TITLE like concat(concat('%',#{cate_name}),'%')
+		</if>
 	</select>
 	
 	<select id="queryTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
-		SELECT 
-		COUNT(1)
-		FROM
-		<include refid="tableName" />
-		<include refid="where" />
+		SELECT COUNT(*) FROM BFAFRICA_4.PROD_CAT_LT CAT   WHERE CAT.LT_PROD_CAT_LANGUAGE_TYPE=1
+		AND CAT.LT_PROD_CAT_DISPLAY='Y'
+		<if test="cate_name != null and cate_name != ''">
+				AND CAT.LT_PROD_CAT_TITLE like concat(concat('%',#{cate_name}),'%')
+		</if>
 	</select>
 	
 
@@ -72,7 +89,7 @@
 				AND CATE_ID = #{cate_id}
 			</if>
 			<if test="cate_name != null and cate_name != ''">
-				AND CATE_NAME = #{cate_name}
+				AND CATE_NAME like concat(concat('%',#{cate_name}),'%')
 			</if>
 			<if test="cate_coversrc != null and cate_coversrc != ''">
 				AND CATE_COVERSRC = #{cate_coversrc}

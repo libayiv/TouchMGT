@@ -83,6 +83,7 @@
 	<select id="queryList" parameterType="java.util.Map" resultMap="BFBannerInfMap">
 		SELECT 
 		<include refid="base" />
+		,ROW_NUMBER() OVER (ORDER BY RANK) RN		
 		FROM
 		<include refid="tableName" />
 		<include refid="mapWhere" />

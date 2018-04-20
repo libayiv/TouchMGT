@@ -5,9 +5,9 @@
 <#include "/header.html">
 <link rel="stylesheet" href="${request.contextPath}/statics/css/switch.css">
 <script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
-<!--  <link rel="stylesheet" type="text/css" href="${request.contextPath}/statics/ueditor/third-party/webuploader/webuploader.css" rel="external nofollow" >
-        <script type="text/javascript" src="${request.contextPath}/statics/ueditor/third-party/webuploader/webuploader.js"></script>
- --></head>
+
+
+</head>
 <body>
 <div id="rrapp" v-cloak>
 	<div v-show="showList">
@@ -41,18 +41,10 @@
 				<div class="col-sm-8">
 					<!-- <input type="text" disabled='true' class="form-control" v-model="fileList.file_path" id="fileName"/></br>
 					<a class="btn btn-primary" id="upload"><i class="fa fa-plus"></i>&nbsp;文件上传</a> -->
-					<a id="ctlBtn" class="btn btn-default" @click="showDialog">开始上传</a>
-					<!-- <div class="page-container">
-					<div id="uploader" class="wu-example">
-						<div id="thelist" class="uploader-list"></div>
-							<div class="btns">
-								<div id="picker">选择文件</div>
-								<button id="ctlBtn" class="btn btn-default">开始上传</button>
-							</div>
-						</div>
-					</div> -->
+<!-- 					<a id="ctlBtn" class="btn btn-default" @click="showDialog">开始上传</a>
+ -->					<a id="ctlBtn" class="btn btn-default" @click="showDialog">开始上传</a>
+					</div>
 				</div>
-			</div>
 
 			<div class="form-group">
 				<div class="col-sm-4 control-label">是否显示</div>
@@ -79,6 +71,7 @@
 </div>
 <!-- <script src="${request.contextPath}/statics/js/modules/sys/test2.js"></script>
  -->
+ 
 <script src="${request.contextPath}/statics/js/modules/sys/oss.js?_${.now?long}"></script>
 </body>
 </html>

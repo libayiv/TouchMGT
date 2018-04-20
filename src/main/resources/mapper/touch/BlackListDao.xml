@@ -76,6 +76,7 @@
 	<select id="queryList" parameterType="java.util.Map" resultMap="BFBlackListMap">
 		SELECT 
 		<include refid="base" />
+		,ROW_NUMBER() OVER (ORDER BY CREATE_DATE DESC) RN
 		FROM
 		<include refid="tableName" />
 		<include refid="where"/>

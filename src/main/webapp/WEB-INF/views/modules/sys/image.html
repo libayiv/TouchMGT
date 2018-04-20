@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+<#include "/header.html">
+
+    <!-- jquery -->
+    <script type="text/javascript" src="${request.contextPath}/statics/ueditor/third-party/jquery-1.10.2.min.js"></script>
+
+    <!-- webuploader -->
+
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/statics/ueditor/third-party/webuploader/webuploader.css" rel="external nofollow" >
+        <script type="text/javascript" src="${request.contextPath}/statics/ueditor/third-party/webuploader/webuploader.js"></script>
+
+</head>
+<body>
+<div id="wrapper">
+		<div id="post-container" class="container">
+			<div class="col-md-9">
+				<div class="page-container">
+					<div id="uploader" class="wu-example">
+						<div id="thelist" class="uploader-list"></div>
+							<div class="btns">
+								<div id="picker">选择文件</div>
+								<button id="ctlBtn" class="btn btn-default">开始上传</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+  
+<script src="${request.contextPath}/statics/js/modules/sys/image.js"></script>
+
+</body>
+</html>

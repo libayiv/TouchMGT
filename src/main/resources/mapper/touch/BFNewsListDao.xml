@@ -127,12 +127,13 @@
 	</select>
 
 	<select id="queryReply" parameterType="java.util.Map" resultMap="BFNewsReplyMap">
-		SELECT RE.*,MS.MEMB_NAME,MS.MEMB_PHOTO FROM BFCMS_NEWS_REPLY RE LEFT JOIN BFAFRICA_4.MEMB_MS MS ON RE.USER_ID = MS.MEMB_ID WHERE NEWS_ID= #{news_id} ORDER BY PUBDATE DESC
+		SELECT RE.*,MS.MEMB_NAME,MS.MEMB_PHOTO,ROW_NUMBER() OVER (ORDER BY RE.PUBDATE DESC ) RN FROM BFCMS_NEWS_REPLY RE LEFT JOIN BFAFRICA_4.MEMB_MS MS ON RE.USER_ID = MS.MEMB_ID WHERE NEWS_ID= #{news_id} ORDER BY PUBDATE DESC
 	</select>
 	
 	<select id="queryList" parameterType="java.util.Map" resultMap="BFNewsEntityMap">
 		SELECT
 		<include refid="base" />
+		,ROW_NUMBER() OVER (ORDER BY PUBDATE DESC ) RN
 		FROM
 		<include refid="tableName" />
 		<include refid="where" />

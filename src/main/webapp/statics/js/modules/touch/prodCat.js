@@ -148,7 +148,7 @@ var vm = new Vue({
                 vm.cat = r.cat;
                 if(r.cat.cate_coversrc != null && r.cat.cate_coversrc != ''){
                 
-                	$("#cat_img").attr("src", localStorage.fileUrlPath + r.cat.cate_coversrc);
+                	$("#cat_img").attr("src",  r.cat.cate_coversrc);
                 } else {
                 	/*$("#banner_img").attr("width", "100px");
                 	$("#banner_img").attr("height", "100px");*/

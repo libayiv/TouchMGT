@@ -5,8 +5,10 @@ import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.qiniu.util.StringUtils;
 import com.security.modules.touch.dao.ProdCatDao;
 import com.security.modules.touch.entity.ProdCatEntity;
 import com.security.modules.touch.service.ProdCatService;
@@ -16,6 +18,9 @@ public class ProdCatServiceImpl implements ProdCatService {
 
 	@Autowired
 	ProdCatDao categoryDao;
+	
+	@Value("${FILE_URL_PATH}")
+	private String fileUrlPath;
 	
 	@Override
 	public List<ProdCatEntity> queryPageList(Map<String, Object> map, RowBounds rowBounds) {
@@ -29,13 +34,25 @@ public class ProdCatServiceImpl implements ProdCatService {
 
 	@Override
 	public void update(ProdCatEntity category) {
-		categoryDao.update(category);
+		ProdCatEntity cat=categoryDao.queryBFCat(String.valueOf(category.getCate_id()));
+		if(cat!=null){
+			categoryDao.update(category);
+		}else{
+			categoryDao.save(category);
+		}
 	}
 
 	@Override
 	public ProdCatEntity queryEntity(String pid) {
 		// TODO Auto-generated method stub
-		return categoryDao.queryObject(pid);
+		ProdCatEntity BFcat=categoryDao.queryBFCat(pid);
+		ProdCatEntity AFcat=categoryDao.queryObject(pid);
+		if(BFcat==null){
+			AFcat.setCate_coversrc("http://www.crc360.cn/upload/thumb/default.jpg");
+		}else{
+			AFcat.setCate_coversrc(fileUrlPath+BFcat.getCate_coversrc());
+		}
+		return AFcat;
 	}
 	
 }

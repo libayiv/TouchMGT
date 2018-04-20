@@ -24,6 +24,7 @@
 	<select id="queryList" parameterType="java.util.Map" resultMap="FileListEntityMap">
 		SELECT 
 		<include refid="base" />
+		,ROW_NUMBER() OVER(ORDER BY PUBDATE DESC) RN
 		FROM
 		<include refid="tableName" />
 		<include refid="mapWhere" />

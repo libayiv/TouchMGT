@@ -152,6 +152,7 @@
 	<select id="queryList" parameterType="java.util.Map" resultMap="BFVoteInfMap">
 		SELECT
 		<include refid="base" />
+		,ROW_NUMBER() OVER (ORDER BY RANK) RN
 		FROM
 		<include refid="tableName" />
 		<include refid="where" />
@@ -187,7 +188,7 @@
 	</select>
 	
 	<select id="queryUserDetail" parameterType="java.util.Map" resultMap="BFVoteDetailMap">
-		SELECT BFAFRICA_4.MEMB_MS.MEMB_NAME AS NICK,BFCMS_VOTE_DETAIL.TITLE,BFCMS_VOTE_ACTION.PUBDATE,'http://www.crc360.cn/upload/thumb/default.jpg' AS THUMB FROM BFCMS_VOTE_ACTION 
+		SELECT BFAFRICA_4.MEMB_MS.MEMB_NAME AS NICK,BFCMS_VOTE_DETAIL.TITLE,BFCMS_VOTE_ACTION.PUBDATE, MS.MEMB_PHOTO AS THUMB FROM BFCMS_VOTE_ACTION 
 		LEFT JOIN BFAFRICA_4.MEMB_MS ON BFAFRICA_4.MEMB_MS.MEMB_ID = BFCMS_VOTE_ACTION.USER_ID
 		LEFT JOIN BFCMS_VOTE_DETAIL ON BFCMS_VOTE_DETAIL.ID=BFCMS_VOTE_ACTION.VOTE_DETAIL_ID
 		WHERE VOTE_DETAIL_ID=#{detail_id}	

@@ -10,6 +10,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -224,6 +225,13 @@ public class MessageController {
 			log.error(e.getMessage(), e);
 			return R.error("发送Message异常");
 		}
+		return R.ok();
+	}
+	
+	@Scheduled(cron= "0 0 7 * * ?")
+	public R autoSendMsg(){
+		messageService.autoSendMsg();
+		log.info("------------------ google message autosend ---------------");
 		return R.ok();
 	}
 }

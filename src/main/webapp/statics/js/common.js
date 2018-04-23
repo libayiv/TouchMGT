@@ -4,7 +4,7 @@ $.jgrid.defaults.responsive = true;
 $.jgrid.defaults.styleUI = 'Bootstrap';
 
 var baseURL = "../../";
-
+var webThumb="http://testafintf.bfsuma.com";
 //工具集合Tools
 window.T = {};
 

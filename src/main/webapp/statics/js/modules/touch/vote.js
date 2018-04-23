@@ -144,7 +144,7 @@ $(function () {
 		colModel: [			
 			{ label: '编号', name: 'id', index: "pid", width: 45, key: true, hidden: true},
 			{ label: 'user-thumb', name: 'thumb',width: 60, formatter: function(value, options, row){
-				return '<img src="'+ value +'" width="50px;" />';
+				return '<img src="'+webThumb+ value +'" width="50px;" />';
 			} },
 			{ label: 'user-nick',width: 60, name: 'nick' },
 			{ label: 'vote-title',width: 60, name: 'title' },

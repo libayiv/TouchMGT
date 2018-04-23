@@ -91,7 +91,7 @@ $(function () {
 		colModel: [			
 			{ label: '编号', name: 'id', index: "pid", width: 45, key: true, hidden: true},
 			{ label: '用户头像', name: 'memb_photo',width: 60, formatter: function(value, options, row){
-				return '<img src="' + value +'" width="50px;" />';
+				return '<img src="' +webThumb+ value +'" width="50px;" />';
 			} },
 			{ label: '用户编号',width: 60, name: 'user_id' },
 			{ label: '用户名称',width: 60, name: 'memb_name' },
@@ -134,7 +134,7 @@ $(function () {
 		colModel: [			
 			{ label: '编号', name: 'id', index: "pid", width: 45, key: true, hidden: true},
 			{ label: '用户头像', name: 'memb_photo',width: 60, formatter: function(value, options, row){
-				return '<img src="'+ value +'" width="50px;" />';
+				return '<img src="'+webThumb+ value +'" width="50px;" />';
 			} },
 			{ label: '用户名称',width: 60, name: 'memb_name'},
 			{ label: '活动名称',width: 60, name: 'title' },

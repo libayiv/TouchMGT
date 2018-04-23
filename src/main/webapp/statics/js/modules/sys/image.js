@@ -1,4 +1,6 @@
 jQuery(function() {
+	var thumbnailWidth = 100;   //缩略图高度和宽度 （单位是像素），当宽高度是0~1的时候，是按照百分比计算，具体可以看api文档  
+	   var thumbnailHeight = 100;
     var $ = jQuery,
         $list = $('#thelist'),
         $btn = $('#ctlBtn'),
@@ -20,16 +22,28 @@ jQuery(function() {
         threads:3,
         accept: {
                 title: 'Images',
-                extensions: 'wmv,mp4,flv,jpeg,bmp,doc,docx,rar,pdf',
+                extensions: 'wmv,mp4,flv,jpg,bmp,doc,docx,rar,pdf',
         }
     });
 
     // 当有文件添加进来的时候
     uploader.on( 'fileQueued', function( file ) {
-        $list.append( '<div id="' + file.id + '" class="item">' +
-            '<h4 class="info">' + file.name + '</h4>' +
-            '<p class="state">等待上传...</p>' +
-        '</div>' );
+    	var $li =$('<div id="' + file.id + '" class="file-item thumbnail">' +
+       		 '<img>' +
+             '<h4 class="info">' + file.name + '</h4>' +
+             '<p class="state">等待上传...</p>' +
+         '</div>');
+    	   $img = $li.find('img');  
+        $list.append( $li );  
+        
+        uploader.makeThumb( file, function( error, src ) {   //webuploader方法  
+            if ( error ) {  
+                $img.replaceWith('<span>不能预览</span>');  
+                return;  
+            }  
+   
+            $img.attr( 'src', src );  
+        }, thumbnailWidth, thumbnailHeight );  
     });
 
   
@@ -46,7 +60,7 @@ jQuery(function() {
               '</div>' +
             '</div>').appendTo( $li ).find('.progress-bar');
         }
-        if(file.getStatus()!='progress'){
+        if(state=='paused'){
         	return;
         }
         $li.find('p.state').text('上传中');

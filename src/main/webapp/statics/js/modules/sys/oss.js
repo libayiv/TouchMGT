@@ -163,6 +163,7 @@ var vm = new Vue({
 			vm.showList = false;
 			vm.title = "新增";
 			$("#url").hide();
+			uploader.refresh();
 			vm.fileList = {status:1};
 
 		},

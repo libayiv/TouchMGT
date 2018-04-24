@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONObject;
 import com.security.common.annotation.SysLog;
 import com.security.common.utils.FileUploaderUtils;
+import com.security.common.utils.FileUtil;
 import com.security.common.utils.PageUtils;
 import com.security.common.utils.Query;
 import com.security.common.utils.R;
@@ -35,15 +37,15 @@ import com.security.modules.sys.service.FileListService;
 @RestController
 @RequestMapping("/touch/fileupload")
 public class FileUploadController {
-	
+
 	private Logger log = LoggerFactory.getLogger(FileUploadController.class);
-	
+
 	@Autowired
 	private FileListService fileListService;
-	
+
 	@Value("${FILE_URL_PATH}")
 	private String fileUrlPath;
-	
+
 	@Value("${FILE_UPLOAD_SIZE}")
 	private String fileSize;
 	/**
@@ -55,7 +57,7 @@ public class FileUploadController {
 		if(file.getSize()>Integer.valueOf(fileSize)){
 			return R.error("文件大小不能超过10MB！");
 		}
-		Map<String,String> fileName = FileUploaderUtils.saveImage(file, modularName);
+		Map<String,String> fileName = FileUtil.saveImage(file, modularName);
 		Map<String, Object> fileInf = new HashMap<String, Object>();
 		fileInf.put("fileName", fileName.get("fileName"));
 		fileInf.put("uploadName", fileName.get("uploadName"));
@@ -64,7 +66,58 @@ public class FileUploadController {
 		fileInf.put("size", file.getSize());
 		return R.ok(fileInf);
 	}
-	
+
+	@RequestMapping(value = "/mergeFile")
+	public R fileUpload(String guid, String md5value, String chunks, String chunk, String id, String name,
+			String type, String lastModifiedDate, int size, MultipartFile file) {
+		Map<String, Object> fileInf = new HashMap<String, Object>();
+		String fileName;
+		try {
+			int index;
+			String uploadFolderPath = FileUtil.getRealPath(null);
+			// 文件保存路径  
+			String modularName="temp";
+			String dirname="/image/" + modularName;
+
+			String mergePath = uploadFolderPath + dirname + "/" + id +"/";  
+			//String mergePath = uploadFolderPath + "\\fileDate\\" + id + "\\";
+			String ext = name.substring(name.lastIndexOf("."));
+
+			// 判断文件是否分块
+			if (chunks != null && chunk != null) {
+				index = Integer.parseInt(chunk);
+				fileName = String.valueOf(index) + ext;
+				// 将文件分块保存到临时文件夹里，便于之后的合并文件
+				FileUtil.saveFile(mergePath, fileName, file, null);
+				// 验证所有分块是否上传成功，成功的话进行合并
+				String mergeName=FileUtil.Uploaded(md5value, guid, chunk, chunks, mergePath, fileName, ext, null);
+				fileInf.put("fileName", dirname+mergeName);
+				fileInf.put("uploadName", mergeName);
+				fileInf.put("oriFileName", file.getOriginalFilename());
+				fileInf.put("url", fileUrlPath + dirname+mergeName);
+				fileInf.put("size", file.getSize());
+			} else {
+				// 上传文件没有分块的话就直接保存目标目录
+				Map<String,String> fileMap =FileUtil.saveImage(file, "fileupload");
+				 fileInf.put("fileName", fileMap.get("fileName"));
+					fileInf.put("uploadName", fileMap.get("uploadName"));
+					fileInf.put("oriFileName", file.getOriginalFilename());
+					fileInf.put("url", fileUrlPath + fileMap.get("fileName"));
+					fileInf.put("size", file.getSize());
+				
+			}
+			
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			log.error(ex.getMessage());	
+		}
+		
+		return R.ok(fileInf);
+	}
+
+
+
 	@RequestMapping("/list")
 	@RequiresPermissions("sys:oss:all")
 	public R list(@RequestParam Map<String, Object> params){
@@ -80,7 +133,7 @@ public class FileUploadController {
 			return R.error("获取上传列表失败");
 		}
 		PageUtils pageUtil = new PageUtils(fileList, total, query.getLimit(), query.getPage());
-		
+
 		return R.ok().put("page", pageUtil);
 	}
 	/**
@@ -94,7 +147,7 @@ public class FileUploadController {
 
 		return R.ok();
 	}
-	
+
 	/**
 	 * 保存Banner
 	 */
@@ -105,17 +158,17 @@ public class FileUploadController {
 		log.info("FileListEntity:{}", file);
 		ValidatorUtils.validateEntity(file, AddGroup.class);
 		log.info("添加上传文件:{}", file);
-		
+
 		try {
 			fileListService.save(file);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return R.error("添加上传文件失败");
 		}
-		
+
 		return R.ok();
 	}
-	
+
 	/**
 	 * 修改Banner
 	 */

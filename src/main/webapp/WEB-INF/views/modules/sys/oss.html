@@ -4,12 +4,8 @@
 <title>文件上传</title>
 <#include "/header.html">
 <link rel="stylesheet" href="${request.contextPath}/statics/css/switch.css">
-<script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
-
-   <link rel="stylesheet" type="text/css" href="${request.contextPath}/statics/ueditor/third-party/webuploader/webuploader.css" rel="external nofollow" >
-        <script type="text/javascript" src="${request.contextPath}/statics/ueditor/third-party/webuploader/webuploader.js"></script>
- <script src="${request.contextPath}/statics/js/modules/sys/image.js"></script>
-
+<!-- <script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
+ -->
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -22,9 +18,9 @@
 	    <div id="jqGridPager"></div>
     </div>
     
-    <div v-show="!showList" class="panel panel-default">
+    <div v-show="!showList" class="panel panel-default"  >
 		<div class="panel-heading">{{title}}</div>
-		<form class="form-horizontal">
+		<form class="form-horizontal" enctype="multipart/form-data">
 			
 		
 			<div class="form-group">
@@ -45,15 +41,9 @@
 					<!-- <input type="text" disabled='true' class="form-control" v-model="fileList.file_path" id="fileName"/></br>
 					<a class="btn btn-primary" id="upload"><i class="fa fa-plus"></i>&nbsp;文件上传</a> -->
 <!-- 					<a id="ctlBtn" class="btn btn-default" @click="showDialog">开始上传</a>
- -->					
- <a id="ctlBtn" class="btn btn-default" @click="showDialog">开始上传</a>
- 						<div id="uploader" class="wu-example">
-						<div id="thelist" class="uploader-list"></div>
-							<div class="btns">
-								<div id="picker">选择文件</div>
-								<button id="ctlBtn" class="btn btn-default">开始上传</button>
-							</div>
-						</div>
+ -->					<input type="text" disabled='true' class="form-control" v-model="fileList.file_path" id="fileName"/></br>
+ 						<a id="ctlBtn" class="btn btn-default btn-sm" @click="showDialog">开始上传</a>
+ 						
 					</div>
 				</div>
 
@@ -83,9 +73,12 @@
 <!-- <script src="${request.contextPath}/statics/js/modules/sys/test2.js"></script>
  -->
  
+ 
 <script src="${request.contextPath}/statics/js/modules/sys/oss.js?_${.now?long}"></script>
 <script type="text/javascript">  
- 
+ $('#picker').unbind('click').bind('mouseover',function(){
+	 uploader.refresh();
+ })
 </script> 
 </body>
 </html>

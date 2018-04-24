@@ -2,6 +2,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="cache-control" content="no-cache">  
+    
     <title></title>
 <#include "/header.html">
 
@@ -10,27 +12,40 @@
 
     <!-- webuploader -->
 
-    <link rel="stylesheet" type="text/css" href="${request.contextPath}/statics/ueditor/third-party/webuploader/webuploader.css" rel="external nofollow" >
-        <script type="text/javascript" src="${request.contextPath}/statics/ueditor/third-party/webuploader/webuploader.js"></script>
+   <link rel="stylesheet" type="text/css" href="${request.contextPath}/statics/css/webuploader.css" rel="external nofollow" >
+        <script type="text/javascript" src="${request.contextPath}/statics/libs/webuploader.js"></script>
 
 </head>
 <body>
-<div id="wrapper">
-		<div id="post-container" class="container">
-			<div class="col-md-9">
-				<div class="page-container">
-					<div id="uploader" class="wu-example">
-						<div id="thelist" class="uploader-list"></div>
-							<div class="btns">
-								<div id="picker">选择文件</div>
-								<button id="ctlBtn" class="btn btn-default">开始上传</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+<section class="content">
+        <div class="container" style="margin-top: 20px">
+            <div class="alert alert-info">可以一次上传多个大文件</div>
+        </div>
+        <div class="container" style="margin-top: 50px">
+            <div id="uploader" class="container">
+                <div class="container">
+                    <div id="fileList" class="uploader-list"></div>
+                    <!--存放文件的容器-->
+                </div>
+                <div class="btns container">
+                    <div id="picker" class="webuploader-container"
+                        style="float: left; margin-right: 10px">
+                        <div>
+                            选择文件 <input type="file" name="file"
+                                class="webuploader-element-invisible" multiple="multiple">
+                        </div>
+                    </div>
+
+                    <div id="UploadBtn" class="webuploader-pick"
+                        style="float: left; margin-right: 10px">开始上传</div>
+                    <div id="StopBtn" class="webuploader-pick"
+                        style="float: left; margin-right: 10px" status="suspend">暂停上传</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
   
 <script src="${request.contextPath}/statics/js/modules/sys/image.js"></script>
 

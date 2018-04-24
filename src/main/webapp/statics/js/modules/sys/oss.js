@@ -101,12 +101,14 @@ var vm = new Vue({
 	data:{
 		showList: true,
 		title: null,
+		file:{},
 		fileList:{status:1}
 	},
 
 	methods: {
 		query: function () {
 			vm.reload();
+
 		},	
 		updateStatus: function(pids, status){
 			var data = {'pids':pids, 'status': status};
@@ -163,9 +165,7 @@ var vm = new Vue({
 			vm.showList = false;
 			vm.title = "新增";
 			$("#url").hide();
-			uploader.refresh();
 			vm.fileList = {status:1};
-
 		},
 		update: function (pid) {
 			vm.showList = false;
@@ -216,22 +216,18 @@ var vm = new Vue({
 			}).trigger("reloadGrid");
 		},
 		showDialog:function(){
-			
+
 		    layer.open({  
 		        type: 2,  
 		        title: '文件上传',  
 		        shadeClose: true,  
-		        shade: 0.8,  
+		        shade: 0.5,  
 		        area: ['380px', '60%'],  
 		        content: 'image.html', //iframe的url  
 		        end : function(index){  
-		        	debugger;
-		          /*  var retVal = $("#layerResult").val();//返回一个标记用于控制,业务逻辑( 也可不写)  
-		            if(retVal=='0'){  
-		                                           // 当返回值为  0   执行 ,业务逻辑  
-		             }  */
-		                         }  
-		                });
+		        	vm.fileList.file_path = vm.file.fileName;
+		         }  
+		   });
 		}
 	}
 });

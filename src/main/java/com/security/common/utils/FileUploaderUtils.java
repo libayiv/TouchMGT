@@ -1,9 +1,20 @@
 package com.security.common.utils;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
@@ -38,6 +49,7 @@ public class FileUploaderUtils {
 	public static final Map<String,String> saveImage(MultipartFile multipartFile, String modularName) {
 		String fileName = null;
 		Map<String,String> map=new HashMap<String,String>();
+	
 		try {
             // 文件保存路径  
 			String dirname = null;
@@ -56,15 +68,16 @@ public class FileUploaderUtils {
             fileName = uploadName+ fileSuffix;
             // 转存文件  
             multipartFile.transferTo(new File(filePath + fileName));
+            
             fileName = dirname + "/" + fileName ;
             map.put("fileName", fileName);
             map.put("uploadName", uploadName+ fileSuffix);
+            
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
 		return map;
     }
-	
 	/**
      * 根据给定的文件名,获取其后缀信息
      * 

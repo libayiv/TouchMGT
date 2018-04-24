@@ -175,6 +175,19 @@
 			#{item}
 		</foreach>
 	</select>
+	<select id="queryListByArray" resultMap="MessageInfoMap" parameterType="java.util.List">
+		SELECT <include refid="queryBase" /> FROM 
+		<include refid="tableName" />
+		WHERE ID IN
+		<foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<insert id="addDetail" parameterType="map" >
+		INSERT INTO BFCMS_MESSAGE_LIST(USER_ID, MESSAGE_ID, STATUS, PUBDATE)
+		values (#{membId},#{id},0,sysdate)
+	</insert>
+	
 	<select id="queryAutoSendList"  resultMap="MessageInfoMap" >
 		SELECT <include refid="queryBase" /> FROM 
 		<include refid="tableName" />
@@ -202,6 +215,7 @@
 		</foreach>
 		)A
 	</insert>
+	
 	
 	<select id="getAcceptMembs" resultType="java.lang.String" parameterType="java.util.Map">
 		<choose>

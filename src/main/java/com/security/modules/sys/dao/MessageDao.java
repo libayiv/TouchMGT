@@ -43,5 +43,12 @@ public interface MessageDao extends BaseDao<MessageInfo> {
 	 * @时间 2018年3月22日 上午11:47:43
 	 */
 	List<MessageInfo> queryAutoSendList();
+	/**
+	 * @说明 增加消息详细信息表（从表）
+	 * @返回 void
+	 * @创建者 hejun
+	 * @时间 2018年4月24日 上午9:52:42
+	 */
+	void addMessageDetailList(Map<String, Object> membParam);
 	
 }

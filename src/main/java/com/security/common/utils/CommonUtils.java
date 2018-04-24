@@ -93,7 +93,7 @@ public class CommonUtils {
 				for (String country : countrys) {
 					countryList.add(country);
 				}
-				paramMap.put("compList", countryList);
+				paramMap.put("countryList", countryList);
 			}
 			if (condition.contains("会员等级")) {
 				String[] ranksRange = condition.substring(condition.indexOf("["), condition.length() - 1).split(",");

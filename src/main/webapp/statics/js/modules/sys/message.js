@@ -267,12 +267,15 @@ var vm = new Vue({
 			};
 			confirm("确定要发送选中的消息？", function() {
 				/* vm.updateStatus(pids.toString(), '0'); */
+				alert("正在发送消息！");
+				layer.load();
 				$.ajax({
 					type : "POST",
 					url : baseURL + "sys/message/sendGoogle",
 					contentType : "application/json",
 					data : JSON.stringify(params),
 					success : function(r) {
+						layer.closeAll("loading");
 						if (r.code === 0) {
 							alert('添加消息队列成功！', function() {
 								vm.reload();

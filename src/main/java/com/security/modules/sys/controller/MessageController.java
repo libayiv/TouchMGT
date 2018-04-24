@@ -222,7 +222,7 @@ public class MessageController {
 			
 			messageService.sendMsg(pids);
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			log.error(e.getMessage());
 			return R.error("发送Message异常");
 		}
 		return R.ok();

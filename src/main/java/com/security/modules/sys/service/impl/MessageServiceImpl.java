@@ -10,6 +10,8 @@ import java.util.UUID;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
@@ -25,6 +27,7 @@ import com.security.modules.sys.service.MessageService;
  * @时间 2018年3月6日 下午5:11:31
  */
 @Service("MessageService")
+@Component
 public class MessageServiceImpl implements MessageService {
 	
 	@Autowired
@@ -145,9 +148,11 @@ public class MessageServiceImpl implements MessageService {
 	@Override
 	public void autoSendMsg() {
 		//  获取未发送信息自动推送的MessageInfo
+		System.out.println("------------------ google message autosend ---------------");
 		List<MessageInfo> list = messageDao.queryAutoSendList();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String[] ids = new String[list.size()] ;
+		List<String> idList = new ArrayList<String>();
+		
 		int sendCount = 0;
 		for(int index = 0 ; index <list.size() ; index++){
 			MessageInfo msg = list.get(index);
@@ -157,8 +162,8 @@ public class MessageServiceImpl implements MessageService {
 			// 判断时间
 			String currentDateStr = sdf.format(new Date());
 			String autoSendDate = msg.getAuto_date().substring(0, 10);
+			paramMap.put("type", msg.getAcc_type());
 			if(currentDateStr.equals(autoSendDate)){
-				paramMap.put("type", msg.getAcc_type());
 				if( msg.getAcc_type() == 1 ){//全部
 					membList = messageDao.getAcceptMembs(paramMap);
 				}else if(msg.getAcc_type() == 2){ //人员
@@ -172,20 +177,20 @@ public class MessageServiceImpl implements MessageService {
 					paramMap = CommonUtils.getAcceptorParams(acceptors);
 					membList = messageDao.getAcceptMembs(paramMap);
 				}
+				
 				sendJson.put("title", msg.getTitle());
 				sendJson.put("body", msg.getIntro());
 				SendMsgUtil mUtil = new SendMsgUtil();
 				for(String membs:membList){
 					mUtil.addQueue(membs);
-					//messageDao.addDetail(membs,msg.getId());
 					Map<String,Object> membParam = new HashMap<String, Object>();
 					membParam.put("membId", membs);
 					membParam.put("id", msg.getId());
 					messageDao.addDetail(membParam);
 				}
-				mUtil.execute(sendJson);	
-				ids[sendCount] = msg.getId();
-				sendCount++;
+				mUtil.execute(sendJson);
+				idList.add(msg.getId()) ;
+				
 				
 				/*Map<String,Object> membParam = new HashMap<String, Object>();
 				membParam.put("membList", membList);
@@ -193,7 +198,14 @@ public class MessageServiceImpl implements MessageService {
 				messageDao.addMessageDetailList(membParam);*/
 			}
 		}
-		messageDao.updateSendStatus(ids);
+		String[] ids = new String[idList.size()];
+		for(int count=0 ; count< idList.size() ;count++){
+			ids[count]=idList.get(count);
+		}
+		if(ids.length >0){
+			messageDao.updateSendStatus(ids);
+		}
+		
 		/*addMsgDetail(ids);*/
 		
 	}

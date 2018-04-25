@@ -2,16 +2,10 @@ $(function () {
 	$("#jqGrid").jqGrid({
 		url: baseURL + 'touch/fileupload/list',
 		datatype: "json",
-		postData:{'file_cat': 'products'},
 		colModel: [			
 			{ label: 'id', name: 'file_id', width: 20, key: true ,hidden:true},
 			{ label: '文件名', name: 'filename', width: 100 },
-			{ label: 'Banner', name: 'banner', width: 60,formatter: function(value, options, row){
-				return '<img src="'+ localStorage.fileUrlPath + value +'" width="100px;" height="100px;" />';
-			} },
 			{ label: '文件类型', name: 'file_type', width:40 },
-			{ label: '标识1', name: 'tab1', width:100 },
-			{ label: '标识2', name: 'tab2', width:100 },
 			{ label: '文件简介', name: 'intro', width: 120 },
 			{ label: '是否显示', name: 'status', width: 60, formatter: function(value, options, row){
 				var id='checked_' + row.file_id;
@@ -19,7 +13,7 @@ $(function () {
 						'<input id="' + id + '" type="checkbox" class="switch" onclick="vm.disable(\'' + row.file_id + '\')" checked/><label for="'+id+'" class="newlabel"></label>' : 
 							'<input id="' + id + '" type="checkbox" class="switch" onclick="vm.enable(\'' + row.file_id + '\')"/><label for="'+id+'" class="newlabel"></label>';
 			} },	
-			{ label: '操作', name: 'operation', width: 60, formatter: function(value, options, row){
+			{ label: '操作', name: 'operation', width: 40, formatter: function(value, options, row){
 				if(hasPermission == null){
 					$.ajax({
 						type: "GET",
@@ -42,7 +36,7 @@ $(function () {
 			} },
 			],
 			viewrecords: true,
-			height: 'auto',
+			height: 385,
 			rowNum: 10,
 			rowList : [10,30,50],
 			rownumbers: true, 
@@ -73,16 +67,26 @@ $(function () {
 		autoSubmit:true,
 		responseType:"json",
 		onSubmit:function(file, extension){
-			 if (!(extension && /^(jpg|jpeg|png|gif)$/.test(extension.toLowerCase()))){
-	                alert('只支持jpg、png、gif格式的图片！');
-	                return false;
-	            }
+			if (!(extension && /^(jpg|jpeg|png|gif)$/.test(extension.toLowerCase()))){
+				vm.fileList.file_type=extension;
+				if(extension.indexOf("ppt") != -1){
+					vm.fileList.file_type='ppt';
+				}else if(extension.indexOf("xls") != -1){
+					vm.fileList.file_type='excel';
+				}else if(extension.indexOf("pdf") != -1){
+					vm.fileList.file_type='pdf';
+				}else{
+					vm.fileList.file_type='word';
+				}
+			}else{
+				vm.fileList.file_type='image';
+			}
 		},
 		onComplete : function(file, r){
 			if(r.code == 0){
-				vm.fileList.banner = r.fileName;
-				$("#file_banner").attr("src", r.url);
-				alert("图片上传成功");
+				vm.fileList.file_path = r.fileName;
+				$("#fileName").val(r.fileName);
+				alert("文件上传成功");
 			}else{
 				alert(r.msg);
 			}
@@ -96,19 +100,17 @@ var vm = new Vue({
 	el:'#rrapp',
 	data:{
 		q:{
+	
 		  title: null
 		},
 		showList: true,
 		title: null,
-		file:{},
 		fileList:{status:1}
 	},
 
 	methods: {
 		query: function () {
-			
 			vm.reload();
-
 		},	
 		updateStatus: function(pids, status){
 			var data = {'pids':pids, 'status': status};
@@ -136,11 +138,7 @@ var vm = new Vue({
         	if(vm.fileList.file_path==null || vm.fileList.file_path==''){    
         		alert("请选择文件!");
        		 	return;
-        	} 
-        	if(vm.fileList.banner==null || vm.fileList.banner==''){    
-        		alert("请选择banner!");
-       		 	return;
-        	} 
+        	}      	
         	if(vm.fileList.filename==null || vm.fileList.filename==''){
         		alert("请填写文件名称！");
         		return;
@@ -168,9 +166,9 @@ var vm = new Vue({
 		add: function(){
 			vm.showList = false;
 			vm.title = "新增";
-			$("#file_banner").removeAttr("src");
-			var cat=$("#myTab .active a").attr('href').split('#')[1];
-			vm.fileList = {status:1,file_cat:cat};
+			$("#url").hide();
+			vm.fileList = {status:1};
+
 		},
 		update: function (pid) {
 			vm.showList = false;
@@ -210,46 +208,23 @@ var vm = new Vue({
 		getFile: function(pid){
 			$.get(baseURL + "touch/fileupload/info/"+pid, function(r){
 				vm.fileList = r.file;
-				if(r.file.banner != null && r.file.banner != ''){
-                	$("#file_banner").attr("src", localStorage.fileUrlPath + r.file.banner);
-                } 
 
 			});
 		},
-		reload: function (parmas) {
+		reload: function () {
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{ 
-				postData:{'file_cat': parmas},
 				page:page
 			}).trigger("reloadGrid");
 		},
 		search: function () {
-	            vm.showList = true;
-	            var page = 1;
-	            $("#jqGrid").jqGrid('setGridParam',{
-	                postData:{'filename': vm.q.title},
-	                page:page
-	            }).trigger("reloadGrid");
-	    },
-		showDialog:function(){
-
-		    layer.open({  
-		        type: 2,  
-		        title: '文件上传',  
-		        shadeClose: true,  
-		        shade: 0.5,  
-		        area: ['380px', '60%'],  
-		        content: 'image.html', //iframe的url  
-		        end : function(index){ 
-		        	$("#fileName").val(vm.file.fileName);
-		        	$("#fileType").val(vm.file.ext);
-		        	vm.fileList.file_path = vm.file.fileName;
-		        	vm.fileList.file_type= vm.file.ext;
-		        	vm.fileList.file_size=vm.file.size;
-		        	
-		         }  
-		   });
-		}
+            vm.showList = true;
+            var page = 1;
+            $("#jqGrid").jqGrid('setGridParam',{
+                postData:{'filename': vm.q.title},
+                page:page
+            }).trigger("reloadGrid");
+    }
 	}
 });

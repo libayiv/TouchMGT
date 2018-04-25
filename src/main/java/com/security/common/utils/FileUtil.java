@@ -20,6 +20,8 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -239,7 +241,6 @@ public class FileUtil {
 
 		String destPath = getRealPath(null) +"/image/bigFile/";// 文件路径
 		String newName = System.currentTimeMillis() + ext;// 文件新名称
-
 		SequenceInputStream s;
 		InputStream s1;
 		try {
@@ -299,7 +300,6 @@ public class FileUtil {
 				}
 			}
 		}
-
 		/* 创建输出流，写入数据，合并分块 */
 		OutputStream outputStream = new FileOutputStream(filePath + newName);
 		byte[] buffer = new byte[1024];
@@ -370,6 +370,30 @@ public class FileUtil {
 		if (!folder.exists()) {
 			folder.mkdirs();
 		}
+		return sp;
+	}
+	
+	public static String extTrans(String ext) {
+		String sp=null;
+		ext=ext.substring(1, ext.length());
+		String imgExt = "jpg|jpeg|png|bmp|GIF|JPG|PNG|JPEG";
+		String vidExt="mp4|rmvb|flv|mpeg|avi|wmv";
+		String textExt="txt|doc|docx";
+        if(imgExt .contains(ext)){
+        	sp="image";
+        }else if(vidExt.contains(ext)){
+        	sp="video";
+        }else if(textExt.contains(ext)){
+        	sp="word";
+        }else if(ext.indexOf("ppt") != -1){
+        	sp="ppt";
+        }else if(ext.indexOf("xls") != -1){
+        	sp="xls";
+        }else if(ext.indexOf("pdf") != -1){
+        	sp="pdf";
+        }else{
+        	sp="other";
+        }
 		return sp;
 	}
 

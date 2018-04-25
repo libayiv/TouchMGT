@@ -4,13 +4,18 @@
 <mapper namespace="com.security.modules.sys.dao.FileListDao">
 
 	<resultMap type="FileListEntity" id="FileListEntityMap">
-		<result column="FILE_ID" property="file_id"/>
-		<result column="FILE_PATH" property="file_path"/>
-		<result column="FILE_TYPE" property="file_type"/>
-		<result column="FILENAME" property="filename"/>
-		<result column="INTRO" property="intro"/>
-		<result column="STATUS" property="status"/>
-		<result column="PUBDATE" property="pubdate"/>
+		<result column="FILE_ID" property="file_id" />
+		<result column="FILE_PATH" property="file_path" />
+		<result column="FILE_TYPE" property="file_type" />
+		<result column="FILENAME" property="filename" />
+		<result column="INTRO" property="intro" />
+		<result column="STATUS" property="status" />
+		<result column="PUBDATE" property="pubdate" />
+		<result column="BANNER" property="banner" />
+		<result column="TAB1" property="tab1" />
+		<result column="TAB2" property="tab2" />
+		<result column="FILE_CAT" property="file_cat" />
+		<result column="FILE_SIZE" property="file_size" />
 	</resultMap>
 	
 	<select id="queryObject" parameterType="java.lang.String" resultMap="FileListEntityMap">
@@ -31,6 +36,7 @@
 		ORDER BY PUBDATE DESC
 	</select>
 	
+
 	<sql id="tableName">
 		BFCMS_FILE_LIST
 	</sql>
@@ -47,7 +53,7 @@
 				AND FILE_TYPE = #{file_type}
 			</if>
 			<if test="filename != null and filename != ''">
-				AND FILENAME = #{filename}
+				AND FILENAME like concat(concat('%',#{filename}),'%')
 			</if>
 			<if test="intro != null and intro != ''">
 				AND INTRO = #{intro}
@@ -58,14 +64,22 @@
 			<if test="pubdate != null and pubdate != ''">
 				AND PUBDATE = #{pubdate}
 			</if>
+			<if test="file_cat != null and file_cat != ''">
+				AND FILE_CAT = #{file_cat}
+			</if>
+			<if test="file_cat == null or file_cat == ''">
+				AND FILE_CAT IS NULL
+			</if>
 		</where>
 	</sql>
  	<select id="queryTotal" resultType="int">
 		select count(*) from BFCMS_FILE_LIST 
+				<include refid="mapWhere" />
+		
 	</select>
 	 
 	 <sql id="base">
-		FILE_ID,FILE_PATH,FILE_TYPE,FILENAME,INTRO,STATUS,PUBDATE
+		FILE_ID,FILE_PATH,FILE_TYPE,FILENAME,INTRO,STATUS,PUBDATE,BANNER,TAB1,TAB2,FILE_CAT,FILE_SIZE
 	</sql>
 	
 	<insert id="save" parameterType="FileListEntity">
@@ -81,7 +95,12 @@
 			#{filename,jdbcType=VARCHAR},
 			#{intro,jdbcType=VARCHAR}, 
 			#{status,jdbcType=VARCHAR},
-			SYSDATE
+			SYSDATE,
+			#{banner,jdbcType=VARCHAR},
+			#{tab1,jdbcType=VARCHAR},
+			#{tab2,jdbcType=VARCHAR},
+			#{file_cat,jdbcType=VARCHAR},
+			#{file_size,jdbcType=VARCHAR}
 		)
 	</insert>
 	 
@@ -112,7 +131,6 @@
 			#{id}
 		</foreach>
 	</delete>
-
 	<sql id="set">
 		<set>
 			pubdate = SYSDATE, 
@@ -133,6 +151,21 @@
 			</if>
 			<if test="status != null and status != ''">
 				STATUS = #{status}, 
+			</if>
+			<if test="banner != null and banner != ''">
+				 BANNER = #{banner},
+			</if>	
+			<if test="tab1 != null and tab1 != ''">
+				 TAB1 = #{tab1},
+			</if>	
+			<if test="tab2 != null and tab2 != ''">
+				 TAB2 = #{tab2},
+			</if>	
+			<if test="file_cat != null and file_cat != ''">
+				 FILE_CAT = #{file_cat},
+			</if>	
+			<if test="file_size != null and file_size != ''">
+				 FILE_SIZE = #{file_size},
 			</if>		
 		</set>
 	</sql>

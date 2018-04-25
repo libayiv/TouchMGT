@@ -3,7 +3,6 @@ $(function () {
 			var thumbnailHeight = 100;
             $list = $('#fileList');
             var flie_count = 0;
-            var obj=null;
             var uploader = WebUploader.create({
                 //设置选完文件后是否自动上传
                 auto: false,
@@ -28,9 +27,9 @@ $(function () {
                 resize: false//不压缩
                 //选择文件类型
                 //accept: {
-                //    title: 'Video',
-                //    extensions: 'mp4,avi',
-                //    mimeTypes: 'video/*'
+                //    title: 'File',
+                //    extensions: 'mp4,avi,rmvb,wmv',
+                //    mimeTypes: 'File/*'
                 //}
             });
             // 当有文件被添加进队列的时候
@@ -74,6 +73,7 @@ $(function () {
                         console.log("before-send-file  preupload: file.size="+file.size+" file.md5="+fileMd5);
                         file.wholeMd5 = fileMd5;//获取到了md5
                         //uploader.options.formData.md5value = file.wholeMd5;//每个文件都附带一个md5，便于实现秒传
+                    	$("#UploadBtn").css("display",'');
 
                         $('#' + file.id).find('p.state').text('MD5计算完毕，可以点击上传了');
                         console.info("MD5="+fileMd5);
@@ -125,11 +125,18 @@ $(function () {
 
 
             uploader.on('uploadSuccess', function (file,response) {
-            	obj=response;
                 $('#' + file.id).find('p.state').text('已上传');
                 $('#' + file.id).find(".progress").find(".progress-bar").attr("class", "progress-bar progress-bar-success");
                 $('#' + file.id).find(".info").find('.btn').fadeOut('slow');//上传完后删除"删除"按钮
                 $('#StopBtn').fadeOut('slow');
+            	response.size=file.size;
+                alert("上传成功",function(){
+                	debugger;
+            		parent.vm.file = response;
+            		var index = parent.layer.getFrameIndex(window.name);
+            		parent.layer.close(index);
+            	})
+            	 
             });
             uploader.on('uploadError', function (file) {
                 $('#' + file.id).find('p.state').text('上传出错');
@@ -153,15 +160,7 @@ $(function () {
                 //$('#' + file.id + 'btn').fadeOut('slow')//上传完后删除"删除"按钮
             });
             uploader.on('uploadFinished', function () {
-            	alert("上传成功",function(){
-            		parent.vm.file = obj;
-            		var index = parent.layer.getFrameIndex(window.name);
-            		parent.layer.close(index);
-            	})
-            	 
-                //上传完后的回调方法
-                //alert("所有文件上传完毕");
-                //提交表单
+            	
             });
             $("#UploadBtn").click(function () {
                 uploader.upload();//上传
@@ -169,6 +168,10 @@ $(function () {
             $("#StopBtn").click(function () {
                 console.log($('#StopBtn').attr("status"));
                 var status = $('#StopBtn').attr("status");
+                if(uploader.getFiles("interrupt").length==0){
+                	alert("请添加文件");
+                	return false;
+                }
                 if (status == "suspend") {
                     console.log("当前按钮是暂停，即将变为继续");
                     $("#StopBtn").html("继续上传");

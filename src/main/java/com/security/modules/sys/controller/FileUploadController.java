@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alibaba.fastjson.JSONObject;
 import com.security.common.annotation.SysLog;
-import com.security.common.utils.FileUploaderUtils;
 import com.security.common.utils.FileUtil;
 import com.security.common.utils.PageUtils;
 import com.security.common.utils.Query;
@@ -91,28 +89,26 @@ public class FileUploadController {
 				FileUtil.saveFile(mergePath, fileName, file, null);
 				// 验证所有分块是否上传成功，成功的话进行合并
 				String mergeName=FileUtil.Uploaded(md5value, guid, chunk, chunks, mergePath, fileName, ext, null);
-				fileInf.put("fileName", dirname+mergeName);
+				fileInf.put("fileName", "/image/bigFile/"+mergeName);
 				fileInf.put("uploadName", mergeName);
 				fileInf.put("oriFileName", file.getOriginalFilename());
-				fileInf.put("url", fileUrlPath + dirname+mergeName);
-				fileInf.put("size", file.getSize());
+				fileInf.put("url", fileUrlPath + "/image/bigFile/"+mergeName);
 			} else {
 				// 上传文件没有分块的话就直接保存目标目录
 				Map<String,String> fileMap =FileUtil.saveImage(file, "fileupload");
-				 fileInf.put("fileName", fileMap.get("fileName"));
-					fileInf.put("uploadName", fileMap.get("uploadName"));
-					fileInf.put("oriFileName", file.getOriginalFilename());
-					fileInf.put("url", fileUrlPath + fileMap.get("fileName"));
-					fileInf.put("size", file.getSize());
-				
+				fileInf.put("fileName", fileMap.get("fileName"));
+				fileInf.put("uploadName", fileMap.get("uploadName"));
+				fileInf.put("oriFileName", file.getOriginalFilename());
+				fileInf.put("url", fileUrlPath + fileMap.get("fileName"));
+
 			}
-			
+			fileInf.put("ext",FileUtil.extTrans(ext));
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			log.error(ex.getMessage());	
 		}
-		
+
 		return R.ok(fileInf);
 	}
 
@@ -218,4 +214,6 @@ public class FileUploadController {
 		}
 		return R.ok();
 	}
+	
+	
 }

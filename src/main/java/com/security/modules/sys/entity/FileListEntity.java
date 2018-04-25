@@ -28,8 +28,54 @@ public class FileListEntity implements Serializable {
 	private String status;
 	
 	private Date pubdate;
+	private String banner;
+	private String tab1;
+	private String tab2;
+	private String file_cat;
+	private String file_size;
+
 
 	
+	public String getBanner() {
+		return banner;
+	}
+
+	public void setBanner(String banner) {
+		this.banner = banner;
+	}
+
+	public String getTab1() {
+		return tab1;
+	}
+
+	public void setTab1(String tab1) {
+		this.tab1 = tab1;
+	}
+
+	public String getTab2() {
+		return tab2;
+	}
+
+	public void setTab2(String tab2) {
+		this.tab2 = tab2;
+	}
+
+	public String getFile_cat() {
+		return file_cat;
+	}
+
+	public void setFile_cat(String file_cat) {
+		this.file_cat = file_cat;
+	}
+
+	public String getFile_size() {
+		return file_size;
+	}
+
+	public void setFile_size(String file_size) {
+		this.file_size = file_size;
+	}
+
 	public String getFile_id() {
 		return file_id;
 	}

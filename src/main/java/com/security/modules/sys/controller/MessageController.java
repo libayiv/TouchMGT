@@ -228,10 +228,10 @@ public class MessageController {
 		return R.ok();
 	}
 	
-	@Scheduled(cron= "0 0 7 * * ?")
+	//@Scheduled(cron= "0 0 7 * * ?")
 	public R autoSendMsg(){
 		messageService.autoSendMsg();
-		log.info("------------------ google message autosend ---------------");
+		
 		return R.ok();
 	}
 }

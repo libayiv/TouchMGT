@@ -6,11 +6,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +18,7 @@ import com.security.common.utils.SendMsgUtil;
 import com.security.modules.sys.dao.MessageDao;
 import com.security.modules.sys.entity.MessageInfo;
 import com.security.modules.sys.service.MessageService;
+
 /**
  * 
  * @说明  消息配置service实现类
@@ -81,9 +80,11 @@ public class MessageServiceImpl implements MessageService {
 				membList = messageDao.getAcceptMembs(paramMap);
 			}else if(msg.getAcc_type() == 2){ //人员
 				String[] membs  = msg.getAcceptor().split(",");
-				for(String membId:membs){
+				paramMap.put("membList", membs);
+				membList = messageDao.getAcceptMembs(paramMap);
+				/*for(String membId:membs){
 					membList.add(membId);
-				}
+				}*/
 				paramMap.put("membList", membList);
 			}else{ // 取值范围
 				String acceptors = msg.getAcceptor();

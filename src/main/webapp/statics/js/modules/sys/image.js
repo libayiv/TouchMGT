@@ -59,6 +59,8 @@ $(function () {
                 $(".btn-delete").click(function () {
                     //console.log($(this).attr("fileId"));//拿到文件id
                     uploader.removeFile(uploader.getFile($(this).attr("fileId"), true));
+                	$("#UploadBtn").css("display",'none');
+
                     $(this).parent().parent().fadeOut();//视觉上消失了
                     $(this).parent().parent().remove();//DOM上删除了
                 });
@@ -170,10 +172,10 @@ $(function () {
             $("#StopBtn").click(function () {
                 console.log($('#StopBtn').attr("status"));
                 var status = $('#StopBtn').attr("status");
-                if(uploader.getFiles("interrupt").length==0){
+              /*  if(uploader.getFiles("interrupt").length==0){
                 	alert("请添加文件");
                 	return false;
-                }
+                }*/
                 if (status == "suspend") {
                     console.log("当前按钮是暂停，即将变为继续");
                     $("#StopBtn").html("继续上传");

@@ -89,6 +89,7 @@ public class MessageServiceImpl implements MessageService {
 			}else{ // 取值范围
 				String acceptors = msg.getAcceptor();
 				paramMap = CommonUtils.getAcceptorParams(acceptors);
+				paramMap.put("type", msg.getAcc_type());
 				membList = messageDao.getAcceptMembs(paramMap);
 			}
 			

@@ -1,3 +1,6 @@
+_extensions ='3gp,mp4,rmvb,mov,avi,m4v,wmv,jpg,jpeg,png,bmp,gif,ppt,pptx,pdf,xls,xlsx,txt,doc,docx';  
+_mimeTypes ='video/*,audio/*,application/*,image/*';  
+  
 $(function () {
 			var thumbnailWidth = 100;   //缩略图高度和宽度 （单位是像素），当宽高度是0~1的时候，是按照百分比计算，具体可以看api文档  
 			var thumbnailHeight = 100;
@@ -24,13 +27,13 @@ $(function () {
                 //fileNumLimit :1,
                 fileSizeLimit: 2000 * 1024 * 1024,//最大2GB
                 fileSingleSizeLimit: 2000 * 1024 * 1024,
-                resize: false//不压缩
+                resize: false,//不压缩
                 //选择文件类型
-                //accept: {
-                //    title: 'File',
-                //    extensions: 'mp4,avi,rmvb,wmv',
-                //    mimeTypes: 'File/*'
-                //}
+                accept: {        
+                    title: '大文件上传',  //文字描述  
+                    extensions: _extensions,     //允许的文件后缀，不带点，多个用逗号分割。,jpg,png,  
+                    mimeTypes: _mimeTypes,      //多个用逗号分割。image/*,  
+                },  
             });
             // 当有文件被添加进队列的时候
             uploader.on('fileQueued', function (file) {
@@ -56,6 +59,8 @@ $(function () {
                 $(".btn-delete").click(function () {
                     //console.log($(this).attr("fileId"));//拿到文件id
                     uploader.removeFile(uploader.getFile($(this).attr("fileId"), true));
+                	$("#UploadBtn").css("display",'none');
+
                     $(this).parent().parent().fadeOut();//视觉上消失了
                     $(this).parent().parent().remove();//DOM上删除了
                 });
@@ -131,7 +136,6 @@ $(function () {
                 $('#StopBtn').fadeOut('slow');
             	response.size=file.size;
                 alert("上传成功",function(){
-                	debugger;
             		parent.vm.file = response;
             		var index = parent.layer.getFrameIndex(window.name);
             		parent.layer.close(index);
@@ -168,10 +172,10 @@ $(function () {
             $("#StopBtn").click(function () {
                 console.log($('#StopBtn').attr("status"));
                 var status = $('#StopBtn').attr("status");
-                if(uploader.getFiles("interrupt").length==0){
+              /*  if(uploader.getFiles("interrupt").length==0){
                 	alert("请添加文件");
                 	return false;
-                }
+                }*/
                 if (status == "suspend") {
                     console.log("当前按钮是暂停，即将变为继续");
                     $("#StopBtn").html("继续上传");

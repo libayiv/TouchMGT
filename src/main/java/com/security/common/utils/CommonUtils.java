@@ -79,7 +79,7 @@ public class CommonUtils {
 		String[] conditions = acceptors.split(" ");
 		for (String condition : conditions) {
 			if (condition.contains("PV")) {
-				String[] pvRange = condition.substring(condition.indexOf("["), condition.length() - 1).split(",");
+				String[] pvRange = condition.substring(condition.indexOf("[")+1, condition.length() - 1).split(",");
 				if ("0".equals(pvRange[1]) && "0".equals(pvRange[0])) {
 					continue;
 				} else {
@@ -88,7 +88,7 @@ public class CommonUtils {
 				}
 			}
 			if (condition.contains("国家")) {
-				String[] countrys = condition.substring(condition.indexOf("["), condition.length() - 1).split(",");
+				String[] countrys = condition.substring(condition.indexOf("[")+1, condition.length() - 1).split(",");
 				List<String> countryList = new ArrayList<String>();
 				for (String country : countrys) {
 					countryList.add(country);
@@ -96,7 +96,7 @@ public class CommonUtils {
 				paramMap.put("countryList", countryList);
 			}
 			if (condition.contains("会员等级")) {
-				String[] ranksRange = condition.substring(condition.indexOf("["), condition.length() - 1).split(",");
+				String[] ranksRange = condition.substring(condition.indexOf("[")+1, condition.length() - 1).split(",");
 				if ("0".equals(ranksRange[1]) && "0".equals(ranksRange[0])) {
 					continue;
 				} else {
@@ -105,7 +105,7 @@ public class CommonUtils {
 				}
 			}
 			if (condition.contains("GPV")) {
-				String[] gpvRange = condition.substring(condition.indexOf("["), condition.length() - 1).split(",");
+				String[] gpvRange = condition.substring(condition.indexOf("[")+1, condition.length() - 1).split(",");
 				if ("0".equals(gpvRange[1]) && "0".equals(gpvRange[0])) {
 					continue;
 				} else {

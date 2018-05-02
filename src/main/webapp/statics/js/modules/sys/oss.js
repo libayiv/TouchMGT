@@ -237,9 +237,9 @@ var vm = new Vue({
 		    layer.open({  
 		        type: 2,  
 		        title: '文件上传',  
-		        shadeClose: true,  
+		        shadeClose: false,  
 		        shade: 0.5,  
-		        area: ['380px', '60%'],  
+		        area: ['600px', '60%'],  
 		        content: 'image.html', //iframe的url  
 		        end : function(index){ 
 		        	$("#fileName").val(vm.file.fileName);

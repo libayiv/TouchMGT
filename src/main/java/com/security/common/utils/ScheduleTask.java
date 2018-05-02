@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 import com.security.modules.sys.service.MessageService;
 
+
+
 @Component
 public class ScheduleTask {
 	@Autowired
@@ -15,7 +17,6 @@ public class ScheduleTask {
      void doSomethingWith(){
          System.out.println("定时任务开始......");
          long begin = System.currentTimeMillis();
-     
          //执行数据库操作了哦...
          msg.autoSendMsg();
          long end = System.currentTimeMillis();

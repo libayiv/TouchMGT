@@ -132,6 +132,7 @@ public class MessageServiceImpl implements MessageService {
 				for(String membId:membs){
 					membList.add(membId);
 				}
+				
 				paramMap.put("membList", membList);
 			}else{ // 取值范围
 				String acceptors = msg.getAcceptor();

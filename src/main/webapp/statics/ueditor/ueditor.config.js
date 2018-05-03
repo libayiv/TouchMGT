@@ -28,9 +28,9 @@
 
         //为编辑器实例添加一个路径，这个不能被注释
         UEDITOR_HOME_URL: URL
-
+//     测试   http://intftest.bfsuma.com:3879/TouchMGT/sys/ueditor/exec
         // 服务器统一请求接口路径
-        , serverUrl: "http://intftest.bfsuma.com:3879/TouchMGT/sys/ueditor/exec"
+        , serverUrl: "http://touch.bfsuma.com/TouchMGT/sys/ueditor/exec"
 
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的重新定义
         , toolbars: [[

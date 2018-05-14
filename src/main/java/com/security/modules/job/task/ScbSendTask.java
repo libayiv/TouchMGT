@@ -29,7 +29,6 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 	public void sendScb(){	
 		
 		try {
-			Thread.sleep(1000L);
 			List<BFAfricaSCB_MS> scbList=bfAFricafunctionService.queryList();
 			Map<String,Object> paramMap = new HashMap<String, Object>();
 			

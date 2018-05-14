@@ -95,6 +95,8 @@ public class MessageServiceImpl implements MessageService {
 			
 			sendJson.put("title", msg.getTitle());
 			sendJson.put("body", msg.getIntro());
+			sendJson.put("type","mes");
+			
 			SendMsgUtil mUtil = new SendMsgUtil();
 			for(String membs:membList){
 				mUtil.addQueue(membs);
@@ -183,6 +185,7 @@ public class MessageServiceImpl implements MessageService {
 				
 				sendJson.put("title", msg.getTitle());
 				sendJson.put("body", msg.getIntro());
+				sendJson.put("type","mes");
 				SendMsgUtil mUtil = new SendMsgUtil();
 				for(String membs:membList){
 					mUtil.addQueue(membs);
@@ -210,6 +213,18 @@ public class MessageServiceImpl implements MessageService {
 		}
 		
 		/*addMsgDetail(ids);*/
+		
+	}
+
+	@Override
+	public void addDetail(Map<String,Object> membParam) {
+		messageDao.addDetail(membParam);
+		
+	}
+
+	@Override
+	public void updateSendStatus(String[] pids) {
+		messageDao.updateSendStatus(pids);
 		
 	}
 

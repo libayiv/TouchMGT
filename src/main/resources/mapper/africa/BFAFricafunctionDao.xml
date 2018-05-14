@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="com.security.modules.africa.dao.BFAFricafunctionDao">
+	
+
+	<resultMap type="com.security.modules.africa.entity.BFAfricaSCB_MS" id="AFscbmsMap">
+		<result column="SCB_INPUT_MEMB_ID" property="scb_input_memb_id"/>
+		<result column="SCB_NO" property="scb_no"/>
+		<result column="SCB_CRT_DATE" property="scb_crt_date"/>
+		<result column="SCB_CODE" property="scb_code"/>
+	</resultMap>
+	
+	<select id="querySCBMS2DayList"  resultMap="AFscbmsMap">
+		<![CDATA[  
+		SELECT SCB_CODE,SCB_NO,SCB_INPUT_MEMB_ID,TO_CHAR(SCB_CRT_DATE,'yyyy-mm-dd hh24:mi:ss') AS SCB_CRT_DATE FROM SCB_MS     
+    	WHERE TO_CHAR(SCB_CRT_DATE,'YYYY-MM-DD') <=TO_CHAR(SYSDATE,'YYYY-MM-DD') AND TO_CHAR(SCB_CRT_DATE,'YYYY-MM-DD')>=TO_CHAR(SYSDATE-2,'YYYY-MM-DD')
+		AND SCB_STATUS <> 4 AND SCB_SEND_STATUS=0
+		ORDER BY SCB_CRT_DATE DESC
+		 ]]>
+	</select>
+	
+	
+	<update id="updateSCBMS" parameterType="com.security.modules.africa.entity.BFAfricaSCB_MS">
+		UPDATE SCB_MS 
+		SET SCB_SEND_STATUS=1 
+		WHERE SCB_CODE=#{scb_code}
+	</update>
+</mapper>

@@ -61,4 +61,8 @@ public interface MessageService {
 	 * @时间 2018年3月22日 上午11:38:22
 	 */
 	void autoSendMsg();
+	
+	void addDetail(Map<String,Object> membParam);
+	
+	void updateSendStatus(String[] pids);
 }

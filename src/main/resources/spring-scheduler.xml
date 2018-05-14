@@ -22,7 +22,7 @@
                 <prop key="org.quartz.jobStore.clusterCheckinInterval">3600000</prop>
                 <prop key="org.quartz.jobStore.maxMisfiresToHandleAtATime">1</prop>
                 
-                <prop key="org.quartz.jobStore.misfireThreshold">3600000</prop>
+                <prop key="org.quartz.jobStore.misfireThreshold">60000</prop>
 				<!-- 表前缀 -->
                 <prop key="org.quartz.jobStore.tablePrefix">QRTZ_</prop>
             </props>
@@ -39,7 +39,7 @@
         <property name="overwriteExistingJobs" value="true" />
 
         <!-- 设置自动启动   默认为true -->
-        <property name="autoStartup" value="false" />
+        <property name="autoStartup" value="true" />
 
     </bean>
 	

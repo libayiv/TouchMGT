@@ -46,13 +46,13 @@
 		values
 		(
 			#{jobId},
-			#{beanName}, 
-			#{methodName}, 
-			#{params}, 
-			#{cronExpression}, 
+			#{beanName,jdbcType=VARCHAR}, 
+			#{methodName,jdbcType=VARCHAR}, 
+			#{params,jdbcType=VARCHAR}, 
+			#{cronExpression,jdbcType=VARCHAR}, 
 			#{status}, 
-			#{remark}, 
-			#{createTime}
+			#{remark,jdbcType=VARCHAR}, 
+			SYSDATE
 		)
 	</insert>
 	 
@@ -60,11 +60,11 @@
 		update schedule_job 
 		<set> 
 			<if test="beanName != null">bean_name = #{beanName}, </if>
-			<if test="methodName != null">method_name = #{methodName}, </if>
-			<if test="params != null">params = #{params}, </if>
-			<if test="cronExpression != null">cron_expression = #{cronExpression}, </if>
+			<if test="methodName != null">method_name = #{methodName,jdbcType=VARCHAR}, </if>
+			<if test="params != null">params = #{params,jdbcType=VARCHAR}, </if>
+			<if test="cronExpression != null">cron_expression = #{cronExpression,jdbcType=VARCHAR}, </if>
 			<if test="status != null">status = #{status}, </if>
-			<if test="remark != null">remark = #{remark}, </if>
+			<if test="remark != null">remark = #{remark,jdbcType=VARCHAR}, </if>
 		</set>
 		where job_id = #{jobId}
 	</update>

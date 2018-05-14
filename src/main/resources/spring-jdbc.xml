@@ -15,30 +15,40 @@
 	<tx:annotation-driven />
 	<context:property-placeholder location="classpath:db.properties,classpath:config.properties" />
 
-	<!-- <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		<bean id="AFRICADataSource" class="com.alibaba.druid.pool.DruidDataSource"
 		init-method="init" destroy-method="close">
+		<property name="driverClassName">
+			<value>${africa_driverClassName}</value>
+		</property>
 		<property name="url">
-			<value>${jdbc.url}</value>
+			<value>${africa_url}</value>
 		</property>
 		<property name="username">
-			<value>${jdbc.username}</value>
+			<value>${africa_username}</value>
 		</property>
 		<property name="password">
-			<value>${jdbc.password}</value>
+			<value>${africa_password}</value>
 		</property>
 		<property name="initialSize">
 			<value>${jdbc.initialSize}</value>
 		</property>
 		<property name="maxActive">
 			<value>${jdbc.maxActive}</value>
+		</property> 
+		<property name="removeAbandoned">
+			<value>true</value>
 		</property>
+		<!-- 清除无用连接的等待时间 -->
+		<property name="removeAbandonedTimeout">
+			<value>1800</value>
+		</property>	
 		<property name="proxyFilters">
 			<list>
 				<ref bean="stat-filter" />
 				<ref bean="wall-filter" />
 			</list>
 		</property>
-	</bean> -->
+	</bean>
 	
 	
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
@@ -107,14 +117,22 @@
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource">
-			<ref bean="dataSource" />
+			<ref bean="multipleDataSource" />
 		</property>
 	</bean>
-
+	<bean id="multipleDataSource" class="com.security.common.dataSource.MultipleDataSource">
+		<property name="defaultTargetDataSource" ref="dataSource" />
+		<property name="targetDataSources">
+			<map>
+				<entry key="AFRICADataSource" value-ref="AFRICADataSource" />
+				<entry key="dataSource" value-ref="dataSource" />		
+			</map>
+		</property>
+	</bean>
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="configLocation" value="classpath:mybatis.xml" />
 		<property name="mapperLocations" value="classpath:mapper/**/*.xml" />
-		<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="multipleDataSource" />
 		<property name="plugins">
 			<array>
 				<bean id="pageInterceptor" class="com.github.pagehelper.PageInterceptor">

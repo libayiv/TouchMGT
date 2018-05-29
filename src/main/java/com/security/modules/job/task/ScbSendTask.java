@@ -16,6 +16,7 @@ import com.security.modules.africa.entity.BFAfricaSCB_MS;
 import com.security.modules.africa.service.BFAFricafunctionService;
 import com.security.modules.sys.entity.MessageInfo;
 import com.security.modules.sys.service.MessageService;
+import com.security.modules.sys.service.SendControlService;
 
 @Component("ScbSendTask")
 public class ScbSendTask {
@@ -24,17 +25,24 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
 	private BFAFricafunctionService bfAFricafunctionService;
 	@Autowired
+	private SendControlService sendControlService;
+	@Autowired
 	private MessageService msg;
 	
 	public void sendScb(){	
 		
 		try {
+			JSONObject obj=sendControlService.validateSendCtrl("job:send:order");
+			if(!"100".equals(obj.getString("code"))){
+				logger.error(obj.getString("result"));
+				return ;
+			}
 			List<BFAfricaSCB_MS> scbList=bfAFricafunctionService.queryList();
-			Map<String,Object> paramMap = new HashMap<String, Object>();
 			
 			for (BFAfricaSCB_MS bfAfricaSCB_MS : scbList) {
 				MessageInfo scmMes=new MessageInfo();
 				JSONObject sendJson = new JSONObject();
+				JSONObject dataJson = new JSONObject();
 				String id=CommonUtils.getRandomId();
 				scmMes.setAcc_type(4);
 				scmMes.setTitle("You have an order at "+bfAfricaSCB_MS.getScb_crt_date());
@@ -44,12 +52,12 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 				scmMes.setType(2);
 				scmMes.setAcceptor(bfAfricaSCB_MS.getScb_input_memb_id());
 				msg.save(scmMes);
-				paramMap.put("membList", bfAfricaSCB_MS.getScb_input_memb_id());
 				sendJson.put("title", scmMes.getTitle());
 				sendJson.put("body", scmMes.getIntro());
-				sendJson.put("type","order");
-				sendJson.put("oderid",bfAfricaSCB_MS.getScb_no());
-				
+				dataJson.put("type","order");
+				dataJson.put("orderid",bfAfricaSCB_MS.getScb_no());
+				//sendJson.put("data", dataJson);
+				System.out.println(sendJson.toJSONString());
 				SendMsgUtil mUtil = new SendMsgUtil();
 				mUtil.addQueue(bfAfricaSCB_MS.getScb_input_memb_id());
 				Map<String,Object> membParam = new HashMap<String, Object>();
@@ -57,7 +65,7 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 				membParam.put("id", scmMes.getId());
 				msg.addDetail(membParam);
 				
-				mUtil.execute(sendJson);
+				mUtil.execute(sendJson,dataJson,false);
 				
 				bfAFricafunctionService.updateSCBMS(bfAfricaSCB_MS);
 			}

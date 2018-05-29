@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.security.common.annotation.SysLog;
 import com.security.common.exception.TouchException;
 import com.security.common.utils.CommonUtils;
@@ -31,6 +32,7 @@ import com.security.common.validator.group.UpdateGroup;
 import com.security.modules.sys.entity.MessageInfo;
 import com.security.modules.sys.entity.SysConfigEntity;
 import com.security.modules.sys.service.MessageService;
+import com.security.modules.sys.service.SendControlService;
 import com.security.modules.sys.service.SysConfigService;
 import com.security.modules.touch.controller.BFBannerController;
 import com.security.modules.touch.entity.BFBannerInf;
@@ -48,6 +50,8 @@ public class MessageController {
 
 	@Autowired
 	private MessageService messageService;
+	@Autowired
+	private SendControlService sendControlService;
 	@Autowired
 	private GetSortNumService sortNumService;
 	private Logger log = LoggerFactory.getLogger(MessageController.class);
@@ -213,6 +217,11 @@ public class MessageController {
 	@RequiresPermissions("sys:message:sendGoogle")
 	public R sendGoogle(@RequestBody Map<String, Object> paramMap){
 		try {
+			JSONObject obj=sendControlService.validateSendCtrl("job:send:message");
+			if(!"100".equals(obj.getString("code"))){
+				log.error(obj.getString("result"));
+				return R.error(obj.getString("result"));
+			}
 			JSONArray pidsJson =  (JSONArray) paramMap.get("pids");
 			String[] pids = new String[pidsJson.size()];
 			Object[] objects =  pidsJson.toArray();

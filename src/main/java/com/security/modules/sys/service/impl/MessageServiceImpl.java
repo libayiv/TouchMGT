@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -74,10 +75,14 @@ public class MessageServiceImpl implements MessageService {
 			MessageInfo msg = list.get(index);
 			JSONObject sendJson = new JSONObject();
 			Map<String,Object> paramMap = new HashMap<String, Object>();
+			List<Map<String,String>> resultMap = new ArrayList<Map<String,String>>();
+
 			List<String> membList = new ArrayList<String>();
 			paramMap.put("type", msg.getAcc_type());
+			boolean isAll=false;
 			if( msg.getAcc_type() == 1 ){//全部
-				membList = messageDao.getAcceptMembs(paramMap);
+				resultMap = messageDao.getAllMembs();
+				isAll=true;
 			}else if(msg.getAcc_type() == 2){ //人员
 				String[] membs  = msg.getAcceptor().split(",");
 				paramMap.put("membList", membs);
@@ -98,14 +103,29 @@ public class MessageServiceImpl implements MessageService {
 			sendJson.put("type","mes");
 			
 			SendMsgUtil mUtil = new SendMsgUtil();
-			for(String membs:membList){
-				mUtil.addQueue(membs);
-				Map<String,Object> membParam = new HashMap<String, Object>();
-				membParam.put("membId", membs);
-				membParam.put("id", msg.getId());
-				messageDao.addDetail(membParam);
+			if(isAll){
+				for (Map<String,String> map : resultMap) {
+					String membs=map.get("MEMB_ID");
+					String regis_id=map.get("MEMB_SEC_QUEST_CUSTOM");
+					if(StringUtils.isNotEmpty(regis_id)){
+						mUtil.addQueue(regis_id);
+						Map<String,Object> membParam = new HashMap<String, Object>();
+						membParam.put("membId", membs);
+						membParam.put("id", msg.getId());
+						messageDao.addDetail(membParam);
+					}
+				}
+			}else{
+				for(String membs:membList){
+					mUtil.addQueue(membs);
+					Map<String,Object> membParam = new HashMap<String, Object>();
+					membParam.put("membId", membs);
+					membParam.put("id", msg.getId());
+					messageDao.addDetail(membParam);
+				}
 			}
-			mUtil.execute(sendJson);
+			
+			mUtil.execute(sendJson,null,isAll);
 			ids[sendCount] = msg.getId();
 			sendCount++;
 			
@@ -157,7 +177,8 @@ public class MessageServiceImpl implements MessageService {
 		List<MessageInfo> list = messageDao.queryAutoSendList();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		List<String> idList = new ArrayList<String>();
-		
+		List<Map<String,String>> resultMap = new ArrayList<Map<String,String>>();
+
 		int sendCount = 0;
 		for(int index = 0 ; index <list.size() ; index++){
 			MessageInfo msg = list.get(index);
@@ -168,9 +189,11 @@ public class MessageServiceImpl implements MessageService {
 			String currentDateStr = sdf.format(new Date());
 			String autoSendDate = msg.getAuto_date().substring(0, 10);
 			paramMap.put("type", msg.getAcc_type());
+			boolean isAll=false;
 			if(currentDateStr.equals(autoSendDate)){
 				if( msg.getAcc_type() == 1 ){//全部
-					membList = messageDao.getAcceptMembs(paramMap);
+					resultMap = messageDao.getAllMembs();
+					isAll=true;
 				}else if(msg.getAcc_type() == 2){ //人员
 					String[] membs  = msg.getAcceptor().split(",");
 					for(String membId:membs){
@@ -186,15 +209,29 @@ public class MessageServiceImpl implements MessageService {
 				sendJson.put("title", msg.getTitle());
 				sendJson.put("body", msg.getIntro());
 				sendJson.put("type","mes");
-				SendMsgUtil mUtil = new SendMsgUtil();
-				for(String membs:membList){
-					mUtil.addQueue(membs);
-					Map<String,Object> membParam = new HashMap<String, Object>();
-					membParam.put("membId", membs);
-					membParam.put("id", msg.getId());
-					messageDao.addDetail(membParam);
+				SendMsgUtil mUtil = new SendMsgUtil();	
+				if(isAll){
+					for (Map<String,String> map : resultMap) {
+						String membs=map.get("MEMB_ID");
+						String regis_id=map.get("MEMB_SEC_QUEST_CUSTOM");
+						if(StringUtils.isNotEmpty(regis_id)){
+							mUtil.addQueue(regis_id);
+							Map<String,Object> membParam = new HashMap<String, Object>();
+							membParam.put("membId", membs);
+							membParam.put("id", msg.getId());
+							messageDao.addDetail(membParam);
+						}
+					}
+				}else{
+					for(String membs:membList){
+						mUtil.addQueue(membs);
+						Map<String,Object> membParam = new HashMap<String, Object>();
+						membParam.put("membId", membs);
+						membParam.put("id", msg.getId());
+						messageDao.addDetail(membParam);
+					}
 				}
-				mUtil.execute(sendJson);
+				mUtil.execute(sendJson,null,isAll);
 				idList.add(msg.getId()) ;
 				
 				
@@ -226,6 +263,16 @@ public class MessageServiceImpl implements MessageService {
 	public void updateSendStatus(String[] pids) {
 		messageDao.updateSendStatus(pids);
 		
+	}
+
+	@Override
+	public List<Map<String, Object>> getBonusMembs(Map<String, String> param) {
+		return messageDao.getBonusMembs(param);
+	}
+
+	@Override
+	public List<MessageInfo> queryMesBonus(String tag) {
+		return messageDao.queryMesBonus(tag);
 	}
 
 }

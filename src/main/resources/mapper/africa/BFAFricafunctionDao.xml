@@ -9,6 +9,13 @@
 		<result column="SCB_CRT_DATE" property="scb_crt_date"/>
 		<result column="SCB_CODE" property="scb_code"/>
 	</resultMap>
+	<resultMap type="com.security.modules.africa.entity.BFAfricaBonus" id="AFbonusMap">
+		<result column="BNS_CODE" property="bns_code"/>
+		<result column="END_INFO" property="end_info"/>
+		<result column="SEND_STATUS" property="send_status"/>
+		<result column="JOB_BONUS_ID" property="job_bonus_id"/>
+		<result column="CALCULATE_DATE" property="calculate_date"/>
+	</resultMap>
 	
 	<select id="querySCBMS2DayList"  resultMap="AFscbmsMap">
 		<![CDATA[  
@@ -17,6 +24,12 @@
 		AND SCB_STATUS <> 4 AND SCB_SEND_STATUS=0
 		ORDER BY SCB_CRT_DATE DESC
 		 ]]>
+	</select>
+	
+	<select id="queryBounsSend"  resultMap="AFbonusMap">
+		SELECT BNS_CODE,END_INFO,SEND_STATUS,JOB_BONUS_ID,TO_CHAR(CALCULATE_DATE,'yyyy-mm-dd') as CALCULATE_DATE FROM 
+         (SELECT ROW_NUMBER() OVER( ORDER BY CALCULATE_DATE DESC) AS IDS , BNS_CODE,END_INFO,SEND_STATUS,JOB_BONUS_ID,CALCULATE_DATE FROM JOB_BONUS_MS) 
+		WHERE IDS = 1 AND  SEND_STATUS = 1  AND TO_CHAR(CALCULATE_DATE,'yyyy-mm-dd')=TO_CHAR(SYSDATE,'yyyy-mm-dd')
 	</select>
 	
 	

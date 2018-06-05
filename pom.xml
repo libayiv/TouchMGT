@@ -64,12 +64,12 @@
 	</pluginRepositories>
 
 	<dependencies>
-		 <!-- Oracle Jdbc Driver -->
+		<!-- Oracle Jdbc Driver -->
     	<dependency>
         	<groupId>com.oracle</groupId>
         	<artifactId>ojdbc14</artifactId>
         	<version>11.2.0</version>
-    	</dependency> 
+    	</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>

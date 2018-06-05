@@ -106,11 +106,7 @@ public class MessageServiceImpl implements MessageService {
 			mUtil.execute(sendJson);
 			ids[sendCount] = msg.getId();
 			sendCount++;
-			
-		/*	Map<String,Object> membParam = new HashMap<String, Object>();
-			membParam.put("membList", membList);
-			membParam.put("sid", msg.getId());
-			messageDao.addMessageDetailList(membParam);*/
+
 			
 		}
 		messageDao.updateSendStatus(pids);
@@ -171,9 +167,11 @@ public class MessageServiceImpl implements MessageService {
 					membList = messageDao.getAcceptMembs(paramMap);
 				}else if(msg.getAcc_type() == 2){ //人员
 					String[] membs  = msg.getAcceptor().split(",");
-					for(String membId:membs){
+					paramMap.put("membList", membs);
+					membList = messageDao.getAcceptMembs(paramMap);
+					/*for(String membId:membs){
 						membList.add(membId);
-					}
+					}*/
 					paramMap.put("membList", membList);
 				}else{ // 取值范围
 					String acceptors = msg.getAcceptor();

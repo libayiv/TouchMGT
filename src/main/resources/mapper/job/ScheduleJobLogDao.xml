@@ -30,8 +30,12 @@
 	</select>
 	 
 	<insert id="save" parameterType="com.security.modules.job.entity.ScheduleJobLogEntity">
+	<selectKey resultType="java.lang.Long" order="BEFORE" keyProperty="logId">  
+       	SELECT SCHEDULE_JOB_LOG_SEQ.Nextval as logId from DUAL  
+   		</selectKey>  
 		insert into schedule_job_log
 		(
+			log_id,
 			job_id, 
 			bean_name, 
 			method_name, 
@@ -43,14 +47,15 @@
 		)
 		values
 		(
+			#{logId},
 			#{jobId}, 
-			#{beanName}, 
-			#{methodName}, 
-			#{params}, 
+			#{beanName,jdbcType=VARCHAR}, 
+			#{methodName,jdbcType=VARCHAR}, 
+			#{params,jdbcType=VARCHAR}, 
 			#{status}, 
-			#{error}, 
+			#{error,jdbcType=VARCHAR}, 
 			#{times}, 
-			#{createTime}
+			sysdate
 		)
 	</insert>
 	

@@ -60,5 +60,20 @@ public interface MessageDao extends BaseDao<MessageInfo> {
 	
 	
 	void addDetail(Map<String, Object> membParam);
+	/**
+	 * @说明 查询所有人的regis_id
+	 * @返回 Map<String, String>
+	 * @创建者 lbx
+	 */
+	List<Map<String, String>> getAllMembs();
+	
+	/**
+	 * @说明 经销商奖金推送
+	 * @返回 Map<String, String>
+	 * @创建者 lbx
+	 */
+	List<Map<String, Object>> getBonusMembs(Map<String, String> param);
+	
+	List<MessageInfo> queryMesBonus(String tag);
 	
 }

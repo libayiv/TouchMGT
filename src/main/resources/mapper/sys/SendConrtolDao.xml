@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.security.modules.sys.dao.SendControlDao">
+
+	<resultMap type="SendEntity" id="SendEntityMap">
+		<result column="ID" property="id"/>
+		<result column="STATUS" property="status"/>
+		<result column="OPERATION_ID" property="operation_id"/>
+		<result column="OPERATION_NAME" property="operation_name"/>
+		<result column="CREATE_DATE" property="create_date"/>
+		<result column="REMARK" property="remark"/>
+		<result column="AUTH_CODE" property="auth_code"/>	
+	</resultMap>
+	
+	<select id="queryObject" parameterType="java.lang.String" resultMap="SendEntityMap">
+		SELECT 
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		WHERE id = #{pid}
+	</select>
+
+	<select id="querySendStatus" parameterType="java.lang.String" resultMap="SendEntityMap">
+		SELECT 
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		WHERE auth_code = #{auth_code}
+	</select>
+
+	<select id="queryList" parameterType="java.util.Map" resultMap="SendEntityMap">
+		SELECT 
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		<include refid="mapWhere" />
+		ORDER BY CREATE_DATE DESC
+	</select>
+	
+	<select id="queryTotal" resultType="int">
+		select count(*) from BFCMS_SEND_CONTROL 	
+	</select>
+
+	<sql id="tableName">
+		BFCMS_SEND_CONTROL
+	</sql>
+	
+	<sql id="mapWhere">
+		<where>
+			<if test="id != null and id != ''">
+				AND ID = #{id}
+			</if>
+			<if test="operation_id != null and operation_id != ''">
+				AND OPERATION_ID = #{operation_id}
+			</if>
+			<if test="create_date != null and create_date != ''">
+				AND CREATE_DATE = #{create_date}
+			</if>	
+			<if test="status != null and status != ''">
+				AND STATUS = #{status}
+			</if>
+			<if test="remark != null and remark != ''">
+				AND REMARK = #{remark}
+			</if>
+			<if test="operation_name != null and operation_name != ''">
+				AND OPERATION_NAME = #{operation_name}
+			</if>
+			<if test="auth_code != null and auth_code != ''">
+				 AND AUTH_CODE = #{auth_code}
+			</if>
+		</where>
+	</sql>
+ 
+	 
+	 <sql id="base">
+		ID,
+        OPERATION_ID,
+       	CREATE_DATE,
+        STATUS,
+        REMARK,
+        OPERATION_NAME,
+        AUTH_CODE
+	</sql>
+	
+	<insert id="save" parameterType="SendEntity">
+		insert into BFCMS_SEND_CONTROL
+		(
+			<include refid="base" />
+		)
+		values
+		(
+			#{id,jdbcType=VARCHAR}, 
+			#{operation_id,jdbcType=VARCHAR},
+			sysdate, 
+			#{status,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR}, 
+			#{operation_name,jdbcType=VARCHAR},
+			#{auth_code,jdbcType=VARCHAR}		
+		)
+	</insert>
+	 
+	<update id="update" parameterType="SendEntity">
+		update BFCMS_SEND_CONTROL 
+		<include refid="set" />
+		where id = #{id}
+	</update>
+	
+	<update id="updateStatus" parameterType="java.util.Map">
+		UPDATE
+		<include refid="tableName" />
+		SET STATUS = #{status}
+		WHERE
+		ID IN
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<sql id="set">
+		<set>
+			create_date = SYSDATE, 
+		
+			<if test="id != null and id != ''">
+				 ID = #{id},
+			</if>
+			<if test="operation_id != null and operation_id != ''">
+				 OPERATION_ID = #{operation_id},
+			</if>
+			<if test="status != null and status != ''">
+				 STATUS = #{status},
+			</if>
+			<if test="remark != null and remark != ''">
+				 REMARK = #{remark},
+			</if>
+			<if test="operation_name != null and operation_name != ''">
+				 OPERATION_NAME = #{operation_name},
+			</if>
+			<if test="auth_code != null and auth_code != ''">
+				 AUTH_CODE = #{auth_code}
+			</if>
+		</set>
+	</sql>
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="com.security.modules.africa.dao.BFAFricafunctionDao">
+	
+
+	<resultMap type="com.security.modules.africa.entity.BFAfricaSCB_MS" id="AFscbmsMap">
+		<result column="SCB_INPUT_MEMB_ID" property="scb_input_memb_id"/>
+		<result column="SCB_NO" property="scb_no"/>
+		<result column="SCB_CRT_DATE" property="scb_crt_date"/>
+		<result column="SCB_CODE" property="scb_code"/>
+	</resultMap>
+	<resultMap type="com.security.modules.africa.entity.BFAfricaBonus" id="AFbonusMap">
+		<result column="BNS_CODE" property="bns_code"/>
+		<result column="END_INFO" property="end_info"/>
+		<result column="SEND_STATUS" property="send_status"/>
+		<result column="JOB_BONUS_ID" property="job_bonus_id"/>
+		<result column="CALCULATE_DATE" property="calculate_date"/>
+	</resultMap>
+	
+	<select id="querySCBMS2DayList"  resultMap="AFscbmsMap">
+		<![CDATA[  
+		SELECT SCB_CODE,SCB_NO,SCB_INPUT_MEMB_ID,TO_CHAR(SCB_CRT_DATE,'yyyy-mm-dd hh24:mi:ss') AS SCB_CRT_DATE FROM SCB_MS     
+    	WHERE TO_CHAR(SCB_CRT_DATE,'YYYY-MM-DD') <=TO_CHAR(SYSDATE,'YYYY-MM-DD') AND TO_CHAR(SCB_CRT_DATE,'YYYY-MM-DD')>=TO_CHAR(SYSDATE-2,'YYYY-MM-DD')
+		AND SCB_STATUS <> 4 AND SCB_SEND_STATUS=0
+		ORDER BY SCB_CRT_DATE DESC
+		 ]]>
+	</select>
+	
+	<select id="queryBounsSend"  resultMap="AFbonusMap">
+		SELECT BNS_CODE,END_INFO,SEND_STATUS,JOB_BONUS_ID,TO_CHAR(CALCULATE_DATE,'yyyy-mm-dd') as CALCULATE_DATE FROM 
+         (SELECT ROW_NUMBER() OVER( ORDER BY CALCULATE_DATE DESC) AS IDS , BNS_CODE,END_INFO,SEND_STATUS,JOB_BONUS_ID,CALCULATE_DATE FROM JOB_BONUS_MS) 
+		WHERE IDS = 1 AND  SEND_STATUS = 1  AND TO_CHAR(CALCULATE_DATE,'yyyy-mm-dd')=TO_CHAR(SYSDATE,'yyyy-mm-dd')
+	</select>
+	
+	
+	<update id="updateSCBMS" parameterType="com.security.modules.africa.entity.BFAfricaSCB_MS">
+		UPDATE SCB_MS 
+		SET SCB_SEND_STATUS=1 
+		WHERE SCB_CODE=#{scb_code}
+	</update>
+</mapper>

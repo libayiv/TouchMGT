@@ -15,7 +15,7 @@
 		<result column="ACC_TYPE" property="acc_type"/>
 		<result column="AUTO_DATE" property="auto_date"/>
 	</resultMap>
-
+	
 	<sql id="tableName">
 		BFCMS_MESSAGE_INFO
 	</sql>
@@ -263,4 +263,33 @@
 		
 		
 	</select>
+	
+	<select id="queryMesBonus" resultMap="MessageInfoMap" parameterType="java.lang.String">
+		SELECT 
+		<include refid="queryBase" />
+		FROM
+		<include refid="tableName" />
+		WHERE TO_CHAR(PUBDATE,'yyyy-mm-dd')=TO_CHAR(SYSDATE,'yyyy-mm-dd')
+		AND TAG= #{tag}
+	</select>
+	
+	<select id="getAllMembs" resultType="java.util.Map">
+		SELECT M.MEMB_ID,M.MEMB_SEC_QUEST_CUSTOM 
+ 		FROM BFAFRICA_4.MEMB_MS M WHERE M.MEMB_STATUS = 3 AND TRIM(M.MEMB_SEC_QUEST_CUSTOM) IS NOT NULL AND M.MEMB_ACTIVE_STATE ='Y' AND M.MEMB_BINDING_STATE ='1' AND NOT EXISTS(SELECT 1 FROM BFCMS_BLACKLIST BL WHERE BL.MEMB_ID = M.MEMB_ID AND BL.STATUS = 1)
+	</select>
+	<select id="getBonusMembs" resultType="java.util.Map" parameterType="java.util.Map">
+		  SELECT M.MEMB_ID,M.MEMB_SEC_QUEST_CUSTOM ,BT.DT_BNS_AMT
+ 		  FROM BFAFRICA_4.MEMB_MS M LEFT JOIN BFAFRICA_4.BNS_DT BT ON M.MEMB_CODE =BT.DT_BNS_MEMB_CODE
+   		  WHERE M.MEMB_STATUS = 3  AND M.MEMB_ACTIVE_STATE ='Y' AND TRIM(M.MEMB_SEC_QUEST_CUSTOM) IS NOT NULL AND M.MEMB_BINDING_STATE ='1' AND BT.DT_BNS_AMT <![CDATA[ > ]]> 0  AND BT.DT_BNS_BNS_CODE=(SELECT MAX(DT_BNS_BNS_CODE) FROM BFAFRICA_4.BNS_DT) 
+     	  AND NOT EXISTS(SELECT 1 FROM BFCMS_BLACKLIST BL WHERE BL.MEMB_ID = M.MEMB_ID AND BL.STATUS = 1)
+     <choose>
+        <when test="rank != null and rank != ''">
+            AND BT.DT_BNS_RANK_TYPE <![CDATA[ >= ]]> #{rank}
+        </when>
+        <otherwise>
+            AND BT.DT_BNS_RANK_TYPE <![CDATA[ < ]]> 7
+        </otherwise>
+    </choose>
+    </select>
+	
 </mapper>

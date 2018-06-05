@@ -13,7 +13,8 @@ public class ScheduleTask {
 	@Autowired
 	MessageService msg;
 	//@Scheduled(cron="0 0 7 * * ?")
-	@Scheduled(cron="0/50 * *  * * ?")//每天凌晨两点执行
+	
+	@Scheduled(cron="0 0 7 * * ?")//每天凌晨两点执行
     void doSomethingWith(){
          System.out.println("定时任务开始......");
          long begin = System.currentTimeMillis();

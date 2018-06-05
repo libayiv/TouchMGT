@@ -61,4 +61,17 @@ public interface MessageService {
 	 * @时间 2018年3月22日 上午11:38:22
 	 */
 	void autoSendMsg();
+	
+	void addDetail(Map<String,Object> membParam);
+	
+	void updateSendStatus(String[] pids);
+	
+	/**
+	 * @说明 查询所有人的regis_id
+	 * @返回 Map<String, String>
+	 * @创建者 lbx
+	 */
+	List<Map<String, Object>> getBonusMembs(Map<String, String> param);
+	
+	List<MessageInfo> queryMesBonus(String tag);
 }

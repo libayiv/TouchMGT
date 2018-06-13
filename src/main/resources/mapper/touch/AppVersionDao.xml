@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="com.security.modules.touch.dao.AppVersionDao">
+
+	<resultMap type="AppVersionEntity" id="AppVersionMap">
+		<result column="ID" property="id"/>
+		<result column="APP_TYPE" property="app_type"/>
+		<result column="VERSION_CODE" property="version_code"/>
+		<result column="URL" property="url"/>
+		<result column="INTRO" property="intro"/>
+		<result column="PUBDATE" property="pubdate"/>
+		<result column="STATUS" property="status"/>
+	</resultMap>
+	
+
+	<insert id="save" parameterType="AppVersionEntity">
+		INSERT INTO
+		<include refid="tableName" />
+		(
+			<include refid="base" />
+		)
+		VALUES(
+			#{id},
+			#{app_type, jdbcType=VARCHAR},
+			#{version_code, jdbcType=VARCHAR},
+			#{url, jdbcType=VARCHAR},
+			#{intro, jdbcType=VARCHAR},
+			SYSDATE,
+			1
+		)
+	</insert>
+
+
+	
+	<update id="update" parameterType="AppVersionEntity" >
+		UPDATE
+		<include refid="tableName" />
+		<include refid="set" />
+		WHERE
+		ID = #{id}
+	</update>
+	<select id="queryMax"  resultMap="AppVersionMap">
+		SELECT 
+       	(MAX(VERSION_CODE)+1) AS VERSION_CODE
+        FROM 
+        <include refid="tableName" />
+	</select>
+	
+	
+	<sql id="tableName">
+		BFCMS_APP_VERSION
+	</sql>
+	
+	<sql id="base">
+	   ID,
+       APP_TYPE,
+       VERSION_CODE,
+       URL,
+       INTRO,
+       PUBDATE,
+       STATUS
+	</sql>
+	
+	<sql id="set">
+		<set>
+			PUBDATE = SYSDATE,
+			<if test="app_type != null and app_type != ''">
+				 APP_TYPE = #{app_type},
+			</if>
+			<if test="version_code != null and version_code != ''">
+				 VERSION_CODE = #{version_code},
+			</if>
+			<if test="url != null and url != ''">
+				 URL = #{url},
+			</if>
+			<if test="status != null and status != ''">
+				 STATUS = #{status},
+			</if>
+			<if test="intro != null and intro != ''">
+				 INTRO = #{intro}
+			</if>
+		</set>
+	</sql>
+	<sql id="where">
+		<where>
+			<if test="id != null and id != ''">
+				AND ID = #{id}
+			</if>
+			<if test="app_type != null and app_type != ''">
+				AND APP_TYPE = #{app_type}
+			</if>
+			<if test="version_code != null and version_code != ''">
+				AND VERSION_CODE = #{version_code}
+			</if>
+			<if test="url != null and url != ''">
+				AND URL = #{url}
+			</if>
+			<if test="status != null and status != ''">
+				AND STATUS = #{status}
+			</if>
+			<if test="intro != null and intro != ''">
+				AND INTRO = #{intro}
+			</if>
+		</where>
+	</sql>
+	
+	
+	
+	
+</mapper>

@@ -52,7 +52,7 @@ public class FileUploadController {
 	@RequestMapping("upload")
 	public R uploadImg(@RequestParam("file") MultipartFile file, String modularName){
 		log.info("文件上传file：{}", file);
-		if(file.getSize()>Integer.valueOf(fileSize)){
+		if(file.getSize()>Integer.valueOf(fileSize)&&!"app".equals(modularName)){
 			return R.error("文件大小不能超过10MB！");
 		}
 		Map<String,String> fileName = FileUtil.saveImage(file, modularName);

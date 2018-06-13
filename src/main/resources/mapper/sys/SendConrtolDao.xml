@@ -119,16 +119,9 @@
 	
 	<sql id="set">
 		<set>
-			create_date = SYSDATE, 
-		
-			<if test="id != null and id != ''">
-				 ID = #{id},
-			</if>
+			create_date = SYSDATE,STATUS = #{status},
 			<if test="operation_id != null and operation_id != ''">
 				 OPERATION_ID = #{operation_id},
-			</if>
-			<if test="status != null and status != ''">
-				 STATUS = #{status},
 			</if>
 			<if test="remark != null and remark != ''">
 				 REMARK = #{remark},

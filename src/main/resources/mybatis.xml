@@ -41,6 +41,8 @@
 			alias="BFVoteInf" />
 		<typeAlias type="com.security.modules.touch.entity.BFVoteDetail" 
 			alias="BFVoteDetail" />
+		<typeAlias type="com.security.modules.touch.entity.AppVersionEntity" 
+			alias="AppVersionEntity" />
 	</typeAliases>
 
 	<!-- 分页插件 -->

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>管理员列表</title>
+<#include "/header.html">
+<link rel="stylesheet" href="${request.contextPath}/statics/css/switch.css">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+
+	<div  class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			
+		
+			
+			<div class="form-group">
+				<div class="col-sm-4 control-label">APP包的版本代号</div>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" v-model="app.version_code" placeholder="代号"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-4 control-label">APK包文件上传</div>
+				<div class="col-sm-8">
+					<input type="text" disabled='true' class="form-control" v-model="app.url" id="fileName"/>
+					<a class="btn btn-primary" id="app_upload"><i class="fa fa-plus"></i>&nbsp;图片上传</a>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-4 control-label">APP包文件简易描述</div>
+				<div class="col-sm-8">
+					<textarea class="form-control" rows="4" cols="50"  v-model="app.intro"></textarea>
+				
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-4 control-label">APP包文件类型</div>
+				
+				<div class="col-sm-8">
+						<select class="form-control"  id="selectType" v-model="app.app_type">
+							<option value="android">android</option>
+							<option value="ios">ios</option>
+							
+
+						</select>
+				</div>
+			</div>
+			
+		
+			
+			
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
+<script src="${request.contextPath}/statics/js/modules/touch/version.js?_${.now?long}"></script>
+
+</body>
+</html>

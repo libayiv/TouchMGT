@@ -28,7 +28,8 @@
 
         //为编辑器实例添加一个路径，这个不能被注释
         UEDITOR_HOME_URL: URL
-//     测试   http://intftest.bfsuma.com:3879/TouchMGT/sys/ueditor/exec
+        //测试   http://intftest.bfsuma.com:3879/TouchMGT/sys/ueditor/exec
+        //正式   http://touch.bfsuma.com/TouchMGT/sys/ueditor/exec
         // 服务器统一请求接口路径
         , serverUrl: "http://touch.bfsuma.com/TouchMGT/sys/ueditor/exec"
 

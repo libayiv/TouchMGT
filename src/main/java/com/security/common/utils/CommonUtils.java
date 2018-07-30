@@ -21,7 +21,7 @@ import org.apache.commons.codec.binary.Base64;
  */
 public class CommonUtils {
 
-	private static String savePath;
+	public static String savePath;
 	
 	static{
 		InputStream in = FileUploaderUtils.class.getClassLoader()  

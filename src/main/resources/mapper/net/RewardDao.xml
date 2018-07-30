@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="com.security.modules.net.dao.RewardDao">
+	
+
+	<resultMap id="RewardMap" type="com.security.modules.net.entity.RewardInfo">
+		<result property="recordId" column="RECORD_ID" jdbcType="VARCHAR"/>
+		<result property="total_integral" column="TOTAL_INTEGRAL" jdbcType="VARCHAR"/>
+		<result property="userId" column="USER_ID" jdbcType="VARCHAR"/>
+		<result property="reward_month" column="REWARD_MONTH" jdbcType="VARCHAR"/>
+		<result property="insert_date" column="INSERT_DATE" jdbcType="VARCHAR"/>
+		<result property="memb_id" column="MEMB_ID" jdbcType="VARCHAR"/>
+		<result property="memb_name" column="MEMB_NAME" jdbcType="VARCHAR"/>
+		<result property="memb_phone_mobile" column="MEMB_PHONE_MOBILE" jdbcType="VARCHAR"/>
+		
+	
+	</resultMap>
+	
+
+	<select id="queryList" parameterType="java.util.Map" resultMap="RewardMap">
+		SELECT A.*,ROW_NUMBER() OVER (ORDER BY INSERT_DATE DESC) RN FROM
+		(
+			SELECT 
+            MM.MEMB_ID,MM.MEMB_NAME,MM.MEMB_PHONE_MOBILE,
+            BR.TOTAL_INTEGRAL,BR.INSERT_DATE 
+            FROM BFS_V_REWARD BR,MEMB_MS MM 
+            WHERE BR.USER_ID=MM.MEMB_ID AND BR.TOTAL_INTEGRAL>=1000
+            <if test="memb_id != null and memb_id != ''">
+				AND  MM.MEMB_ID like concat(concat('%',#{memb_id}),'%')
+			 </if>
+            ORDER BY INSERT_DATE DESC
+            
+		) A
+
+	</select>
+	
+	<select id="queryTotal" parameterType="java.util.Map" resultType="java.lang.Integer">        
+            SELECT 
+           	COUNT(*)
+            FROM BFS_V_REWARD BR,MEMB_MS MM 
+            WHERE BR.USER_ID=MM.MEMB_ID AND BR.TOTAL_INTEGRAL>=1000
+	</select>
+	
+
+	
+	
+	
+
+	
+</mapper>

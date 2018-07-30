@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="com.security.modules.net.dao.IntegralDao">
+	
+
+	<resultMap id="IntegralLogMap" type="com.security.modules.net.entity.IntegralLog">
+		<result property="recordId" column="RECORD_ID" jdbcType="VARCHAR"/>
+		<result property="associatedId" column="ASSOCIATED_ID" jdbcType="VARCHAR"/>
+		<result property="userId" column="USER_ID" jdbcType="VARCHAR"/>
+		<result property="intType" column="INT_TYPE" jdbcType="VARCHAR"/>
+		<result property="intEvent" column="INT_EVENT" jdbcType="VARCHAR"/>
+		<result property="intEventType" column="INT_EVENT_TYPE" jdbcType="VARCHAR"/>
+		<result property="intFront" column="INT_FRONT" jdbcType="VARCHAR"/>
+		<result property="intInfo" column="INT_INFO" jdbcType="VARCHAR"/>
+		<result property="intBack" column="INT_BACK" jdbcType="VARCHAR"/>
+		<result property="memb_name" column="MEMB_NAME" jdbcType="VARCHAR"/>
+		<result property="insertDate" column="INSERT_DATE" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- <insert id="save" parameterType="BFBannerInf">
+		INSERT INTO
+		<include refid="tableName" />
+		(
+			<include refid="base" />
+		)
+		VALUES(
+			#{id},
+			#{type, jdbcType=VARCHAR},
+			#{value, jdbcType=VARCHAR},
+			#{title, jdbcType=VARCHAR},
+			#{coversrc, jdbcType=VARCHAR},
+			#{rank, jdbcType=VARCHAR},
+			#{status, jdbcType=VARCHAR},
+			#{is_single, jdbcType=VARCHAR},
+			#{pc_valid, jdbcType=VARCHAR}
+			
+		)
+	</insert> -->
+	
+	
+<!-- 	
+	<update id="update" parameterType="BFBannerInf" >
+		UPDATE
+		<include refid="tableName" />
+		<include refid="set" />
+		WHERE
+		ID = #{id}
+	</update>
+	
+	<update id="updateStatus" parameterType="java.util.Map">
+		UPDATE
+		<include refid="tableName" />
+		SET STATUS = #{status}
+		WHERE
+		ID IN
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update> -->
+	
+	<!-- <select id="queryObject" parameterType="java.lang.String" resultMap="BFBannerInfMap">
+		SELECT 
+		<include refid="base" />
+		FROM
+		<include refid="tableName" />
+		WHERE
+		ID = #{id}
+	</select> -->
+
+	<select id="queryList" parameterType="java.util.Map" resultMap="IntegralLogMap">
+		SELECT A.*,ROW_NUMBER() OVER (ORDER BY INSERT_DATE DESC) RN FROM
+		(
+			SELECT 
+            BI.RECORD_ID,
+            BI.ASSOCIATED_ID,
+            BI.USER_ID,
+            BI.INT_TYPE,
+            BI.INT_EVENT,
+            BI.INT_EVENT_TYPE,
+            BI.INT_FRONT,
+            BI.INT_INFO,
+            BI.INT_BACK,
+            BI.INSERT_DATE,MM.MEMB_ID,MM.MEMB_NAME  
+            FROM BFS_V_INTEGRAL_LOG BI,MEMB_MS MM 
+            WHERE BI.USER_ID=MM.MEMB_ID 
+            <if test="integral_id != null and integral_id != '' ">
+				AND BI.RECORD_ID = #{integral_id}
+			</if>
+			<if test="intEvent != null and intEvent != ''">
+				AND  BI.INT_EVENT like concat(concat('%',#{intEvent}),'%')
+			</if>
+            ORDER BY BI.INSERT_DATE DESC
+		) A
+
+	</select>
+	
+	<select id="queryTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+			FROM BFS_V_INTEGRAL_LOG BI,MEMB_MS MM 
+            WHERE BI.USER_ID=MM.MEMB_ID 
+	</select>
+	
+
+	
+	
+	
+
+	
+</mapper>

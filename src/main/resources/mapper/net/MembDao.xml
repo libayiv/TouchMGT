@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.security.modules.net.dao.MembInfoDao">
+
+	<resultMap type="com.security.modules.net.entity.MembInfo" id="MembMap">
+		<result property="memb_code" column="MEMB_CODE" />
+		<result property="memb_user_type" column="MEMB_USER_TYPE" />
+		<result property="memb_doc_type" column="MEMB_DOC_TYPE" />
+		<result property="memb_id" column="memb_id" />
+		<result property="memb_name" column="memb_name" />
+		<result property="company_name" column="COMPANY_NAME" />
+		<result property="gender" column="MEMB_GENDER_TYPE" jdbcType="INTEGER" />
+		<result property="memb_birth" column="MEMB_BIRTH" />
+		<result property="memb_doc_no" column="MEMB_DOC_NO" />
+		<result property="memb_phone_mobile" column="MEMB_PHONE_MOBILE" />
+		<result property="memb_email" column="MEMB_EMAIL" />
+		<result property="memb_sponsor_name" column="MEMB_SPONSOR_NAME" />
+		<result property="memb_upline_name" column="MEMB_UPLINE_NAME" />
+		<result property="memb_joindate" column="MEMB_JOIN_DATE" />
+		<result property="KIV" column="MEMB_KIV" />
+		<result property="shop_id" column="SHOPID" />
+		<result property="memb_photo_status" column="MEMB_PHOTO_STATUS" />
+		<result property="photoName" column="MEMB_PHOTO" />
+		<result property="signature" column="MEMB_APP_SIGNATURE" />
+		<result property="country" column="COUNTRY" />
+		<result property="status" column="STATUS" />
+		<result property="bindingState" column="BINDINGSTATE" />
+		<result property="isShopOwner" column="ISSHOPOWNER" />
+		<result property="city" column="CITY" />
+		<result property="memb_status" column="MEMB_STATUS" />
+				<result property="user_title" column="LT_USER_TITLE" />
+		
+	</resultMap>
+
+
+
+	<select id="queryObject" parameterType="java.lang.String"
+		resultMap="MembMap">
+		
+		  SELECT 
+            UL.LT_USER_TITLE,A.MEMB_CODE,A.MEMB_STATUS,A.MEMB_ID,A.MEMB_JOIN_DATE,A.MEMB_USER_TYPE,A.MEMB_KIV,A.MEMB_NAME,A.MEMB_DOC_TYPE,A.MEMB_DOC_NO,A.MEMB_BIRTH,A.MEMB_GENDER_TYPE,A.MEMB_PHONE_MOBILE,A.MEMB_EMAIL,
+            B.MEMB_NAME MEMB_SPONSOR_NAME,
+            C.MEMB_NAME MEMB_UPLINE_NAME,
+            U1.LD_UNIT_NAME COMPANY_NAME 
+            FROM MEMB_MS A,MEMB_MS B,MEMB_MS C,VW_UNIT_DETAIL U1,VW_UNIT_DETAIL U2 ,USER_LT UL
+            WHERE U1.UNIT_CODE=A.MEMB_COMP_UNIT_CODE 
+            AND A.MEMB_SPONSOR_MEMB_CODE=B.MEMB_CODE 
+            AND A.MEMB_SHOP_CODE=U2.UNIT_CODE 
+            AND A.MEMB_UPLINE_MEMB_CODE=C.MEMB_CODE 
+            AND A.MEMB_USER_TYPE=UL.LT_USER_TYPE
+            AND UL.LT_USER_LANGUAGE_TYPE=1
+            AND U1.LD_UNIT_LANGUAGE_TYPE=1 AND U2.LD_UNIT_LANGUAGE_TYPE=1 AND A.MEMB_ID=#{id}
+	</select>
+
+	<!-- <select id="queryTotal" parameterType="java.util.Map" resultType="java.lang.Integer"> 
+		SELECT COUNT(*) FROM BFS_V_GAME </select> -->
+
+
+
+
+
+
+
+</mapper>

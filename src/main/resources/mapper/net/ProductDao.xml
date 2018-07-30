@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="com.security.modules.net.dao.ProductDao">
+	
+
+
+	
+	<resultMap id="ProductMap" type="com.security.modules.net.entity.ProductInfo">
+		<result property="pro_id" column="pro_id" jdbcType="VARCHAR"/>
+		<result property="pro_name" column="pro_name" jdbcType="VARCHAR"/>
+		<result property="pro_picture" column="pro_picture" jdbcType="VARCHAR"/>
+		<result property="pro_integral" column="pro_integral" jdbcType="VARCHAR"/>
+		<result property="stock" column="stock" jdbcType="VARCHAR"/>
+		<result property="limit_number" column="limit_number" jdbcType="VARCHAR"/>
+		<result property="status" column="status" jdbcType="VARCHAR"/>
+		<result property="order_num" column="order_num" jdbcType="VARCHAR"/>
+		<result property="buy_count" column="BUY_COUNT" jdbcType="VARCHAR"/>	
+	</resultMap>
+	
+
+
+	<select id="queryList" parameterType="java.util.Map" resultMap="ProductMap">
+		SELECT A.*,ROW_NUMBER() OVER (ORDER BY ORDER_NUM DESC) RN FROM
+		(
+			SELECT BP.*, (CASE BP.STOCK
+                                     WHEN -1 THEN
+                                      -1
+                                     ELSE
+                                      (BP.STOCK -
+                                      (SELECT NVL(SUM(BUY_COUNT), 0)
+                                          FROM BFS_V_ORDER BO
+                                         WHERE BP.PRO_ID = BO.PRO_ID
+                                           AND BO.STATUS IN (0, 1)
+                                           AND TO_CHAR(INSERT_DATE, 'yyyy-mm') =
+                                               TO_CHAR(SYSDATE, 'yyyy-mm')))
+                                   END) BUY_COUNT
+                              FROM BFS_V_PRODUCT BP
+                             WHERE BP.STATUS != 3
+                             <if test="pro_id != null and pro_id != '' ">
+							 AND BP.PRO_ID = #{pro_id}
+							 </if>
+							 <if test="pro_name != null and pro_name != ''">
+							 AND  BP.PRO_NAME like concat(concat('%',#{pro_name}),'%')
+							 </if>
+                             ORDER BY BP.ORDER_NUM DESC
+		) A
+
+	</select>
+	
+	<select id="queryTotal" parameterType="java.util.Map" resultType="java.lang.Integer">        
+           SELECT count(*) FROM BFS_V_PRODUCT BP
+                             WHERE BP.STATUS != 3
+	</select>
+	
+	
+	<insert id="save" parameterType="com.security.modules.net.entity.ProductInfo">
+		<selectKey resultType="string" order="BEFORE" keyProperty="pro_id">  
+			SELECT BFS_TABLE_SEQ.NEXTVAL as pro_id FROM DUAL
+   		</selectKey> 
+		INSERT INTO
+		BFS_V_PRODUCT
+		(
+			 PRO_ID,
+			 PRO_NAME,
+			 PRO_PICTURE,
+			 PRO_INTEGRAL,
+			 STOCK,
+			 LIMIT_NUMBER,
+			 STATUS,
+			 ORDER_NUM
+		)
+		VALUES(
+			#{pro_id, jdbcType=VARCHAR},
+			#{pro_name, jdbcType=VARCHAR},
+			#{pro_picture, jdbcType=VARCHAR},
+			#{pro_integral, jdbcType=VARCHAR},
+			#{stock, jdbcType=VARCHAR},
+			#{limit_number, jdbcType=VARCHAR},
+			#{status, jdbcType=VARCHAR},
+			#{order_num, jdbcType=VARCHAR}
+			
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.security.modules.net.entity.ProductInfo" >
+		UPDATE
+		BFS_V_PRODUCT
+		<include refid="set" />
+		WHERE
+		PRO_ID = #{pro_id}
+	</update>
+	
+	<sql id="set">
+		<set>
+			<if test="pro_name != null and pro_name != ''">
+				PRO_NAME = #{pro_name},
+			</if>
+			<if test="pro_picture != null and pro_picture != ''">
+				PRO_PICTURE = #{pro_picture},
+			</if>
+			<if test="pro_integral != null and pro_integral != ''">
+				PRO_INTEGRAL = #{pro_integral},
+			</if>
+			<if test="stock != null and stock != ''">
+				STOCK = #{stock},
+			</if>
+			<if test="limit_number != null and limit_number != ''">
+				LIMIT_NUMBER = #{limit_number},
+			</if>
+			<if test="status != null and status != ''">
+				STATUS = #{status}, 
+			</if>
+			<if test="order_num != null and order_num != ''">
+				ORDER_NUM = #{order_num}, 
+			</if>
+			
+		</set>
+	</sql>
+
+	
+</mapper>

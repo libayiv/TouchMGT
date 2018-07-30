@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="com.security.modules.net.dao.ExchangeLogDao">
+	
+
+	<resultMap id="OrderInfoMap" type="com.security.modules.net.entity.OrderInfo">
+		<result property="order_id" column="order_id" jdbcType="VARCHAR"/>
+		<result property="user_id" column="user_id" jdbcType="VARCHAR"/>
+		<result property="store_id" column="store_id" jdbcType="VARCHAR"/>
+		<result property="redeem_code" column="redeem_code" jdbcType="VARCHAR"/>
+		<result property="pro_id" column="pro_id" jdbcType="VARCHAR"/>
+		<result property="pro_name" column="pro_name" jdbcType="VARCHAR"/>
+		<result property="addr" column="addr" jdbcType="VARCHAR"/>
+		<result property="pro_picture" column="pro_picture" jdbcType="VARCHAR"/>
+		<result property="buy_count" column="buy_count" jdbcType="VARCHAR"/>
+		<result property="pro_integral" column="pro_integral" jdbcType="VARCHAR"/>
+		<result property="total_integral" column="total_integral" jdbcType="VARCHAR"/>
+		<result property="status" column="status" jdbcType="VARCHAR"/>
+		<result property="insert_date" column="insert_date" jdbcType="VARCHAR"/>
+		<result property="counrty" column="COUNTRY" jdbcType="VARCHAR"/>
+		<result property="shopname" column="SHOPNAME" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME" jdbcType="VARCHAR"/>
+		<result property="user_name" column="user_name" jdbcType="VARCHAR"/>
+		<result property="contracts" column="MEMB_PHONE_MOBILE" jdbcType="VARCHAR"/>
+		<result property="remaining_integral" column="REMAINING_INTEGRAL" jdbcType="VARCHAR"/>
+		
+	</resultMap>
+	
+	<!-- <insert id="save" parameterType="BFBannerInf">
+		INSERT INTO
+		<include refid="tableName" />
+		(
+			<include refid="base" />
+		)
+		VALUES(
+			#{id},
+			#{type, jdbcType=VARCHAR},
+			#{value, jdbcType=VARCHAR},
+			#{title, jdbcType=VARCHAR},
+			#{coversrc, jdbcType=VARCHAR},
+			#{rank, jdbcType=VARCHAR},
+			#{status, jdbcType=VARCHAR},
+			#{is_single, jdbcType=VARCHAR},
+			#{pc_valid, jdbcType=VARCHAR}
+			
+		)
+	</insert> -->
+	
+	
+<!-- 	
+	<update id="update" parameterType="BFBannerInf" >
+		UPDATE
+		<include refid="tableName" />
+		<include refid="set" />
+		WHERE
+		ID = #{id}
+	</update>
+	
+	<update id="updateStatus" parameterType="java.util.Map">
+		UPDATE
+		<include refid="tableName" />
+		SET STATUS = #{status}
+		WHERE
+		ID IN
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update> -->
+	
+	 <select id="queryObject" parameterType="java.lang.String" resultMap="OrderInfoMap">		
+			SELECT C.LT_COUNTRY_TITLE AS COUNTRY,
+				UL.LD_UNIT_SHORT_NAME AS SHOPNAME,
+				UM.UNIT_NAME AS NAME,
+				UL.LD_UNIT_ADDR1 AS ADDR,
+				BO.*,
+				MM.MEMB_ID AS USER_ID,
+				MM.MEMB_NAME AS USER_NAME,
+				MM.MEMB_PHONE_MOBILE,
+				BI.TOTAL_INTEGRAL AS REMAINING_INTEGRAL
+			FROM BFS_V_ORDER BO
+			LEFT JOIN BFS_V_INTEGRAL BI
+			ON BO.USER_ID=BI.USER_ID 
+			LEFT JOIN MEMB_MS MM
+			ON BO.USER_ID = MM.MEMB_ID
+			LEFT JOIN UNIT_MS UM
+			ON UM.UNIT_ID = BO.STORE_ID
+			AND UM.UNIT_LANGUAGE_TYPE = 1
+			LEFT JOIN COUNTRY_LT C
+			ON UM.UNIT_COUNTRY_TYPE = C.LT_COUNTRY_TYPE
+			AND C.LT_COUNTRY_LANGUAGE_TYPE = 1
+			LEFT JOIN UNIT_LD UL
+			ON UL.LD_UNIT_CODE = UM.UNIT_CODE
+			AND UL.LD_UNIT_LANGUAGE_TYPE = 1
+			WHERE MM.MEMB_ID IS NOT NULL
+			AND BO.ORDER_ID = #{id}
+	</select> 
+
+	<select id="queryList" parameterType="java.util.Map" resultMap="OrderInfoMap">
+		SELECT A.*,ROW_NUMBER() OVER (ORDER BY INSERT_DATE DESC) RN FROM
+		(
+			SELECT C.LT_COUNTRY_TITLE AS COUNTRY,
+				UL.LD_UNIT_SHORT_NAME AS SHOPNAME,
+				UM.UNIT_NAME AS NAME,
+				UL.LD_UNIT_ADDR1 AS ADDR,
+				BO.ORDER_ID,
+				BO.STORE_ID,
+				BO.BUY_COUNT,
+				BO.TOTAL_INTEGRAL,
+				BO.STATUS,
+				BO.REDEEM_CODE,
+				BO.INSERT_DATE,
+				MM.MEMB_ID AS USER_ID,
+				MM.MEMB_NAME AS USER_NAME
+			FROM BFS_V_ORDER BO
+			LEFT JOIN MEMB_MS MM
+			ON BO.USER_ID = MM.MEMB_ID
+			LEFT JOIN UNIT_MS UM
+			ON UM.UNIT_ID = BO.STORE_ID
+			AND UM.UNIT_LANGUAGE_TYPE = 1
+			LEFT JOIN COUNTRY_LT C
+			ON UM.UNIT_COUNTRY_TYPE = C.LT_COUNTRY_TYPE
+			AND C.LT_COUNTRY_LANGUAGE_TYPE = 1
+			LEFT JOIN UNIT_LD UL
+			ON UL.LD_UNIT_CODE = UM.UNIT_CODE
+			AND UL.LD_UNIT_LANGUAGE_TYPE = 1
+			WHERE MM.MEMB_ID IS NOT NULL
+			<if test="order_id != null and order_id != '' ">
+				AND BO.ORDER_ID = #{order_id}
+			</if>
+			<if test="user_id != null and user_id != ''">
+				AND MM.MEMB_ID like concat(concat('%',#{user_id}),'%')
+			</if>
+			ORDER BY BO.INSERT_DATE DESC
+		) A
+
+	</select>
+	
+	<select id="queryTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+			FROM BFS_V_ORDER BO
+			LEFT JOIN MEMB_MS MM
+			ON BO.USER_ID = MM.MEMB_ID
+			LEFT JOIN UNIT_MS UM
+			ON UM.UNIT_ID = BO.STORE_ID
+			AND UM.UNIT_LANGUAGE_TYPE = 1
+			LEFT JOIN COUNTRY_LT C
+			ON UM.UNIT_COUNTRY_TYPE = C.LT_COUNTRY_TYPE
+			AND C.LT_COUNTRY_LANGUAGE_TYPE = 1
+			LEFT JOIN UNIT_LD UL
+			ON UL.LD_UNIT_CODE = UM.UNIT_CODE
+			AND UL.LD_UNIT_LANGUAGE_TYPE = 1
+			WHERE MM.MEMB_ID IS NOT NULL
+			ORDER BY BO.INSERT_DATE DESC
+	</select>
+	
+
+	
+	
+	
+
+	
+</mapper>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="com.security.modules.net.dao.GameDao">
+	
+
+	<resultMap id="GameMap" type="com.security.modules.net.entity.GameInfo">
+		<id property="id" column="GAME_ID" jdbcType="VARCHAR"/>
+		<result property="title" column="GAME_TITLE" jdbcType="VARCHAR"/>
+		<result property="picture" column="GAME_PICTURE" jdbcType="VARCHAR"/>
+		<result property="game_time" column="GAME_TIME" jdbcType="VARCHAR"/>
+		<result property="is_valid" column="IS_VALID" jdbcType="VARCHAR"/>
+		<result property="order_num" column="ORDER_NUM" jdbcType="VARCHAR"/>
+		<result property="gameNum" column="GAME_NUM" jdbcType="VARCHAR"/>
+		<result property="url" column="URL" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+
+
+	<select id="queryList" parameterType="java.util.Map" resultMap="GameMap">
+		SELECT A.* ,ROW_NUMBER() OVER (ORDER BY ORDER_NUM DESC) RN FROM
+		(
+			SELECT B.GAME_ID,
+           B.GAME_TITLE,
+           B.GAME_PICTURE,
+           B.GAME_TIME,
+           B.IS_VALID,
+           B.ORDER_NUM FROM BFS_V_GAME B
+           WHERE 1=1
+           <if test="game_id != null and game_id != '' ">
+				AND B.GAME_ID = #{game_id}
+			</if>
+			<if test="title != null and title != ''">
+				AND B.GAME_TITLE like concat(concat('%',#{title}),'%')
+			</if>
+          ORDER BY B.ORDER_NUM DESC
+		) A
+
+	</select>
+	
+	<select id="queryTotal" parameterType="java.util.Map" resultType="java.lang.Integer">        
+            SELECT  COUNT(*) FROM BFS_V_GAME 
+	</select>
+	
+
+	
+	<insert id="save" parameterType="com.security.modules.net.entity.GameInfo">
+		<selectKey resultType="string" order="BEFORE" keyProperty="id">  
+			SELECT BFS_TABLE_SEQ.NEXTVAL as id FROM DUAL
+   		</selectKey> 
+		INSERT INTO
+		BFS_V_GAME
+		(
+			  game_id,
+			  game_title ,
+			  game_picture,
+			  game_time,
+			  is_valid,
+			  order_num
+		)
+		VALUES(
+			#{id, jdbcType=VARCHAR},
+			#{title, jdbcType=VARCHAR},
+			#{picture, jdbcType=VARCHAR},
+			#{game_time, jdbcType=VARCHAR},
+			#{is_valid, jdbcType=VARCHAR},
+			#{order_num, jdbcType=VARCHAR}
+		
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.security.modules.net.entity.GameInfo" >
+		UPDATE
+		BFS_V_GAME
+		<include refid="set" />
+		WHERE
+		game_id = #{id}
+	</update>
+	
+	
+	
+	<sql id="set">
+		<set>
+			<if test="title != null and title != ''">
+				GAME_TITLE = #{title},
+			</if>
+			<if test="picture != null and picture != ''">
+				GAME_PICTURE = #{picture},
+			</if>
+			<if test="game_time != null and game_time != ''">
+				GAME_TIME = #{game_time},
+			</if>
+			<if test="is_valid != null and is_valid != ''">
+				IS_VALID = #{is_valid},
+			</if>
+			<if test="order_num != null and order_num != ''">
+				ORDER_NUM = #{order_num},
+			</if>
+			
+		</set>
+	</sql>
+	
+	
+
+	
+</mapper>

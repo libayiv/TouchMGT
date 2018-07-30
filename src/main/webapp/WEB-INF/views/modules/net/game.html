@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>管理员列表</title>
+<#include "/header.html">
+<link rel="stylesheet" href="${request.contextPath}/statics/css/switch.css">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-sm-2">
+				<input type="text" class="form-control" v-model="q.title" @keyup.enter="search" placeholder="Title">
+			</div>
+			<a class="btn btn-default" @click="search">查询</a>
+			<#if shiro.hasPermission("touch:game:save")>
+			<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+		<!-- 	<#if shiro.hasPermission("touch:game:updateStatus")>
+			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if> -->
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+
+	<div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-2 control-label">序号</div>
+				<div class="col-sm-10">
+					<input type="number" class="form-control" v-model="game.order_num"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">标题</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="game.title" placeholder="标题"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">图片上传</div>
+				<div class="col-sm-10">
+					<img id="game_img" width="100" height="100"/>
+					<a class="btn btn-primary" id="game_upload"><i class="fa fa-plus"></i>&nbsp;图片上传</a></br>
+					<span><font size="-2" color="#9e9e9e">注意:建议先请设计师设计完成后操作,尽可能将图片控制在1M之内</font></span>
+				</div>
+			</div>
+		
+			<div class="form-group">
+				<div class="col-sm-2 control-label">游戏时间（秒）</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="game.game_time"/>
+				</div>
+			</div> 
+			
+			<div class="form-group">
+				<div class="col-sm-2 control-label">是否显示</div>
+				<!-- <label class="radio-inline">
+					<input type="radio" name="status" value="0" v-model="game.status"/> 删除
+				</label> -->
+				<label class="radio-inline">
+					<input type="radio" name="is_valid" value="1" v-model="game.is_valid"/> 是
+				</label>
+				<label class="radio-inline">
+					<input type="radio" name="is_valid" value="0" v-model="game.is_valid"/> 否
+				</label>
+			</div>
+			
+			
+			
+			
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+								<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
+
+<script src="${request.contextPath}/statics/js/modules/net/game.js?_${.now?long}"></script>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>管理员列表</title>
+<#include "/header.html">
+<link rel="stylesheet" href="${request.contextPath}/statics/css/switch.css">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-sm-2">
+				<input type="text" class="form-control" v-model="q.title" @keyup.enter="search" placeholder="Credtis income & outcome">
+			</div>
+			<a class="btn btn-default" @click="search">查询</a>
+			<#if shiro.hasPermission("touch:integral:save")>
+			<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+		<!-- 	<#if shiro.hasPermission("touch:integral:updateStatus")>
+			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if> -->
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+
+	<div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal" style="width:100%">
+			
+			<div class="form-group">
+					<div class="col-sm-2 control-label" style="font-weight: bold;">Member
+						information:</div>
+					<div class="col-sm-10">
+						<table class="table table-bordered">
+							<tr>
+								<th class="left-table">Member code</th>
+								<th>{{memb.memb_code}}</th>	
+							</tr>
+							<tr>
+								<th class="left-table">Owned company</th>
+								<th>{{memb.company_name}}</th>	
+							</tr>
+							<tr>
+								<th class="left-table">Member status</th>
+								<th>{{memb.statusStr}}</th>	
+							</tr>
+							<tr>
+								<th class="left-table">Member id</th>
+								<th>{{memb.memb_id}}</th>	
+							</tr>
+							<tr>
+								<th class="left-table">Member join time</th>
+								<th>{{memb.memb_joindate}}</th>	
+							</tr>
+							<tr>
+								<th class="left-table">Member type</th>
+								<th> {{memb.user_title}}</th>
+								
+							</tr>
+							<tr>
+								<th class="left-table">Referrals Member</th>
+								<th> {{memb.memb_sponsor_name}}</th>
+							</tr>
+								<tr>
+								<th class="left-table">Upstream Member</th>
+								<th>{{memb.memb_upline_name}}</th>	
+							</tr>
+							<tr>
+								<th class="left-table">Member KIV logo</th>
+								<th> {{memb.kIV}}</th>	
+							</tr>
+							<tr>
+							<th class="left-table">Member name</th>
+								<th> {{memb.memb_name}}</th>
+								
+							</tr>
+							<tr>
+								<th class="left-table">ID Number</th>
+								<th> {{memb.memb_doc_no}}</th>
+							</tr>
+							
+								<tr>
+								<th class="left-table">Birthday</th>
+								<th>{{memb.memb_birth}}</th>	
+							</tr>
+							<tr>
+								<th class="left-table">Gender</th>
+								<th> {{memb.gender==1?'Man':'Female'}}</th>
+								
+							</tr>
+							<tr>
+								<th class="left-table">Phone</th>
+								<th> {{memb.memb_phone_mobile}}</th>
+							</tr>
+								<tr>
+								<th class="left-table">E-mail</th>
+								<th>{{memb.memb_email}}</th>	
+							</tr>
+						</table>
+
+					</div>
+				</div>
+				
+			<div class="form-group">
+					<div class="col-sm-2 control-label" style="font-weight: bold;">Integral
+						information:</div>
+					<div class="col-sm-10">
+						<table class="table table-bordered">
+							<tr >
+								<th class="left-table">Credtis income & outcome</th>
+								<th>{{integral.intEvent}}</th>
+								
+							</tr>
+							<tr>
+								<th class="left-table">Original Credits</th>
+								<th >{{integral.intFront}}</th>
+								
+							</tr>
+							<tr>
+								<th class="left-table">Earn/Consume</th>
+								<th >{{integral.intEventType}}{{integral.intInfo}}</th>
+								
+							</tr>
+							<tr>
+								<th class="left-table">Balance</th>
+								<th >{{integral.intBack}}</th>
+								
+							</tr>
+						</table>
+					</div>
+		
+			</div>
+			
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<script src="${request.contextPath}/statics/js/modules/net/integral.js?_${.now?long}"></script>
+
+</body>
+</html>

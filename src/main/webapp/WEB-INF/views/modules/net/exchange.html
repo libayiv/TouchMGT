@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>管理员列表</title>
+<#include "/header.html">
+<link rel="stylesheet" href="${request.contextPath}/statics/css/switch.css">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-sm-2">
+				<input type="text" class="form-control" v-model="q.title" @keyup.enter="search" placeholder="Memb_id">
+			</div>
+			<a class="btn btn-default" @click="search">查询</a>
+			
+			<#if shiro.hasPermission("touch:exchange:export")>
+			<a class="btn btn-primary" @click="exportExcel"><i class="fa fa-file"></i>&nbsp;导出</a>
+			</#if>
+		<!-- 	<#if shiro.hasPermission("touch:order:updateStatus")>
+			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if> -->
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+	    
+    </div>
+	
+	<div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal" style="width:100%">
+				<div class="form-group">
+					<div class="col-sm-2 control-label" style="font-weight: bold;">Product
+						information:</div>
+					<div class="col-sm-10">
+						<table class="table table-bordered">
+							<tr class="left-table">
+								<th>Product number</th>
+								<th>Product name</th>
+								<th>Consume credits</th>
+								<th>Purchase quantity</th>
+								<th>Total Credits</th>
+							</tr>
+							<tr>
+								<th>{{order.pro_id}}</th>
+								<th>{{order.pro_name}}</th>
+								<th>{{order.pro_integral}}</th>
+								<th>{{order.buy_count}}</th>
+								<th>{{order.total_integral}}</th>
+							</tr>
+						</table>
+
+					</div>
+				</div>
+				<div class="form-group">
+				<div class="col-sm-2 control-label" style="font-weight: bold;">Order information:</div>
+				<div class="col-sm-10">
+					<table class="table table-bordered">
+							<tr>
+								<th class="left-table">Order number</th>
+								<th>{{order.order_id}}</th>	
+							</tr>
+							<tr>
+								<th class="left-table">Shop id</th>
+								<th>{{order.store_id}}</th>	
+							</tr>
+							<tr>
+								<th class="left-table">Shop name</th>
+								<th>{{order.name}}</th>	
+							</tr>
+							<tr>
+								<th class="left-table">Redeem code</th>
+								<th>{{order.redeem_code}}</th>	
+							</tr>
+							<tr>
+								<th class="left-table">Address</th>
+								<th>{{order.addr}}</th>	
+							</tr>
+							<tr>
+								<th class="left-table">Order status</th>
+								<th> {{order.status==1?'Submitted':'Others'}}</th>
+								
+							</tr>
+							<tr>
+								<th class="left-table">Order Time</th>
+								<th> {{order.insert_date}}</th>
+							</tr>
+						</table>
+ 				</div>
+			</div>
+		
+			<div class="form-group">
+				<div class="col-sm-2 control-label" style="font-weight: bold;">Member information:</div>
+				<div class="col-sm-10">
+					<table class="table table-bordered">
+							<tr>
+								<th class="left-table">Member account</th>
+								<th>{{order.user_id}}</th>	
+							</tr>
+							<tr>
+								<th class="left-table">Member name</th>
+								<th>{{order.user_name}}</th>	
+							</tr>
+							<tr>
+								<th class="left-table">Member contacts	</th>
+								<th>{{order.name}}</th>	
+							</tr>
+							<tr>
+								<th class="left-table">Remaining credtis</th>
+								<th>{{order.remaining_integral}}</th>	
+							</tr>
+							
+						</table>
+ 				</div>
+			</div>
+			
+			
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<script src="${request.contextPath}/statics/js/modules/net/exchange.js?_${.now?long}"></script>
+
+</body>
+</html>
